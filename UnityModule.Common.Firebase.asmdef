@@ -1,0 +1,18 @@
+{
+    "name": "UnityModule.Common.Firebase",
+    "references": [
+        "UnityModule.Common.Define",
+        "UnityModule.Common.Access",
+        "UnityModule.Common.Func",
+        "UnityModule.Common.Utility"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
