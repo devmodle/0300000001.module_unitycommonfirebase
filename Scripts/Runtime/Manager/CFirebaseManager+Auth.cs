@@ -16,29 +16,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(!this.IsInit || this.IsLogin) {
 			a_oCallback?.Invoke(this, this.IsLogin);
 		} else {
-			CFunc.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync(), (a_oTask) => {
+			CTaskManager.Instance.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync(), (a_oTask) => {
 				bool bIsComplete = a_oTask.ExIsComplete();
 
 				CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
-					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, bIsComplete ? a_oTask.Result.UserId : string.Empty, a_oTask.Exception?.Message);
-
-				a_oCallback?.Invoke(this, this.IsLogin);
-			});
-		}
-	}
-
-	//! 인증 로그인을 처리한다
-	public void LoginWithCredential(Credential a_oCredential, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oCredential != null);
-		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
-
-		if(!this.IsInit || this.IsLogin) {
-			a_oCallback?.Invoke(this, this.IsLogin);
-		} else {
-			CFunc.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), (a_oTask) => {
-				bool bIsComplete = a_oTask.ExIsComplete();
-
-				CFunc.ShowLog("CFirebaseManager.OnLoginWithCredential: {0}, {1}. {2}", 
 					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, bIsComplete ? a_oTask.Result.UserId : string.Empty, a_oTask.Exception?.Message);
 
 				a_oCallback?.Invoke(this, this.IsLogin);
@@ -55,6 +36,25 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 
 		a_oCallback?.Invoke(this);
+	}
+
+	//! 인증 로그인을 처리한다
+	private void LoginWithCredential(Credential a_oCredential, System.Action<CFirebaseManager, bool> a_oCallback) {
+		CAccess.Assert(a_oCredential != null);
+		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
+
+		if(!this.IsInit || this.IsLogin) {
+			a_oCallback?.Invoke(this, this.IsLogin);
+		} else {
+			CTaskManager.Instance.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), (a_oTask) => {
+				bool bIsComplete = a_oTask.ExIsComplete();
+
+				CFunc.ShowLog("CFirebaseManager.OnLoginWithCredential: {0}, {1}. {2}", 
+					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, bIsComplete ? a_oTask.Result.UserId : string.Empty, a_oTask.Exception?.Message);
+
+				a_oCallback?.Invoke(this, this.IsLogin);
+			});
+		}
 	}
 	#endregion			// 함수
 
@@ -98,7 +98,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if UNITY_IOS
 			m_oGameCenterLoginCallback = a_oCallback;
-			CFunc.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), this.OnReceiveCredential);
+			CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), this.OnReceiveCredential);
 #else
 			var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
 			this.LoginWithCredential(oCredential, a_oCallback);

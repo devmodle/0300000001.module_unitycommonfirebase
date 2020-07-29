@@ -23,10 +23,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(!this.IsInit) {
 			a_oCallback?.Invoke(this, false);
 		} else {
-			CFunc.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_DEF_TIMEOUT_FIREBASE_FETCH_CONFIG_DATA), (a_oTask) => {
+			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_DEF_TIMEOUT_FIREBASE_FETCH_CONFIG_DATA), (a_oTask) => {
 				CFunc.ShowLog("CFirebaseManager.OnLoadConfigData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oTask.Exception?.Message);
 
-				if(!CFunc.IsCompleteAsyncTask(a_oTask)) {
+				if(!a_oTask.ExIsComplete()) {
 					a_oCallback?.Invoke(this, false);
 				} else {
 					a_oCallback?.Invoke(this, FirebaseRemoteConfig.ActivateFetched());

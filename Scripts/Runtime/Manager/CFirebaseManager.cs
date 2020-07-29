@@ -19,6 +19,10 @@ using Firebase.Analytics;
 using Firebase.RemoteConfig;
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
+#if FIREBASE_MSG_ENABLE
+using Firebase.Messaging;
+#endif			// #if FIREBASE_MSG_ENABLE
+
 //! 파이어 베이스 관리자
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 변수
@@ -34,6 +38,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public bool IsLogin => this.IsInit && FirebaseAuth.DefaultInstance.CurrentUser != null;
 	public string UserID => this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
 #endif			// #if FIREBASE_AUTH_ENABLE
+
+#if FIREBASE_MSG_ENABLE
+	public string MsgToken { get; private set; } = string.Empty;
+#endif			// #if FIREBASE_MSG_ENABLE
 	#endregion			// 프로퍼티
 
 	#region 함수
@@ -44,7 +52,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit || !CAccess.IsMobilePlatform()) {
 			a_oCallback?.Invoke(this, this.IsInit);
 		} else {
-			CFunc.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), (a_oTask) => {
+			CTaskManager.Instance.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), (a_oTask) => {
 				this.IsInit = a_oTask.Result == DependencyStatus.Available;
 				CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, a_oTask.Exception?.Message);
 
@@ -69,6 +77,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 					this.LoadConfigData(null);
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
+
+#if FIREBASE_MSG_ENABLE
+					FirebaseMessaging.TokenReceived += this.OnReceiveToken;
+					FirebaseMessaging.MessageReceived += this.OnReceiveMsg;
+#endif			// #if FIREBASE_MSG_ENABLE
 				}
 
 				a_oCallback?.Invoke(this, this.IsInit);

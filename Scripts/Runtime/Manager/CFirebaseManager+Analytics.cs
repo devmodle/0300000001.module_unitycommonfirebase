@@ -31,14 +31,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 	//! 로그를 전송한다
-	public void SendLog(string a_oName, string a_oParameter) {
-		this.SendLog(a_oName, a_oParameter, null);
+	public void SendLog(string a_oName, string a_oParam) {
+		this.SendLog(a_oName, a_oParam, null);
 	}
 
 	//! 로그를 전송한다
-	public void SendLog(string a_oName, string a_oParameter, List<string> a_oDataList) {
-		CAccess.Assert(a_oName.ExIsValid() && a_oParameter.ExIsValid());
-		CFunc.ShowLog("CFirebaseManager.SendLog: {0}, {1}, {2}", KCDefine.B_LOG_COLOR_PLUGIN, a_oName, a_oParameter, a_oDataList);
+	public void SendLog(string a_oName, string a_oParam, List<string> a_oDataList) {
+		CAccess.Assert(a_oName.ExIsValid() && a_oParam.ExIsValid());
+		CFunc.ShowLog("CFirebaseManager.SendLog: {0}, {1}, {2}", KCDefine.B_LOG_COLOR_PLUGIN, a_oName, a_oParam, a_oDataList);
 
 #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 		if(this.IsInit) {
@@ -47,17 +47,17 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if MSG_PACK_ENABLE
 			oDataList.ExAddValue(CAppInfoStorage.Instance.AppInfo.DeviceID);
 
-#if AUTO_LOG_PARAMETER_ENABLE
+#if AUTO_LOG_PARAM_ENABLE
 			oDataList.ExAddValue(CAppInfoStorage.Instance.PlatformName);
 			oDataList.ExAddValue(CUserInfoStorage.Instance.UserInfo.UserType.ToString());
 
 			oDataList.ExAddValue(System.DateTime.UtcNow.ExToLongString());
 			oDataList.ExAddValue(CAppInfoStorage.Instance.AppInfo.UTCInstallTime.ExToLongString());
-#endif			// #if AUTO_LOG_PARAMETER_ENABLE
+#endif			// #if AUTO_LOG_PARAM_ENABLE
 #endif			// #if MSG_PACK_ENABLE
 
 			string oLog = oDataList.ExToString(KCDefine.U_TOKEN_FIREBASE_ANALYTICS_LOG_DATA);
-			FirebaseAnalytics.LogEvent(a_oName, a_oParameter, oLog);
+			FirebaseAnalytics.LogEvent(a_oName, a_oParam, oLog);
 		}
 #endif			// #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 	}
