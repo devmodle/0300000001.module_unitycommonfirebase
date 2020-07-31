@@ -56,7 +56,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if AUTO_LOG_PARAM_ENABLE
 #endif			// #if MSG_PACK_ENABLE
 
-			string oLog = oDataList.ExToString(KCDefine.U_TOKEN_FIREBASE_ANALYTICS_LOG_DATA);
+			string oLog = oDataList.ExToString(KCDefine.B_TOKEN_CSV_STRING);
 			FirebaseAnalytics.LogEvent(a_oName, a_oParam, oLog);
 		}
 #endif			// #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
