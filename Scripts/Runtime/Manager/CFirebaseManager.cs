@@ -19,9 +19,9 @@ using Firebase.Analytics;
 using Firebase.RemoteConfig;
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
-#if FIREBASE_MSG_ENABLE
+#if FIREBASE_CLOUD_MSG_ENABLE
 using Firebase.Messaging;
-#endif			// #if FIREBASE_MSG_ENABLE
+#endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 
 //! 파이어 베이스 관리자
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -39,9 +39,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public string UserID => this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
 #endif			// #if FIREBASE_AUTH_ENABLE
 
-#if FIREBASE_MSG_ENABLE
+#if FIREBASE_CLOUD_MSG_ENABLE
 	public string MsgToken { get; private set; } = string.Empty;
-#endif			// #if FIREBASE_MSG_ENABLE
+#endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 	#endregion			// 프로퍼티
 
 	#region 함수
@@ -78,10 +78,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 					this.LoadConfigData(null);
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
-#if FIREBASE_MSG_ENABLE
+#if FIREBASE_CLOUD_MSG_ENABLE
 					FirebaseMessaging.TokenReceived += this.OnReceiveToken;
 					FirebaseMessaging.MessageReceived += this.OnReceiveMsg;
-#endif			// #if FIREBASE_MSG_ENABLE
+#endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 				}
 
 				a_oCallback?.Invoke(this, this.IsInit);

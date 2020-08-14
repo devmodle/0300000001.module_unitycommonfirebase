@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if FIREBASE_ENABLE && FIREBASE_MSG_ENABLE
+#if FIREBASE_ENABLE && FIREBASE_CLOUD_MSG_ENABLE
 using Firebase.Messaging;
 
 //! 파이어 베이스 관리자 - 메세지
@@ -24,4 +24,4 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 	#endregion			// 함수
 }
-#endif			// #if FIREBASE_ENABLE && FIREBASE_MSG_ENABLE
+#endif			// #if FIREBASE_ENABLE && FIREBASE_CLOUD_MSG_ENABLE
