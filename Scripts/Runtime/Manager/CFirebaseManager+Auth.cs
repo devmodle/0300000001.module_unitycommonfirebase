@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-#if FIREBASE_ENABLE && FIREBASE_AUTH_ENABLE
+#if FIREBASE_MODULE_ENABLE && FIREBASE_AUTH_ENABLE
 using Firebase.Auth;
 
 //! 파이어 베이스 관리자 - 인증
@@ -59,7 +59,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#endregion			// 함수
 
 	#region 조건부 함수
-#if FACEBOOK_ENABLE
+#if FACEBOOK_MODULE_ENABLE
 	//! 페이스 북 로그인을 처리한다
 	public void LoginWithFacebook(string a_oAccessToken, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CAccess.Assert(a_oAccessToken.ExIsValid());
@@ -74,9 +74,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			this.LoginWithCredential(oCredential, a_oCallback);
 		}
 	}
-#endif			// #if FACEBOOK_ENABLE
+#endif			// #if FACEBOOK_MODULE_ENABLE
 
-#if GAME_CENTER_ENABLE
+#if GAME_CENTER_MODULE_ENABLE
 	//! 인증을 수신했을 경우
 	public void OnReceiveCredential(Task<Credential> a_oTask) {
 		if(a_oTask.ExIsComplete()) {
@@ -105,7 +105,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if UNITY_IOS
 		}
 	}
-#endif			// #if GAME_CENTER_ENABLE
+#endif			// #if GAME_CENTER_MODULE_ENABLE
 	#endregion			// 조건부 함수
 }
-#endif			// #if FIREBASE_ENABLE && FIREBASE_AUTH_ENABLE
+#endif			// #if FIREBASE_MODULE_ENABLE && FIREBASE_AUTH_ENABLE

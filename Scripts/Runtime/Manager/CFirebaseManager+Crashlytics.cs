@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if FIREBASE_ENABLE && FIREBASE_CRASHLYTICS_ENABLE
+#if FIREBASE_MODULE_ENABLE && FIREBASE_CRASHLYTICS_ENABLE
 using Firebase.Crashlytics;
 
 //! 파이어 베이스 관리자 - 크래시 리포트
@@ -47,4 +47,4 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 	#endregion			// 함수
 }
-#endif			// #if FIREBASE_ENABLE && FIREBASE_CRASHLYTICS_ENABLE
+#endif			// #if FIREBASE_MODULE_ENABLE && FIREBASE_CRASHLYTICS_ENABLE

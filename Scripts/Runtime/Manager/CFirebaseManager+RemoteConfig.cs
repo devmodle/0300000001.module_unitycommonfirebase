@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if FIREBASE_ENABLE && FIREBASE_REMOTE_CONFIG_ENABLE
+#if FIREBASE_MODULE_ENABLE && FIREBASE_REMOTE_CONFIG_ENABLE
 using Firebase.RemoteConfig;
 
 //! 파이어 베이스 관리자 - 원격 속성
@@ -36,4 +36,4 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 	#endregion			// 함수
 }
-#endif			// #if FIREBASE_ENABLE && FIREBASE_REMOTE_CONFIG_ENABLE
+#endif			// #if FIREBASE_MODULE_ENABLE && FIREBASE_REMOTE_CONFIG_ENABLE

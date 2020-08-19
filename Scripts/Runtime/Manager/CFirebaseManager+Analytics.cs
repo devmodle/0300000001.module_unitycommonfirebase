@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-#if FIREBASE_ENABLE && FIREBASE_ANALYTICS_ENABLE
+#if FIREBASE_MODULE_ENABLE && FIREBASE_ANALYTICS_ENABLE
 using Firebase.Analytics;
 
 //! 파이어 베이스 관리자 - 분석
@@ -63,4 +63,4 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 	#endregion			// 함수
 }
-#endif			// #if FIREBASE_ENABLE && FIREBASE_ANALYTICS_ENABLE
+#endif			// #if FIREBASE_MODULE_ENABLE && FIREBASE_ANALYTICS_ENABLE

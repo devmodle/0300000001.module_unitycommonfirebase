@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-#if FIREBASE_ENABLE
+#if FIREBASE_MODULE_ENABLE
 using Firebase;
 using Firebase.Unity.Editor;
 
@@ -26,9 +26,9 @@ using Firebase.Messaging;
 //! 파이어 베이스 관리자
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 변수
-#if FIREBASE_AUTH_ENABLE && GAME_CENTER_ENABLE
+#if FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE
 	private System.Action<CFirebaseManager, bool> m_oGameCenterLoginCallback = null;
-#endif			// #if FIREBASE_AUTH_ENABLE && GAME_CENTER_ENABLE
+#endif			// #if FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE
 	#endregion			// 변수
 
 	#region 프로퍼티
@@ -90,4 +90,4 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 	#endregion			// 함수
 }
-#endif			// #if FIREBASE_ENABLE
+#endif			// #if FIREBASE_MODULE_ENABLE
