@@ -13,6 +13,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oID.ExIsValid());
 		CFunc.ShowLog("CFirebaseManager.SetAnalyticsUserID: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oID);
 
+		// 초기화 되었을 경우
 		if(this.IsInit) {
 			FirebaseAnalytics.SetUserId(a_oID);
 		}
@@ -23,6 +24,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oDataList.ExIsValid());
 		CFunc.ShowLog("CFirebaseManager.SetAnalyticsDatas: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oDataList);
 
+		// 초기화 되었을 경우
 		if(this.IsInit) {
 			foreach(var stKeyValue in a_oDataList) {
 				FirebaseAnalytics.SetUserProperty(stKeyValue.Key, stKeyValue.Value);
@@ -41,6 +43,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.SendLog: {0}, {1}, {2}", KCDefine.B_LOG_COLOR_PLUGIN, a_oName, a_oParam, a_oDataList);
 
 #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
+		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oDataList = a_oDataList ?? new List<string>();
 

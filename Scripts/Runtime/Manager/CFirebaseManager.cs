@@ -49,6 +49,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public virtual void Init(Dictionary<string, object> a_oConfigDataList, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.Init: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oConfigDataList);
 
+		// 초기화가 필요 없을 경우
 		if(this.IsInit || !CAccess.IsMobilePlatform()) {
 			a_oCallback?.Invoke(this, this.IsInit);
 		} else {
@@ -56,6 +57,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 				this.IsInit = a_oTask.Result == DependencyStatus.Available;
 				CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, a_oTask.Exception?.Message);
 
+				// 초기화 되었을 경우
 				if(this.IsInit) {
 #if UNITY_EDITOR && FIREBASE_DATABASE_ENABLE
 					string oFirebaseURL = CPluginInfoTable.Instance.FirebasePluginInfo.m_oDatabaseURL;
@@ -71,6 +73,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_ANALYTICS_ENABLE
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
+					// 속성 데이터가 유효 할 경우
 					if(a_oConfigDataList != null) {
 						FirebaseRemoteConfig.SetDefaults(a_oConfigDataList);
 					}

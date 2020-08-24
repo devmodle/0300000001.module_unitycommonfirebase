@@ -20,12 +20,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void LoadConfigData(System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoadConfigData", KCDefine.B_LOG_COLOR_PLUGIN);
 
+		// 초기화가 필요 할 경우
 		if(!this.IsInit) {
 			a_oCallback?.Invoke(this, false);
 		} else {
 			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_DEF_TIMEOUT_FIREBASE_FETCH_CONFIG_DATA), (a_oTask) => {
 				CFunc.ShowLog("CFirebaseManager.OnLoadConfigData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oTask.Exception?.Message);
 
+				// 비동기 처리가 실패했을 경우
 				if(!a_oTask.ExIsComplete()) {
 					a_oCallback?.Invoke(this, false);
 				} else {

@@ -13,6 +13,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oJSONString.ExIsValid());
 		CFunc.ShowLog("CFirebaseManager.SaveDatabase: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, a_oNodeNameList, a_oJSONString);
 
+		// 초기화가 필요 할 경우
 		if(!this.IsInit) {
 			a_oCallback?.Invoke(this, false);
 		} else {
@@ -34,6 +35,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void LoadDatabase(List<string> a_oNodeNameList, System.Action<CFirebaseManager, string, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoadDatabase: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oNodeNameList);
 
+		// 초기화가 필요 할 경우
 		if(!this.IsInit) {
 			a_oCallback?.Invoke(this, string.Empty, false);
 		} else {
@@ -47,6 +49,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CTaskManager.Instance.WaitAsyncTask(oDatabaseRef.GetValueAsync(), (a_oTask) => {
 				CFunc.ShowLog("CFirebaseManager.OnLoadDatabase: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oTask.Exception?.Message);
 
+				// 비동기 처리가 실패했을 경우
 				if(!a_oTask.ExIsComplete()) {
 					a_oCallback?.Invoke(this, string.Empty, false);
 				} else {

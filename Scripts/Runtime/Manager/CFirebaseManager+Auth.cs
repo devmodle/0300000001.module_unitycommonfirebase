@@ -13,6 +13,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void Login(System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.Login", KCDefine.B_LOG_COLOR_PLUGIN);
 
+		// 로그인이 필요 없을 경우
 		if(!this.IsInit || this.IsLogin) {
 			a_oCallback?.Invoke(this, this.IsLogin);
 		} else {
@@ -31,6 +32,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void Logout(System.Action<CFirebaseManager> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.Logout", KCDefine.B_LOG_COLOR_PLUGIN);
 
+		// 초기화 되었을 경우
 		if(this.IsInit) {
 			FirebaseAuth.DefaultInstance.SignOut();
 		}
@@ -43,6 +45,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oCredential != null);
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
 
+		// 로그인이 필요 없을 경우
 		if(!this.IsInit || this.IsLogin) {
 			a_oCallback?.Invoke(this, this.IsLogin);
 		} else {
@@ -65,6 +68,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oAccessToken.ExIsValid());
 		CFunc.ShowLog("CFirebaseManager.LoginWithFacebook: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
 
+		// 로그인이 필요 없을 경우
 		if(!this.IsInit || !CAccess.IsMobilePlatform()) {
 			a_oCallback?.Invoke(this, false);
 		} else {
@@ -79,6 +83,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if GAME_CENTER_MODULE_ENABLE
 	//! 인증을 수신했을 경우
 	public void OnReceiveCredential(Task<Credential> a_oTask) {
+		// 비동기 처리가 완료 되었을 경우
 		if(a_oTask.ExIsComplete()) {
 			this.LoginWithCredential(a_oTask.Result, m_oGameCenterLoginCallback);
 		} else {
@@ -86,11 +91,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 	}
 
-	//! 게임 로그인을 처리한다
+	//! 게임 센터 로그인을 처리한다
 	public void LoginWithGameCenter(string a_oAuthCode, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CAccess.Assert(a_oAuthCode.ExIsValid());
 		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
 
+		// 로그인이 필요 없을 경우
 		if(!this.IsInit || !CAccess.IsMobilePlatform()) {
 			a_oCallback?.Invoke(this, false);
 		} else {
