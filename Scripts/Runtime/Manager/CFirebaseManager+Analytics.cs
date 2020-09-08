@@ -50,13 +50,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if MSG_PACK_ENABLE
 			oDataList.ExAddValue(CCommonAppInfoStorage.Instance.AppInfo.DeviceID);
 
-#if AUTO_LOG_PARAM_ENABLE
+#if AUTO_LOG_PARAMS_ENABLE
 			oDataList.ExAddValue(CCommonAppInfoStorage.Instance.PlatformName);
 			oDataList.ExAddValue(CCommonUserInfoStorage.Instance.UserInfo.UserType.ToString());
 
 			oDataList.ExAddValue(System.DateTime.UtcNow.ExToLongString());
 			oDataList.ExAddValue(CCommonAppInfoStorage.Instance.AppInfo.UTCInstallTime.ExToLongString());
-#endif			// #if AUTO_LOG_PARAM_ENABLE
+#endif			// #if AUTO_LOG_PARAMS_ENABLE
 #endif			// #if MSG_PACK_ENABLE
 
 			string oLog = oDataList.ExToString(KCDefine.B_TOKEN_CSV_STRING);

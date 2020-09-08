@@ -18,10 +18,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			a_oCallback?.Invoke(this, this.IsLogin);
 		} else {
 			CTaskManager.Instance.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync(), (a_oTask) => {
-				bool bIsComplete = a_oTask.ExIsComplete();
+				var oTask = a_oTask as Task<FirebaseUser>;
+				bool bIsComplete = oTask.ExIsComplete();
 
 				CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
-					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, bIsComplete ? a_oTask.Result.UserId : string.Empty, a_oTask.Exception?.Message);
+					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, bIsComplete ? oTask.Result.UserId : string.Empty, oTask.Exception?.Message);
 
 				a_oCallback?.Invoke(this, this.IsLogin);
 			});
@@ -50,10 +51,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			a_oCallback?.Invoke(this, this.IsLogin);
 		} else {
 			CTaskManager.Instance.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), (a_oTask) => {
-				bool bIsComplete = a_oTask.ExIsComplete();
+				var oTask = a_oTask as Task<FirebaseUser>;
+				bool bIsComplete = oTask.ExIsComplete();
 
 				CFunc.ShowLog("CFirebaseManager.OnLoginWithCredential: {0}, {1}. {2}", 
-					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, bIsComplete ? a_oTask.Result.UserId : string.Empty, a_oTask.Exception?.Message);
+					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, bIsComplete ? oTask.Result.UserId : string.Empty, oTask.Exception?.Message);
 
 				a_oCallback?.Invoke(this, this.IsLogin);
 			});
@@ -104,7 +106,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if UNITY_IOS
 			m_oGameCenterLoginCallback = a_oCallback;
-			CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), this.OnReceiveCredential);
+
+			CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), (a_oTask) => {
+				var oTask = a_oTask as Task<Credential>;
+				this.OnReceiveCredential(oTask);
+			});
 #else
 			var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
 			this.LoginWithCredential(oCredential, a_oCallback);
