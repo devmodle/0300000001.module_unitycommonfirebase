@@ -10,9 +10,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	//! 속성 데이터를 반환한다
 	public string GetConfigData(string a_oKey) {
-		CAccess.Assert(a_oKey.ExIsValid());
 		CFunc.ShowLog("CFirebaseManager.GetConfigData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
-
 		return this.IsInit ? FirebaseRemoteConfig.GetValue(a_oKey).StringValue : string.Empty;
 	}
 
@@ -25,7 +23,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			a_oCallback?.Invoke(this, false);
 		} else {
 			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_DEF_TIMEOUT_FIREBASE_FETCH_CONFIG_DATA), (a_oTask) => {
-				CFunc.ShowLog("CFirebaseManager.OnLoadConfigData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oTask.Exception?.Message);
+				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+				CFunc.ShowLog("CFirebaseManager.OnLoadConfigData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
 				// 비동기 처리가 실패했을 경우
 				if(!a_oTask.ExIsComplete()) {

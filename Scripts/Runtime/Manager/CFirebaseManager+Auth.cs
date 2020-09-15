@@ -21,8 +21,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 				var oTask = a_oTask as Task<FirebaseUser>;
 				bool bIsComplete = oTask.ExIsComplete();
 
+				string oUserID = bIsComplete ? oTask.Result.UserId : string.Empty;
+				string oErrorMsg = (oTask.Exception != null) ? oTask.Exception.Message : string.Empty;
+
 				CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
-					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, bIsComplete ? oTask.Result.UserId : string.Empty, oTask.Exception?.Message);
+					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
 
 				a_oCallback?.Invoke(this, this.IsLogin);
 			});
@@ -43,7 +46,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	//! 인증 로그인을 처리한다
 	private void LoginWithCredential(Credential a_oCredential, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oCredential != null);
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		// 로그인이 필요 없을 경우
@@ -54,8 +56,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 				var oTask = a_oTask as Task<FirebaseUser>;
 				bool bIsComplete = oTask.ExIsComplete();
 
+				string oUserID = bIsComplete ? oTask.Result.UserId : string.Empty;
+				string oErrorMsg = (oTask.Exception != null) ? oTask.Exception.Message : string.Empty;
+
 				CFunc.ShowLog("CFirebaseManager.OnLoginWithCredential: {0}, {1}. {2}", 
-					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, bIsComplete ? oTask.Result.UserId : string.Empty, oTask.Exception?.Message);
+					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
 
 				a_oCallback?.Invoke(this, this.IsLogin);
 			});
@@ -67,7 +72,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FACEBOOK_MODULE_ENABLE
 	//! 페이스 북 로그인을 처리한다
 	public void LoginWithFacebook(string a_oAccessToken, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oAccessToken.ExIsValid());
 		CFunc.ShowLog("CFirebaseManager.LoginWithFacebook: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
 
 		// 로그인이 필요 없을 경우
@@ -95,7 +99,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	//! 게임 센터 로그인을 처리한다
 	public void LoginWithGameCenter(string a_oAuthCode, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oAuthCode.ExIsValid());
 		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
 
 		// 로그인이 필요 없을 경우

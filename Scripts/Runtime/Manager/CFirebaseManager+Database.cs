@@ -10,8 +10,10 @@ using Firebase.Database;
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	//! 데이터를 저장한다
-	public void SaveData(List<string> a_oNodeNameList, string a_oJSONString, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oJSONString.ExIsValid());
+	public void SaveData(List<string> a_oNodeNameList, 
+		string a_oJSONString, System.Action<CFirebaseManager, bool> a_oCallback) 
+	{
+		CAccess.Assert(a_oJSONString.ExIsValid() && a_oNodeNameList != null);
 		CFunc.ShowLog("CFirebaseManager.SaveData: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, a_oNodeNameList, a_oJSONString);
 
 		// 초기화가 필요 할 경우
@@ -21,12 +23,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			var oRootRef = FirebaseDatabase.DefaultInstance.RootReference;
 			var oDatabaseRef = oRootRef;
 
-			for(int i = 0; i < a_oNodeNameList?.Count; ++i) {
+			for(int i = 0; i < a_oNodeNameList.Count; ++i) {
 				oDatabaseRef = oDatabaseRef.Child(a_oNodeNameList[i]);
 			}
 
 			CTaskManager.Instance.WaitAsyncTask(oDatabaseRef.SetRawJsonValueAsync(a_oJSONString), (a_oTask) => {
-				CFunc.ShowLog("CFirebaseManager.OnSaveData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oTask.Exception?.Message);
+				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+				CFunc.ShowLog("CFirebaseManager.OnSaveData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+
 				a_oCallback?.Invoke(this, a_oTask.ExIsComplete());
 			});
 		}
@@ -34,6 +38,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	//! 데이터를 로드한다
 	public void LoadData(List<string> a_oNodeNameList, System.Action<CFirebaseManager, string, bool> a_oCallback) {
+		CAccess.Assert(a_oNodeNameList != null);
 		CFunc.ShowLog("CFirebaseManager.LoadData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oNodeNameList);
 
 		// 초기화가 필요 할 경우
@@ -43,13 +48,15 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			var oRootRef = FirebaseDatabase.DefaultInstance.RootReference;
 			var oDatabaseRef = oRootRef;
 
-			for(int i = 0; i < a_oNodeNameList?.Count; ++i) {
+			for(int i = 0; i < a_oNodeNameList.Count; ++i) {
 				oDatabaseRef = oDatabaseRef.Child(a_oNodeNameList[i]);
 			}
 
 			CTaskManager.Instance.WaitAsyncTask(oDatabaseRef.GetValueAsync(), (a_oTask) => {
 				var oTask = a_oTask as Task<DataSnapshot>;
-				CFunc.ShowLog("CFirebaseManager.OnLoadData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oTask.Exception?.Message);
+				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+
+				CFunc.ShowLog("CFirebaseManager.OnLoadData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
 				// 비동기 처리가 실패했을 경우
 				if(!a_oTask.ExIsComplete()) {

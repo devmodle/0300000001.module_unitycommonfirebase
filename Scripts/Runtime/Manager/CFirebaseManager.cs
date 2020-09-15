@@ -55,9 +55,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		} else {
 			CTaskManager.Instance.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), (a_oTask) => {
 				var oTask = a_oTask as Task<DependencyStatus>;
+				string oErrorMsg = (oTask.Exception != null) ? oTask.Exception.Message : string.Empty;
+
 				this.IsInit = oTask.Result == DependencyStatus.Available;
 				
-				CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, oTask.Exception?.Message);
+				CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", 
+					KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, oErrorMsg);
 
 				// 초기화 되었을 경우
 				if(this.IsInit) {
