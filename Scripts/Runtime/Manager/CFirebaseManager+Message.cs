@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 #if FIREBASE_MODULE_ENABLE && FIREBASE_CLOUD_MSG_ENABLE
+#if UNITY_IOS || UNITY_ANDROID
 using Firebase.Messaging;
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 
 //! 파이어 베이스 관리자 - 메세지
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
-	#region 함수
+	#region 조건부 함수
+#if UNITY_IOS || UNITY_ANDROID
 	//! 토큰을 수신했을 경우
 	public void OnReceiveToken(object a_oSender, TokenReceivedEventArgs a_oArgs) {
 		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_TOKEN_CALLBACK, () => {
@@ -22,6 +25,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CFunc.ShowLog("CFirebaseManager.OnReceiveMsg: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oArgs);
 		});
 	}
-	#endregion			// 함수
+#endif			// #if UNITY_IOS || UNITY_ANDROID
+	#endregion			// 조건부 함수
 }
 #endif			// #if FIREBASE_MODULE_ENABLE && FIREBASE_CLOUD_MSG_ENABLE

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 #if FIREBASE_MODULE_ENABLE
+#if UNITY_IOS || UNITY_ANDROID
 using Firebase;
 using Firebase.Unity.Editor;
 
@@ -22,6 +23,7 @@ using Firebase.RemoteConfig;
 #if FIREBASE_CLOUD_MSG_ENABLE
 using Firebase.Messaging;
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 
 //! 파이어 베이스 관리자
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -35,8 +37,25 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public bool IsInit { get; private set; } = false;
 
 #if FIREBASE_AUTH_ENABLE
-	public bool IsLogin => this.IsInit && FirebaseAuth.DefaultInstance.CurrentUser != null;
-	public string UserID => this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
+	public bool IsLogin {
+		get {
+#if UNITY_IOS || UNITY_ANDROID
+			return this.IsInit && FirebaseAuth.DefaultInstance.CurrentUser != null;
+#else
+			return false;
+#endif			// #if UNITY_IOS || UNITY_ANDROID
+		}
+	}
+
+	public string UserID {
+		get {
+#if UNITY_IOS || UNITY_ANDROID
+			return this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
+#else
+			return string.Empty;
+#endif			// #if UNITY_IOS || UNITY_ANDROID
+		}
+	}
 #endif			// #if FIREBASE_AUTH_ENABLE
 
 #if FIREBASE_CLOUD_MSG_ENABLE
@@ -53,6 +72,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit || !CAccess.IsMobilePlatform()) {
 			a_oCallback?.Invoke(this, this.IsInit);
 		} else {
+#if UNITY_IOS || UNITY_ANDROID
 			CTaskManager.Instance.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), (a_oTask) => {
 				var oTask = a_oTask as Task<DependencyStatus>;
 				string oErrorMsg = (oTask.Exception != null) ? oTask.Exception.Message : string.Empty;
@@ -94,6 +114,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 				a_oCallback?.Invoke(this, this.IsInit);
 			});
+#else
+			a_oCallback?.Invoke(this, this.IsInit);
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 		}
 	}
 	#endregion			// 함수

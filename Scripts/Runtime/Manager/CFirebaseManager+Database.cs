@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 #if FIREBASE_MODULE_ENABLE && FIREBASE_DATABASE_ENABLE
+#if UNITY_IOS || UNITY_ANDROID
 using Firebase.Database;
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 
 //! 파이어 베이스 관리자 - 데이터 베이스
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -20,6 +22,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(!this.IsInit) {
 			a_oCallback?.Invoke(this, false);
 		} else {
+#if UNITY_IOS || UNITY_ANDROID
 			var oRootRef = FirebaseDatabase.DefaultInstance.RootReference;
 			var oDatabaseRef = oRootRef;
 
@@ -33,6 +36,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 				a_oCallback?.Invoke(this, a_oTask.ExIsComplete());
 			});
+#else
+			a_oCallback?.Invoke(this, false);
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 		}
 	}
 
@@ -45,6 +51,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(!this.IsInit) {
 			a_oCallback?.Invoke(this, string.Empty, false);
 		} else {
+#if UNITY_IOS || UNITY_ANDROID
 			var oRootRef = FirebaseDatabase.DefaultInstance.RootReference;
 			var oDatabaseRef = oRootRef;
 
@@ -65,6 +72,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 					a_oCallback?.Invoke(this, oTask.Result.GetRawJsonValue(), true);
 				}
 			});
+#else
+			a_oCallback?.Invoke(this, string.Empty, false);
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 		}
 	}
 	#endregion			// 함수
