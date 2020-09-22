@@ -10,9 +10,9 @@ using Firebase.RemoteConfig;
 //! 파이어 베이스 관리자 - 원격 속성
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
-	//! 속성 데이터를 반환한다
-	public string GetConfigData(string a_oKey) {
-		CFunc.ShowLog("CFirebaseManager.GetConfigData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
+	//! 속성을 반환한다
+	public string GetConfig(string a_oKey) {
+		CFunc.ShowLog("CFirebaseManager.GetConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
 
 #if UNITY_IOS || UNITY_ANDROID
 		return this.IsInit ? FirebaseRemoteConfig.GetValue(a_oKey).StringValue : string.Empty;
@@ -21,18 +21,18 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
-	//! 설정 데이터를 로드한다
-	public void LoadConfigData(System.Action<CFirebaseManager, bool> a_oCallback) {
-		CFunc.ShowLog("CFirebaseManager.LoadConfigData", KCDefine.B_LOG_COLOR_PLUGIN);
+	//! 속성을 로드한다
+	public void LoadConfig(System.Action<CFirebaseManager, bool> a_oCallback) {
+		CFunc.ShowLog("CFirebaseManager.LoadConfig", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		// 초기화가 필요 할 경우
 		if(!this.IsInit) {
 			a_oCallback?.Invoke(this, false);
 		} else {
 #if UNITY_IOS || UNITY_ANDROID
-			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_DEF_TIMEOUT_FIREBASE_FETCH_CONFIG_DATA), (a_oTask) => {
+			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_TIMEOUT_FIREBASE_FETCH_CONFIG_DATA), (a_oTask) => {
 				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-				CFunc.ShowLog("CFirebaseManager.OnLoadConfigData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+				CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
 				// 비동기 처리가 실패했을 경우
 				if(!a_oTask.ExIsComplete()) {

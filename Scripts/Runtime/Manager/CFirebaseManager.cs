@@ -65,8 +65,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 함수
 	//! 초기화
-	public virtual void Init(Dictionary<string, object> a_oConfigDataList, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CFunc.ShowLog("CFirebaseManager.Init: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oConfigDataList);
+	public virtual void Init(Dictionary<string, object> a_oConfigList, 
+		System.Action<CFirebaseManager, bool> a_oCallback) 
+	{
+		CAccess.Assert(a_oConfigList != null);
+		CFunc.ShowLog("CFirebaseManager.Init: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oConfigList);
 
 		// 초기화가 필요 없을 경우
 		if(this.IsInit || !CAccess.IsMobilePlatform()) {
@@ -98,12 +101,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_ANALYTICS_ENABLE
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
-					// 속성 데이터가 유효 할 경우
-					if(a_oConfigDataList != null) {
-						FirebaseRemoteConfig.SetDefaults(a_oConfigDataList);
+					// 속성이 유효 할 경우
+					if(a_oConfigList != null) {
+						FirebaseRemoteConfig.SetDefaults(a_oConfigList);
 					}
 
-					this.LoadConfigData(null);
+					this.LoadConfig(null);
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
 #if FIREBASE_CLOUD_MSG_ENABLE
