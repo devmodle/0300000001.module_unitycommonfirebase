@@ -83,14 +83,15 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 결제 로그를 전송한다
 	public void SendPurchaseLog(Product a_oProduct) {
 		CAccess.Assert(a_oProduct != null);
-		CFunc.ShowLog("CFirebaseManager.SendPurchaseLog: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oProduct);
+		
+		CFunc.ShowLog("CFirebaseManager.SendPurchaseLog: {0}", 
+			KCDefine.B_LOG_COLOR_PLUGIN, a_oProduct);
 		
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			// FB.LogPurchase(a_oProduct.metadata.localizedPrice, 
-			// 	a_oProduct.metadata.isoCurrencyCode, a_oDataList);
+
 		}
 #endif			// #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 #endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)

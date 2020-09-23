@@ -30,7 +30,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			a_oCallback?.Invoke(this, false);
 		} else {
 #if UNITY_IOS || UNITY_ANDROID
-			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_TIMEOUT_FIREBASE_FETCH_CONFIG_DATA), (a_oTask) => {
+			var oTask = FirebaseRemoteConfig.FetchAsync(KCDefine.U_TIMEOUT_FIREBASE_FETCH_CONFIG);
+
+			CTaskManager.Instance.WaitAsyncTask(oTask, (a_oTask) => {
 				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 				CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
