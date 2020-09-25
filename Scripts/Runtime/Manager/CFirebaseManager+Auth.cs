@@ -84,7 +84,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.LoginWithFacebook: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
 
 		// 로그인이 필요 없을 경우
-		if(!this.IsInit || !CAccess.IsMobilePlatform()) {
+		if(!this.IsInit || !CAccess.IsMobile()) {
 			a_oCallback?.Invoke(this, false);
 		} else {
 			var oAuth = FirebaseAuth.DefaultInstance;
@@ -111,7 +111,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
 
 		// 로그인이 필요 없을 경우
-		if(!this.IsInit || !CAccess.IsMobilePlatform()) {
+		if(!this.IsInit || !CAccess.IsMobile()) {
 			a_oCallback?.Invoke(this, false);
 		} else {
 			var oAuth = FirebaseAuth.DefaultInstance;
