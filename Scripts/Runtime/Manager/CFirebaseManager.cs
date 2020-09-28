@@ -105,8 +105,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 					if(a_oConfigList != null) {
 						FirebaseRemoteConfig.SetDefaults(a_oConfigList);
 					}
-
-					this.LoadConfig(null);
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
 #if FIREBASE_CLOUD_MSG_ENABLE
