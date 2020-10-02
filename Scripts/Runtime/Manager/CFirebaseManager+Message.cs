@@ -12,7 +12,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 조건부 함수
 #if UNITY_IOS || UNITY_ANDROID
 	//! 토큰을 수신했을 경우
-	public void OnReceiveToken(object a_oSender, TokenReceivedEventArgs a_oArgs) {
+	private void OnReceiveToken(object a_oSender, TokenReceivedEventArgs a_oArgs) {
 		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_TOKEN_CALLBACK, () => {
 			CFunc.ShowLog("CFirebaseManager.OnReceiveToken: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oArgs);
 			this.MsgToken = a_oArgs.Token;
@@ -20,10 +20,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 	//! 메세지를 수신했을 경우
-	public void OnReceiveMsg(object a_oSender, MessageReceivedEventArgs a_oArgs) {
-		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_MSG_CALLBACK, () => {
-			CFunc.ShowLog("CFirebaseManager.OnReceiveMsg: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oArgs);
-		});
+	private void OnReceiveMsg(object a_oSender, MessageReceivedEventArgs a_oArgs) {
+		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_MSG_CALLBACK, () => 
+			CFunc.ShowLog("CFirebaseManager.OnReceiveMsg: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oArgs));
 	}
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	#endregion			// 조건부 함수

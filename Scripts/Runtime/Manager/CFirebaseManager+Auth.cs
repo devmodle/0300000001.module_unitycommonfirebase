@@ -21,11 +21,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		} else {
 #if UNITY_IOS || UNITY_ANDROID
 			CTaskManager.Instance.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync(), (a_oTask) => {
-				var oTask = a_oTask as Task<FirebaseUser>;
-				bool bIsComplete = oTask.ExIsComplete();
+				bool bIsComplete = a_oTask.ExIsComplete();
 
-				string oUserID = bIsComplete ? oTask.Result.UserId : string.Empty;
-				string oErrorMsg = (oTask.Exception != null) ? oTask.Exception.Message : string.Empty;
+				string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
+				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 
 				CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
 					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
@@ -64,11 +63,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			a_oCallback?.Invoke(this, this.IsLogin);
 		} else {
 			CTaskManager.Instance.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), (a_oTask) => {
-				var oTask = a_oTask as Task<FirebaseUser>;
-				bool bIsComplete = oTask.ExIsComplete();
+				bool bIsComplete = a_oTask.ExIsComplete();
 
-				string oUserID = bIsComplete ? oTask.Result.UserId : string.Empty;
-				string oErrorMsg = (oTask.Exception != null) ? oTask.Exception.Message : string.Empty;
+				string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
+				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 
 				CFunc.ShowLog("CFirebaseManager.OnLoginWithCredential: {0}, {1}. {2}", 
 					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
@@ -96,16 +94,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FACEBOOK_MODULE_ENABLE
 
 #if GAME_CENTER_MODULE_ENABLE
-	//! 인증을 수신했을 경우
-	public void OnReceiveCredential(Task<Credential> a_oTask) {
-		// 비동기 처리가 완료 되었을 경우
-		if(a_oTask.ExIsComplete()) {
-			this.LoginWithCredential(a_oTask.Result, m_oGameCenterLoginCallback);
-		} else {
-			m_oGameCenterLoginCallback?.Invoke(this, false);
-		}
-	}
-
 	//! 게임 센터 로그인을 처리한다
 	public void LoginWithGameCenter(string a_oAuthCode, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
@@ -119,14 +107,22 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS
 			m_oGameCenterLoginCallback = a_oCallback;
 
-			CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), (a_oTask) => {
-				var oTask = a_oTask as Task<Credential>;
-				this.OnReceiveCredential(oTask);
-			});
+			CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), (a_oTask) => 
+				this.OnReceiveGameCenterCredential(a_oTask));
 #else
 			var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
 			this.LoginWithCredential(oCredential, a_oCallback);
 #endif			// #if UNITY_IOS
+		}
+	}
+
+	//! 게임 센터 인증을 수신했을 경우
+	private void OnReceiveGameCenterCredential(Task<Credential> a_oTask) {
+		// 비동기 처리가 완료 되었을 경우
+		if(a_oTask.ExIsComplete()) {
+			this.LoginWithCredential(a_oTask.Result, m_oGameCenterLoginCallback);
+		} else {
+			m_oGameCenterLoginCallback?.Invoke(this, false);
 		}
 	}
 #endif			// #if GAME_CENTER_MODULE_ENABLE

@@ -60,16 +60,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			}
 
 			CTaskManager.Instance.WaitAsyncTask(oDatabaseRef.GetValueAsync(), (a_oTask) => {
-				var oTask = a_oTask as Task<DataSnapshot>;
 				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-
 				CFunc.ShowLog("CFirebaseManager.OnLoadData: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
 				// 비동기 처리가 실패했을 경우
 				if(!a_oTask.ExIsComplete()) {
 					a_oCallback?.Invoke(this, string.Empty, false);
 				} else {
-					a_oCallback?.Invoke(this, oTask.Result.GetRawJsonValue(), true);
+					a_oCallback?.Invoke(this, a_oTask.Result.GetRawJsonValue(), true);
 				}
 			});
 #else

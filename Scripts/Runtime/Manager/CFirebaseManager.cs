@@ -77,10 +77,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		} else {
 #if UNITY_IOS || UNITY_ANDROID
 			CTaskManager.Instance.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), (a_oTask) => {
-				var oTask = a_oTask as Task<DependencyStatus>;
-				string oErrorMsg = (oTask.Exception != null) ? oTask.Exception.Message : string.Empty;
-
-				this.IsInit = oTask.Result == DependencyStatus.Available;
+				this.IsInit = a_oTask.Result == DependencyStatus.Available;
+				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 				
 				CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", 
 					KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, oErrorMsg);
