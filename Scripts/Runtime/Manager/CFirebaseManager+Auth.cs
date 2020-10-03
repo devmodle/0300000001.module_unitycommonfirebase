@@ -81,15 +81,19 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void LoginWithFacebook(string a_oAccessToken, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoginWithFacebook: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
 
-		// 로그인이 필요 없을 경우
-		if(!this.IsInit || !CAccess.IsMobile()) {
-			a_oCallback?.Invoke(this, false);
-		} else {
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+		// 초기화 되었을 경우
+		if(this.IsInit) {
 			var oAuth = FirebaseAuth.DefaultInstance;
 			var oCredential = FacebookAuthProvider.GetCredential(a_oAccessToken);
 
 			this.LoginWithCredential(oCredential, a_oCallback);
+		} else {
+			a_oCallback?.Invoke(this, false);
 		}
+#else
+		a_oCallback?.Invoke(this, false);
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 #endif			// #if FACEBOOK_MODULE_ENABLE
 
@@ -98,10 +102,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void LoginWithGameCenter(string a_oAuthCode, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
 
-		// 로그인이 필요 없을 경우
-		if(!this.IsInit || !CAccess.IsMobile()) {
-			a_oCallback?.Invoke(this, false);
-		} else {
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+		// 초기화 되었을 경우
+		if(this.IsInit) {
 			var oAuth = FirebaseAuth.DefaultInstance;
 
 #if UNITY_IOS
@@ -113,7 +116,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
 			this.LoginWithCredential(oCredential, a_oCallback);
 #endif			// #if UNITY_IOS
+		} else {
+			a_oCallback?.Invoke(this, false);
 		}
+#else
+		a_oCallback?.Invoke(this, false);
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	//! 게임 센터 인증을 수신했을 경우

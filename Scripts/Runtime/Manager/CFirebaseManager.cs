@@ -71,11 +71,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oConfigList != null);
 		CFunc.ShowLog("CFirebaseManager.Init: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oConfigList);
 
-		// 초기화가 필요 없을 경우
-		if(this.IsInit || !CAccess.IsMobile()) {
-			a_oCallback?.Invoke(this, this.IsInit);
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
+		// 초기화 되었을 경우
+		if(this.IsInit) {
+			a_oCallback?.Invoke(this, true);
 		} else {
-#if UNITY_IOS || UNITY_ANDROID
 			CTaskManager.Instance.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), (a_oTask) => {
 				this.IsInit = a_oTask.Result == DependencyStatus.Available;
 				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -113,10 +113,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 				a_oCallback?.Invoke(this, this.IsInit);
 			});
-#else
-			a_oCallback?.Invoke(this, this.IsInit);
-#endif			// #if UNITY_IOS || UNITY_ANDROID
 		}
+#else
+		a_oCallback?.Invoke(this, false);
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 	#endregion			// 함수
 }
