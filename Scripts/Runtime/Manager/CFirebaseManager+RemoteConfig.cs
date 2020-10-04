@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 #if FIREBASE_MODULE_ENABLE && FIREBASE_REMOTE_CONFIG_ENABLE
-#if UNITY_IOS || UNITY_ANDROID
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 using Firebase.RemoteConfig;
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 
 //! 파이어 베이스 관리자 - 원격 속성
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -14,11 +14,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public string GetConfig(string a_oKey) {
 		CFunc.ShowLog("CFirebaseManager.GetConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
 
-#if UNITY_IOS || UNITY_ANDROID
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		return this.IsInit ? FirebaseRemoteConfig.GetValue(a_oKey).StringValue : string.Empty;
 #else
 		return string.Empty;
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	//! 속성을 로드한다
@@ -30,9 +30,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			a_oCallback?.Invoke(this, false);
 		} else {
 #if UNITY_IOS || UNITY_ANDROID
-			var oTask = FirebaseRemoteConfig.FetchAsync(KCDefine.U_TIMEOUT_FIREBASE_FETCH_CONFIG);
-
-			CTaskManager.Instance.WaitAsyncTask(oTask, (a_oTask) => {
+			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_TIMEOUT_FIREBASE_FETCH_CONFIG), (a_oTask) => {
 				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 				CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 

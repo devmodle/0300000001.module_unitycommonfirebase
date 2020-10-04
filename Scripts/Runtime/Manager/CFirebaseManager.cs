@@ -39,11 +39,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_AUTH_ENABLE
 	public bool IsLogin {
 		get {
-#if UNITY_IOS || UNITY_ANDROID
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 			return this.IsInit && FirebaseAuth.DefaultInstance.CurrentUser != null;
 #else
 			return false;
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		}
 	}
 

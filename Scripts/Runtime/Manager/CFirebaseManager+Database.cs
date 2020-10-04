@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 #if FIREBASE_MODULE_ENABLE && FIREBASE_DATABASE_ENABLE
-#if UNITY_IOS || UNITY_ANDROID
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 using Firebase.Database;
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 
 //! 파이어 베이스 관리자 - 데이터 베이스
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {

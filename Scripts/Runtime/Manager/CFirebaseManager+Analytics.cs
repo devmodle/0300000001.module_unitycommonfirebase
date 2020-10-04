@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 #if FIREBASE_MODULE_ENABLE && FIREBASE_ANALYTICS_ENABLE
-#if UNITY_IOS || UNITY_ANDROID
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 using Firebase.Analytics;
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 
 #if PURCHASE_MODULE_ENABLE
 using UnityEngine.Purchasing;
@@ -16,30 +16,28 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	//! 분석 유저 식별자를 변경한다
 	public void SetAnalyticsUserID(string a_oID) {
-		CFunc.ShowLog("CFirebaseManager.SetAnalyticsUserID: {0}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oID);
+		CFunc.ShowLog("CFirebaseManager.SetAnalyticsUserID: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oID);
 
-#if UNITY_IOS || UNITY_ANDROID
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			FirebaseAnalytics.SetUserId(a_oID);
 		}
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	//! 분석 데이터를 변경한다
 	public void SetAnalyticsDatas(Dictionary<string, string> a_oDataList) {
-		CFunc.ShowLog("CFirebaseManager.SetAnalyticsDatas: {0}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oDataList);
+		CFunc.ShowLog("CFirebaseManager.SetAnalyticsDatas: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oDataList);
 
-#if UNITY_IOS || UNITY_ANDROID
+#if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			foreach(var stKeyValue in a_oDataList) {
 				FirebaseAnalytics.SetUserProperty(stKeyValue.Key, stKeyValue.Value);
 			}
 		}
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	//! 로그를 전송한다
@@ -83,9 +81,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 결제 로그를 전송한다
 	public void SendPurchaseLog(Product a_oProduct) {
 		CAccess.Assert(a_oProduct != null);
-		
-		CFunc.ShowLog("CFirebaseManager.SendPurchaseLog: {0}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oProduct);
+		CFunc.ShowLog("CFirebaseManager.SendPurchaseLog: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oProduct);
 		
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
