@@ -54,18 +54,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		a_oCallback?.Invoke(this, string.Empty, false);
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
-
-	//! 데이터 베이스를 반환한다
-	private DatabaseReference GetDatabase(List<string> a_oNodeList) {
-		var oRoot = FirebaseDatabase.DefaultInstance.RootReference;
-		var oDatabase = oRoot;
-
-		for(int i = 0; i < a_oNodeList.Count; ++i) {
-			oDatabase = oDatabase.Child(a_oNodeList[i]);
-		}
-
-		return oDatabase;
-	}
 	#endregion			// 함수
 
 	#region 조건부 함수
@@ -89,6 +77,18 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		} else {
 			m_oLoadDatabaseCallback?.Invoke(this, a_oTask.Result.GetRawJsonValue(), true);
 		}
+	}
+
+	//! 데이터 베이스를 반환한다
+	private DatabaseReference GetDatabase(List<string> a_oNodeList) {
+		var oRoot = FirebaseDatabase.DefaultInstance.RootReference;
+		var oDatabase = oRoot;
+
+		for(int i = 0; i < a_oNodeList.Count; ++i) {
+			oDatabase = oDatabase.Child(a_oNodeList[i]);
+		}
+
+		return oDatabase;
 	}
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	#endregion			// 조건부 함수

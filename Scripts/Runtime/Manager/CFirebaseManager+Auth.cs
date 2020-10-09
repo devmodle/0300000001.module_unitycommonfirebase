@@ -36,11 +36,15 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	{
 		CFunc.ShowLog("CFirebaseManager.LoginWithFacebook: {0}", 
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
-
+			
+#if UNITY_IOS || UNITY_ANDROID
 		var oAuth = FirebaseAuth.DefaultInstance;
 		var oCredential = FacebookAuthProvider.GetCredential(a_oAccessToken);
 
 		this.LoginWithCredential(oCredential, a_oCallback);
+#else
+		a_oCallback?.Invoke(this, false);
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
 	//! 게임 센터 로그인을 처리한다
@@ -50,6 +54,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", 
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
 
+#if UNITY_IOS || UNITY_ANDROID
 		m_oLoginCallback = a_oCallback;
 		var oAuth = FirebaseAuth.DefaultInstance;
 
@@ -60,6 +65,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
 		this.LoginWithCredential(oCredential, a_oCallback);
 #endif			// #if UNITY_IOS
+#else
+		a_oCallback?.Invoke(this, false);
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
 	//! 로그아웃을 처리한다

@@ -64,7 +64,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit) {
 			var oDataList = a_oDataList ?? new Dictionary<string, string>();
 
-#if MSG_PACK_ENABLE
 			oDataList.ExAddValue(KCDefine.U_LOG_KEY_DEVICE_ID, 
 				CCommonAppInfoStorage.Instance.AppInfo.DeviceID);
 
@@ -81,7 +80,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			oDataList.ExAddValue(KCDefine.U_LOG_KEY_INSTALL_TIME, 
 				CCommonAppInfoStorage.Instance.AppInfo.UTCInstallTime.ExToLongString());
 #endif			// #if AUTO_LOG_PARAMS_ENABLE
-#endif			// #if MSG_PACK_ENABLE
 
 			var oParams = this.MakeParams(oDataList);
 			FirebaseAnalytics.LogEvent(a_oName, oParams);
@@ -89,7 +87,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
+	#endregion			// 함수
 
+	#region 조건부 함수
+#if UNITY_IOS || UNITY_ANDROID
 	//! 매개 변수를 생성한다
 	private Parameter[] MakeParams(Dictionary<string, string> a_oDataList) {
 		var oParamList = new List<Parameter>();
@@ -101,9 +102,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		return oParamList.ToArray();
 	}
-	#endregion			// 함수
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 
-	#region 조건부 함수
 #if PURCHASE_MODULE_ENABLE
 	//! 결제 로그를 전송한다
 	public void SendPurchaseLog(Product a_oProduct) {

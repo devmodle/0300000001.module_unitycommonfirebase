@@ -56,22 +56,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		a_oCallback?.Invoke(this, string.Empty, false);
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
-
-	//! 문서를 반환한다
-	private DocumentReference GetDoc(List<string> a_oCollectionList, List<string> a_oDocList) {
-		CAccess.Assert(a_oCollectionList.ExIsValid() && 
-			a_oDocList.ExIsValid() && a_oCollectionList.Count == a_oDocList.Count);
-
-		var oCollection = FirebaseFirestore.DefaultInstance.Collection(a_oCollectionList[KCDefine.B_INDEX_START]);
-		var oDoc = oCollection.Document(a_oDocList[KCDefine.B_INDEX_START]);
-
-		for(int i = KCDefine.B_INDEX_START + 1; i < a_oDocList.Count; ++i) {
-			oCollection = oDoc.Collection(a_oCollectionList[i]);
-			oDoc = oCollection.Document(a_oDocList[i]);
-		}
-
-		return oDoc;
-	}
 	#endregion			// 함수
 
 	#region 조건부 함수
@@ -95,6 +79,22 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		} else {
 			m_oLoadFirestoreCallback?.Invoke(this, a_oTask.Result.ToString(), true);
 		}
+	}
+
+	//! 문서를 반환한다
+	private DocumentReference GetDoc(List<string> a_oCollectionList, List<string> a_oDocList) {
+		CAccess.Assert(a_oCollectionList.ExIsValid() && 
+			a_oDocList.ExIsValid() && a_oCollectionList.Count == a_oDocList.Count);
+
+		var oCollection = FirebaseFirestore.DefaultInstance.Collection(a_oCollectionList[KCDefine.B_INDEX_START]);
+		var oDoc = oCollection.Document(a_oDocList[KCDefine.B_INDEX_START]);
+
+		for(int i = KCDefine.B_INDEX_START + 1; i < a_oDocList.Count; ++i) {
+			oCollection = oDoc.Collection(a_oCollectionList[i]);
+			oDoc = oCollection.Document(a_oDocList[i]);
+		}
+
+		return oDoc;
 	}
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	#endregion			// 조건부 함수
