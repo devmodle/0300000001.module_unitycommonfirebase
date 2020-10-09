@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 #if FIREBASE_MODULE_ENABLE
-#if UNITY_IOS || UNITY_ANDROID
 using Firebase;
 
 #if FIREBASE_AUTH_ENABLE
@@ -22,7 +21,6 @@ using Firebase.RemoteConfig;
 #if FIREBASE_CLOUD_MSG_ENABLE
 using Firebase.Messaging;
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
-#endif			// #if UNITY_IOS || UNITY_ANDROID
 
 //! 파이어 베이스 관리자
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -112,7 +110,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 #if UNITY_EDITOR && FIREBASE_DATABASE_ENABLE
-			string oDatabaseURL = CPluginInfoTable.Instance.FirebasePluginInfo.m_oDatabaseURL;
+			string oDatabaseURL = CPluginInfoTable.Instance.FirebaseDatabaseURL;
 			FirebaseApp.DefaultInstance.Options.DatabaseUrl = new System.Uri(oDatabaseURL);
 #endif			// #if UNITY_EDITOR && FIREBASE_DATABASE_ENABLE
 

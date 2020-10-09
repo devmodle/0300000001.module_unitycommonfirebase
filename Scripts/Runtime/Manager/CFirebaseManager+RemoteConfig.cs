@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-#if FIREBASE_MODULE_ENABLE && FIREBASE_REMOTE_CONFIG_ENABLE
-#if UNITY_IOS || UNITY_ANDROID
+#if FIREBASE_MODULE_ENABLE
+#if FIREBASE_REMOTE_CONFIG_ENABLE
 using Firebase.RemoteConfig;
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
 //! 파이어 베이스 관리자 - 원격 속성
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -15,18 +15,18 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public string GetConfig(string a_oKey) {
 		CFunc.ShowLog("CFirebaseManager.GetConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
 
-#if UNITY_IOS || UNITY_ANDROID
+#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		return this.IsInit ? FirebaseRemoteConfig.GetValue(a_oKey).StringValue : string.Empty;
 #else
 		return string.Empty;
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	//! 속성을 로드한다
 	public void LoadConfig(System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoadConfig", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if UNITY_IOS || UNITY_ANDROID
+#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화가 필요 할 경우
 		if(this.IsInit) {
 			m_oLoadConfigCallback = a_oCallback;
@@ -38,12 +38,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
 	#endregion			// 함수
 
 	#region 조건부 함수
-#if UNITY_IOS || UNITY_ANDROID
+#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 속성을 로드했을 경우
 	private void OnLoadConfig(Task a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -56,7 +56,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oLoadConfigCallback?.Invoke(this, FirebaseRemoteConfig.ActivateFetched());
 		}
 	}
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	#endregion			// 조건부 함수
 }
-#endif			// #if FIREBASE_MODULE_ENABLE && FIREBASE_REMOTE_CONFIG_ENABLE
+#endif			// #if FIREBASE_MODULE_ENABLE

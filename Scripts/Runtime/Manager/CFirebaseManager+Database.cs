@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-#if FIREBASE_MODULE_ENABLE && FIREBASE_DATABASE_ENABLE
-#if UNITY_IOS || UNITY_ANDROID
+#if FIREBASE_MODULE_ENABLE
+#if FIREBASE_DATABASE_ENABLE
 using Firebase.Database;
-#endif			// #if #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if FIREBASE_DATABASE_ENABLE
 
 //! 파이어 베이스 관리자 - 데이터 베이스
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -18,7 +18,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oNodeList.ExIsValid() && a_oJSONString.ExIsValid());
 		CFunc.ShowLog("CFirebaseManager.SaveDatabase: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, a_oNodeList, a_oJSONString);
 
-#if UNITY_IOS || UNITY_ANDROID
+#if FIREBASE_DATABASE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			m_oSaveDatabaseCallback = a_oCallback;
@@ -31,7 +31,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if FIREBASE_DATABASE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	//! 데이터를 로드한다
@@ -39,7 +39,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oNodeList != null);
 		CFunc.ShowLog("CFirebaseManager.LoadDatabase: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oNodeList);
 
-#if UNITY_IOS || UNITY_ANDROID
+#if FIREBASE_DATABASE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			m_oLoadDatabaseCallback = a_oCallback;
@@ -52,12 +52,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		a_oCallback?.Invoke(this, string.Empty, false);
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if FIREBASE_DATABASE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
 	#endregion			// 함수
 
 	#region 조건부 함수
-#if UNITY_IOS || UNITY_ANDROID
+#if FIREBASE_DATABASE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 데이터를 저장했을 경우
 	private void OnSaveDatabase(Task a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -90,7 +90,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		return oDatabase;
 	}
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if FIREBASE_DATABASE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	#endregion			// 조건부 함수
 }
-#endif			// #if FIREBASE_MODULE_ENABLE && FIREBASE_DATABASE_ENABLE
+#endif			// #if FIREBASE_MODULE_ENABLE
