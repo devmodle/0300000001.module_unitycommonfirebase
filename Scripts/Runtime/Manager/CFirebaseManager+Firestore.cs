@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 #if FIREBASE_MODULE_ENABLE && FIREBASE_FIRESTORE_ENABLE
@@ -19,23 +20,19 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.SaveFirestore: {0}, {1}, {2}", 
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oCollectionList, a_oDocList, a_oJSONString);
 
-		// 초기화가 필요 할 경우
-		if(!this.IsInit) {
-			a_oCallback?.Invoke(this, false);
-		} else {
 #if UNITY_IOS || UNITY_ANDROID
-			var oDoc = this.GetDoc(a_oCollectionList, a_oDocList);	
+		// 초기화 되었을 경우
+		if(this.IsInit) {
+			m_oSaveFirestoreCallback = a_oCallback;
+			var oDoc = this.GetDoc(a_oCollectionList, a_oDocList);
 
-			CTaskManager.Instance.WaitAsyncTask(oDoc.SetAsync(a_oJSONString), (a_oTask) => {
-				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-				CFunc.ShowLog("CFirebaseManager.OnSaveFirestore: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
-
-				a_oCallback?.Invoke(this, a_oTask.ExIsComplete());
-			});
-#else
+			CTaskManager.Instance.WaitAsyncTask(oDoc.SetAsync(a_oJSONString), this.OnSaveFirestore);
+		} else {
 			a_oCallback?.Invoke(this, false);
-#endif			// #if UNITY_IOS || UNITY_ANDROID
 		}
+#else
+		a_oCallback?.Invoke(this, false);
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
 	//! 데이터를 로드한다
@@ -45,28 +42,19 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.LoadFirestore: {0}, {1}", 
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oCollectionList, a_oDocList);
 
-		// 초기화가 필요 할 경우
-		if(!this.IsInit) {
-			a_oCallback?.Invoke(this, string.Empty, false);
-		} else {
 #if UNITY_IOS || UNITY_ANDROID
+		// 초기화 되었을 경우
+		if(this.IsInit) {
+			m_oLoadFirestoreCallback = a_oCallback;
 			var oDoc = this.GetDoc(a_oCollectionList, a_oDocList);
 
-			CTaskManager.Instance.WaitAsyncTask(oDoc.GetSnapshotAsync(), (a_oTask) => {
-				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-				CFunc.ShowLog("CFirebaseManager.OnLoadFirestore: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
-
-				// 비동기 처리가 실패했을 경우
-				if(!a_oTask.ExIsComplete()) {
-					a_oCallback?.Invoke(this, string.Empty, false);
-				} else {
-					a_oCallback?.Invoke(this, a_oTask.Result.ToString(), true);
-				}
-			});
-#else
+			CTaskManager.Instance.WaitAsyncTask(oDoc.GetSnapshotAsync(), this.OnLoadFirestore);
+		} else {
 			a_oCallback?.Invoke(this, string.Empty, false);
-#endif			// #if UNITY_IOS || UNITY_ANDROID
 		}
+#else
+		a_oCallback?.Invoke(this, string.Empty, false);
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 
 	//! 문서를 반환한다
@@ -85,5 +73,30 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		return oDoc;
 	}
 	#endregion			// 함수
+
+	#region 조건부 함수
+#if UNITY_IOS || UNITY_ANDROID
+	//! 데이터를 저장했을 경우
+	private void OnSaveFirestore(Task a_oTask) {
+		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+		CFunc.ShowLog("CFirebaseManager.OnSaveFirestore: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+
+		m_oSaveFirestoreCallback?.Invoke(this, a_oTask.ExIsComplete());
+	}
+
+	//! 데이터를 로드했을 경우
+	private void OnLoadFirestore(Task<DocumentSnapshot> a_oTask) {
+		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+		CFunc.ShowLog("CFirebaseManager.OnLoadFirestore: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+
+		// 비동기 처리가 실패했을 경우
+		if(!a_oTask.ExIsComplete()) {
+			m_oLoadFirestoreCallback?.Invoke(this, string.Empty, false);
+		} else {
+			m_oLoadFirestoreCallback?.Invoke(this, a_oTask.Result.ToString(), true);
+		}
+	}
+#endif			// #if UNITY_IOS || UNITY_ANDROID
+	#endregion			// 조건부 함수
 }
 #endif			// #if FIREBASE_MODULE_ENABLE && FIREBASE_FIRESTORE_ENABLE

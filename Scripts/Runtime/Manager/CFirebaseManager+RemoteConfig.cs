@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 #if FIREBASE_MODULE_ENABLE && FIREBASE_REMOTE_CONFIG_ENABLE
@@ -25,27 +26,37 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void LoadConfig(System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoadConfig", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		// 초기화가 필요 할 경우
-		if(!this.IsInit) {
-			a_oCallback?.Invoke(this, false);
-		} else {
 #if UNITY_IOS || UNITY_ANDROID
-			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_TIMEOUT_FIREBASE_FETCH_CONFIG), (a_oTask) => {
-				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-				CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+		// 초기화가 필요 할 경우
+		if(this.IsInit) {
+			m_oLoadConfigCallback = a_oCallback;
 
-				// 비동기 처리가 실패했을 경우
-				if(!a_oTask.ExIsComplete()) {
-					a_oCallback?.Invoke(this, false);
-				} else {
-					a_oCallback?.Invoke(this, FirebaseRemoteConfig.ActivateFetched());
-				}
-			});
-#else
+			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_TIMEOUT_FIREBASE_FETCH_CONFIG), 
+				this.OnLoadConfig);
+		} else {
 			a_oCallback?.Invoke(this, false);
-#endif			// #if UNITY_IOS || UNITY_ANDROID
 		}
+#else
+		a_oCallback?.Invoke(this, false);
+#endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 	#endregion			// 함수
+
+	#region 조건부 함수
+#if UNITY_IOS || UNITY_ANDROID
+	//! 속성을 로드했을 경우
+	private void OnLoadConfig(Task a_oTask) {
+		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+		CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+
+		// 비동기 처리가 실패했을 경우
+		if(!a_oTask.ExIsComplete()) {
+			m_oLoadConfigCallback?.Invoke(this, false);
+		} else {
+			m_oLoadConfigCallback?.Invoke(this, FirebaseRemoteConfig.ActivateFetched());
+		}
+	}
+#endif			// #if UNITY_IOS || UNITY_ANDROID
+	#endregion			// 조건부 함수
 }
 #endif			// #if FIREBASE_MODULE_ENABLE && FIREBASE_REMOTE_CONFIG_ENABLE

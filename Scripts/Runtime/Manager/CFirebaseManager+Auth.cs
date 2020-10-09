@@ -17,24 +17,49 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin) {
-			a_oCallback?.Invoke(this, true);
+		if(!this.IsInit || this.IsLogin) {
+			a_oCallback?.Invoke(this, this.IsLogin);
 		} else {
-			CTaskManager.Instance.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync(), (a_oTask) => {
-				bool bIsComplete = a_oTask.ExIsComplete();
+			m_oLoginCallback = a_oCallback;
+			var oTask = FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync();
 
-				string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
-				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-
-				CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
-					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
-
-				a_oCallback?.Invoke(this, this.IsLogin);
-			});
+			CTaskManager.Instance.WaitAsyncTask(oTask, this.OnLogin);
 		}
 #else
 		a_oCallback?.Invoke(this, false);
 #endif			// #if UNITY_IOS || UNITY_ANDROID
+	}
+
+	//! 페이스 북 로그인을 처리한다
+	public void LoginWithFacebook(string a_oAccessToken, 
+		System.Action<CFirebaseManager, bool> a_oCallback) 
+	{
+		CFunc.ShowLog("CFirebaseManager.LoginWithFacebook: {0}", 
+			KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
+
+		var oAuth = FirebaseAuth.DefaultInstance;
+		var oCredential = FacebookAuthProvider.GetCredential(a_oAccessToken);
+
+		this.LoginWithCredential(oCredential, a_oCallback);
+	}
+
+	//! 게임 센터 로그인을 처리한다
+	public void LoginWithGameCenter(string a_oAuthCode, 
+		System.Action<CFirebaseManager, bool> a_oCallback) 
+	{
+		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", 
+			KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
+
+		m_oLoginCallback = a_oCallback;
+		var oAuth = FirebaseAuth.DefaultInstance;
+
+#if UNITY_IOS
+		CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), 
+			this.OnReceiveGameCenterCredential);
+#else
+		var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
+		this.LoginWithCredential(oCredential, a_oCallback);
+#endif			// #if UNITY_IOS
 	}
 
 	//! 로그아웃을 처리한다
@@ -54,80 +79,47 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 조건부 함수
 #if UNITY_IOS || UNITY_ANDROID
+	//! 로그인 되었을 경우
+	private void OnLogin(Task<FirebaseUser> a_oTask) {
+		bool bIsComplete = a_oTask.ExIsComplete();
+
+		string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
+		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+
+		CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
+			KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
+
+		m_oLoginCallback?.Invoke(this, this.IsLogin);
+	}
+
 	//! 인증 로그인을 처리한다
-	private void LoginWithCredential(Credential a_oCredential, System.Action<CFirebaseManager, bool> a_oCallback) {
+	private void LoginWithCredential(Credential a_oCredential, 
+		System.Action<CFirebaseManager, bool> a_oCallback) 
+	{
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin) {
-			a_oCallback?.Invoke(this, true);
+		if(!this.IsInit || this.IsLogin) {
+			a_oCallback?.Invoke(this, this.IsLogin);
 		} else {
-			CTaskManager.Instance.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), (a_oTask) => {
-				bool bIsComplete = a_oTask.ExIsComplete();
+			m_oLoginCallback = a_oCallback;
+			var oTask = FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential);
 
-				string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
-				string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-
-				CFunc.ShowLog("CFirebaseManager.OnLoginWithCredential: {0}, {1}. {2}", 
-					KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
-
-				a_oCallback?.Invoke(this, this.IsLogin);
-			});
-		}
-	}
-	
-#if FACEBOOK_MODULE_ENABLE
-	//! 페이스 북 로그인을 처리한다
-	public void LoginWithFacebook(string a_oAccessToken, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CFunc.ShowLog("CFirebaseManager.LoginWithFacebook: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
-
-		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin) {
-			a_oCallback?.Invoke(this, true);
-		} else {
-			var oAuth = FirebaseAuth.DefaultInstance;
-			var oCredential = FacebookAuthProvider.GetCredential(a_oAccessToken);
-
-			this.LoginWithCredential(oCredential, a_oCallback);
-		}
-	}
-#endif			// #if FACEBOOK_MODULE_ENABLE
-
-#if GAME_CENTER_MODULE_ENABLE
-	//! 게임 센터 로그인을 처리한다
-	public void LoginWithGameCenter(string a_oAuthCode, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
-
-		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin) {
-			a_oCallback?.Invoke(this, true);
-		} else {
-			var oAuth = FirebaseAuth.DefaultInstance;
-
-#if UNITY_IOS
-			m_oGameCenterLoginCallback = a_oCallback;
-
-			CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), (a_oTask) => 
-				this.OnReceiveGameCenterCredential(a_oTask));
-#else
-			var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
-			this.LoginWithCredential(oCredential, a_oCallback);
-#endif			// #if UNITY_IOS
+			CTaskManager.Instance.WaitAsyncTask(oTask, this.OnLogin);
 		}
 	}
 
-#if UNITY_IOS
+#if UNITY_IOS && GAME_CENTER_MODULE_ENABLE
 	//! 게임 센터 인증을 수신했을 경우
 	private void OnReceiveGameCenterCredential(Task<Credential> a_oTask) {
 		// 비동기 처리가 완료 되었을 경우
 		if(a_oTask.ExIsComplete()) {
-			this.LoginWithCredential(a_oTask.Result, m_oGameCenterLoginCallback);
+			this.LoginWithCredential(a_oTask.Result, m_oLoginCallback);
 		} else {
-			m_oGameCenterLoginCallback?.Invoke(this, false);
+			m_oLoginCallback?.Invoke(this, false);
 		}
 	}
-#endif			// #if UNITY_IOS
-#endif			// #if GAME_CENTER_MODULE_ENABLE
+#endif			// #if UNITY_IOS && GAME_CENTER_MODULE_ENABLE
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	#endregion			// 조건부 함수
 }
