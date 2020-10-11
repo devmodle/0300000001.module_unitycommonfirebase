@@ -84,7 +84,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		var oRoot = FirebaseDatabase.DefaultInstance.RootReference;
 		var oDatabase = oRoot;
 
-		for(int i = 0; i < a_oNodeList.Count; ++i) {
+		for(int i = KCDefine.B_INDEX_START; i < a_oNodeList.Count; ++i) {
 			oDatabase = oDatabase.Child(a_oNodeList[i]);
 		}
 
