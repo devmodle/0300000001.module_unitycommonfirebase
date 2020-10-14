@@ -62,23 +62,27 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_FIRESTORE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 데이터를 저장했을 경우
 	private void OnSaveFirestore(Task a_oTask) {
-		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-		CFunc.ShowLog("CFirebaseManager.OnSaveFirestore: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_FIRESTORE_CALLBACK, () => {
+			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+			CFunc.ShowLog("CFirebaseManager.OnSaveFirestore: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
-		m_oSaveFirestoreCallback?.Invoke(this, a_oTask.ExIsComplete());
+			m_oSaveFirestoreCallback?.Invoke(this, a_oTask.ExIsComplete());
+		});
 	}
 
 	//! 데이터를 로드했을 경우
 	private void OnLoadFirestore(Task<DocumentSnapshot> a_oTask) {
-		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-		CFunc.ShowLog("CFirebaseManager.OnLoadFirestore: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_FIRESTORE_CALLBACK, () => {
+			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+			CFunc.ShowLog("CFirebaseManager.OnLoadFirestore: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
-		// 비동기 처리가 실패했을 경우
-		if(!a_oTask.ExIsComplete()) {
-			m_oLoadFirestoreCallback?.Invoke(this, string.Empty, false);
-		} else {
-			m_oLoadFirestoreCallback?.Invoke(this, a_oTask.Result.ToString(), true);
-		}
+			// 비동기 처리가 실패했을 경우
+			if(!a_oTask.ExIsComplete()) {
+				m_oLoadFirestoreCallback?.Invoke(this, string.Empty, false);
+			} else {
+				m_oLoadFirestoreCallback?.Invoke(this, a_oTask.Result.ToString(), true);
+			}
+		});
 	}
 
 	//! 문서를 반환한다

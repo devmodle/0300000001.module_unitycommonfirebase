@@ -46,15 +46,17 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 속성을 로드했을 경우
 	private void OnLoadConfig(Task a_oTask) {
-		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-		CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIG_CALLBACK, () => {
+			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+			CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
-		// 비동기 처리가 실패했을 경우
-		if(!a_oTask.ExIsComplete()) {
-			m_oLoadConfigCallback?.Invoke(this, false);
-		} else {
-			m_oLoadConfigCallback?.Invoke(this, FirebaseRemoteConfig.ActivateFetched());
-		}
+			// 비동기 처리가 실패했을 경우
+			if(!a_oTask.ExIsComplete()) {
+				m_oLoadConfigCallback?.Invoke(this, false);
+			} else {
+				m_oLoadConfigCallback?.Invoke(this, FirebaseRemoteConfig.ActivateFetched());
+			}
+		});
 	}
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	#endregion			// 조건부 함수

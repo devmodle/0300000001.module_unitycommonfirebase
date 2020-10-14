@@ -89,15 +89,17 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 로그인 되었을 경우
 	private void OnLogin(Task<FirebaseUser> a_oTask) {
-		bool bIsComplete = a_oTask.ExIsComplete();
+		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => {
+			bool bIsComplete = a_oTask.ExIsComplete();
 
-		string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
-		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+			string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
+			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 
-		CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
+			CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
+				KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
 
-		m_oLoginCallback?.Invoke(this, this.IsLogin);
+			m_oLoginCallback?.Invoke(this, this.IsLogin);
+		});
 	}
 
 	//! 인증 로그인을 처리한다
@@ -120,12 +122,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS && GAME_CENTER_MODULE_ENABLE
 	//! 게임 센터 인증을 수신했을 경우
 	private void OnReceiveGameCenterCredential(Task<Credential> a_oTask) {
-		// 비동기 처리가 완료 되었을 경우
-		if(a_oTask.ExIsComplete()) {
-			this.LoginWithCredential(a_oTask.Result, m_oLoginCallback);
-		} else {
-			m_oLoginCallback?.Invoke(this, false);
-		}
+		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_GAME_CENTER_CALLBACK, () => {
+			// 비동기 처리가 완료 되었을 경우
+			if(a_oTask.ExIsComplete()) {
+				this.LoginWithCredential(a_oTask.Result, m_oLoginCallback);
+			} else {
+				m_oLoginCallback?.Invoke(this, false);
+			}
+		});
 	}
 #endif			// #if UNITY_IOS && GAME_CENTER_MODULE_ENABLE
 #endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)

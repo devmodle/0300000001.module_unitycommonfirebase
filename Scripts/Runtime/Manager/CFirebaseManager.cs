@@ -32,10 +32,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private System.Action<CFirebaseManager, bool> m_oLoginCallback = null;
 #endif			// #if FIREBASE_AUTH_ENABLE
 
-#if FIREBASE_DATABASE_ENABLE
-	private System.Action<CFirebaseManager, bool> m_oSaveDatabaseCallback = null;
-	private System.Action<CFirebaseManager, string, bool> m_oLoadDatabaseCallback = null;
-#endif			// #if FIREBASE_DATABASE_ENABLE
+#if FIREBASE_DB_ENABLE
+	private System.Action<CFirebaseManager, bool> m_oSaveDBCallback = null;
+	private System.Action<CFirebaseManager, string, bool> m_oLoadDBCallback = null;
+#endif			// #if FIREBASE_DB_ENABLE
 
 #if FIREBASE_FIRESTORE_ENABLE
 	private System.Action<CFirebaseManager, bool> m_oSaveFirestoreCallback = null;
@@ -101,41 +101,47 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	//! 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
-		this.IsInit = a_oTask.Result == DependencyStatus.Available;
-		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-		
-		CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, oErrorMsg);
+		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
+			this.IsInit = a_oTask.Result == DependencyStatus.Available;
+			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+			
+			CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", 
+				KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, oErrorMsg);
 
-		// 초기화 되었을 경우
-		if(this.IsInit) {
-#if UNITY_EDITOR && FIREBASE_DATABASE_ENABLE
-			string oDatabaseURL = CPluginInfoTable.Instance.FirebaseDatabaseURL;
-			FirebaseApp.DefaultInstance.Options.DatabaseUrl = new System.Uri(oDatabaseURL);
-#endif			// #if UNITY_EDITOR && FIREBASE_DATABASE_ENABLE
+			// 초기화 되었을 경우
+			if(this.IsInit) {
+				var oApp = FirebaseApp.DefaultInstance;
+				
+#if UNITY_EDITOR && FIREBASE_DB_ENABLE
+				string oURL = CPluginInfoTable.Instance.FirebaseDBURL;
+				oApp.Options.DatabaseUrl = new System.Uri(oURL);
+#endif			// #if UNITY_EDITOR && FIREBASE_DB_ENABLE
 
 #if FIREBASE_ANALYTICS_ENABLE
+				FirebaseAnalytics.SetSessionTimeoutDuration(KCDefine.U_TIMEOUT_FIREBASE_SESSION);
+			
 #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
-			FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+				FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
 #else
-			FirebaseAnalytics.SetAnalyticsCollectionEnabled(false);
+				FirebaseAnalytics.SetAnalyticsCollectionEnabled(false);
 #endif			// #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 #endif			// #if FIREBASE_ANALYTICS_ENABLE
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
-			// 속성이 유효 할 경우
-			if(m_oConfigList != null) {
-				FirebaseRemoteConfig.SetDefaults(m_oConfigList);
-			}
+				// 속성이 유효 할 경우
+				if(m_oConfigList != null) {
+					FirebaseRemoteConfig.SetDefaults(m_oConfigList);
+				}
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
 #if FIREBASE_CLOUD_MSG_ENABLE
-			FirebaseMessaging.TokenReceived += this.OnReceiveToken;
-			FirebaseMessaging.MessageReceived += this.OnReceiveMsg;
+				FirebaseMessaging.TokenReceived += this.OnReceiveToken;
+				FirebaseMessaging.MessageReceived += this.OnReceiveMsg;
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
-		}
+			}
 
-		m_oInitCallback?.Invoke(this, this.IsInit);
+			m_oInitCallback?.Invoke(this, this.IsInit);
+		});
 	}
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	#endregion			// 조건부 함수
