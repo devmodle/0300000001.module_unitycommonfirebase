@@ -37,11 +37,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private System.Action<CFirebaseManager, string, bool> m_oLoadDBCallback = null;
 #endif			// #if FIREBASE_DB_ENABLE
 
-#if FIREBASE_FIRESTORE_ENABLE
-	private System.Action<CFirebaseManager, bool> m_oSaveFirestoreCallback = null;
-	private System.Action<CFirebaseManager, string, bool> m_oLoadFirestoreCallback = null;
-#endif			// #if FIREBASE_FIRESTORE_ENABLE
-
 #if FIREBASE_REMOTE_CONFIG_ENABLE
 	private System.Action<CFirebaseManager, bool> m_oLoadConfigCallback = null;
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
@@ -111,7 +106,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			// 초기화 되었을 경우
 			if(this.IsInit) {
 				var oApp = FirebaseApp.DefaultInstance;
-				
+
 #if UNITY_EDITOR && FIREBASE_DB_ENABLE
 				string oURL = CPluginInfoTable.Instance.FirebaseDBURL;
 				oApp.Options.DatabaseUrl = new System.Uri(oURL);
