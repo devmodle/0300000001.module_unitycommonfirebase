@@ -20,7 +20,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin) {
+		if(this.IsInit && this.IsLogin && CAccess.IsMobile()) {
 			m_oSaveDBCallback = a_oCallback;
 			var oDB = this.GetDB(a_oNodeList);
 
@@ -41,7 +41,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin) {
+		if(this.IsInit && this.IsLogin && CAccess.IsMobile()) {
 			m_oLoadDBCallback = a_oCallback;
 			var oDB = this.GetDB(a_oNodeList);
 			
@@ -87,7 +87,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private DatabaseReference GetDB(List<string> a_oNodeList) {
 		var oDB = FirebaseDatabase.DefaultInstance.RootReference;
 
-		for(int i = KCDefine.B_INDEX_START; i < a_oNodeList.Count; ++i) {
+		for(int i = KCDefine.B_VALUE_INT_0; i < a_oNodeList.Count; ++i) {
 			// 노드가 유효 할 경우
 			if(a_oNodeList[i].ExIsValid()) {
 				oDB = oDB.Child(a_oNodeList[i]);
