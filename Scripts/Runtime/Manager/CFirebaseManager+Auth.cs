@@ -38,6 +38,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
 			
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+		CAccess.Assert(a_oAccessToken.ExIsValid());
+
 		var oCredential = FacebookAuthProvider.GetCredential(a_oAccessToken);
 		this.LoginWithCredential(oCredential, a_oCallback);
 #else
@@ -59,6 +61,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), 
 			this.OnReceiveGameCenterCredential);
 #else
+		CAccess.Assert(a_oAuthCode.ExIsValid());
+
 		var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
 		this.LoginWithCredential(oCredential, a_oCallback);
 #endif			// #if UNITY_IOS
@@ -103,6 +107,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private void LoginWithCredential(Credential a_oCredential, 
 		System.Action<CFirebaseManager, bool> a_oCallback) 
 	{
+		CAccess.Assert(a_oCredential != null);
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		// 로그인 되었을 경우

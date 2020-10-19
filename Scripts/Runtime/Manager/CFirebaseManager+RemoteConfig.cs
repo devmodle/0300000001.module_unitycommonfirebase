@@ -16,6 +16,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.GetConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+		CAccess.Assert(a_oKey.ExIsValid());
 		return this.IsInit ? FirebaseRemoteConfig.GetValue(a_oKey).StringValue : string.Empty;
 #else
 		return string.Empty;

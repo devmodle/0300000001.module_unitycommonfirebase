@@ -74,10 +74,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public virtual void Init(Dictionary<string, object> a_oConfigList, 
 		System.Action<CFirebaseManager, bool> a_oCallback) 
 	{
-		CAccess.Assert(a_oConfigList != null);
 		CFunc.ShowLog("CFirebaseManager.Init: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oConfigList);
 
 #if UNITY_IOS || UNITY_ANDROID
+		CAccess.Assert(a_oConfigList != null);
+		
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			a_oCallback?.Invoke(this, true);
