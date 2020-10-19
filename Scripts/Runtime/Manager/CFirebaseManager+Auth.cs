@@ -38,9 +38,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
 			
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
-		var oAuth = FirebaseAuth.DefaultInstance;
 		var oCredential = FacebookAuthProvider.GetCredential(a_oAccessToken);
-
 		this.LoginWithCredential(oCredential, a_oCallback);
 #else
 		a_oCallback?.Invoke(this, false);
@@ -56,7 +54,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		m_oLoginCallback = a_oCallback;
-		var oAuth = FirebaseAuth.DefaultInstance;
 
 #if UNITY_IOS
 		CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), 
@@ -123,7 +120,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 게임 센터 인증을 수신했을 경우
 	private void OnReceiveGameCenterCredential(Task<Credential> a_oTask) {
 		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_GAME_CENTER_CALLBACK, () => {
-			// 비동기 처리가 완료 되었을 경우
+			// 게임 센터에 인증 되었을 경우
 			if(a_oTask.ExIsComplete()) {
 				this.LoginWithCredential(a_oTask.Result, m_oLoginCallback);
 			} else {

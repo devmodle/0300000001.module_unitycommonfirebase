@@ -74,11 +74,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 			CFunc.ShowLog("CFirebaseManager.OnLoadDB: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
-			// 비동기 처리가 실패했을 경우
-			if(!a_oTask.ExIsComplete()) {
-				m_oLoadDBCallback?.Invoke(this, string.Empty, false);
-			} else {
+			// 데이터가 로드 되었을 경우
+			if(a_oTask.ExIsComplete()) {
 				m_oLoadDBCallback?.Invoke(this, a_oTask.Result.GetRawJsonValue(), true);
+			} else {
+				m_oLoadDBCallback?.Invoke(this, string.Empty, false);
 			}
 		});
 	}
