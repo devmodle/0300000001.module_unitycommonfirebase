@@ -69,7 +69,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if AUTO_LOG_PARAMS_ENABLE
 			oDataList.ExAddValue(KCDefine.U_LOG_KEY_PLATFORM, 
-				CCommonAppInfoStorage.Instance.PlatformName);
+				CCommonAppInfoStorage.Instance.Platform);
 
 			oDataList.ExAddValue(KCDefine.U_LOG_KEY_USER_TYPE, 
 				CCommonUserInfoStorage.Instance.UserInfo.UserType.ToString());
