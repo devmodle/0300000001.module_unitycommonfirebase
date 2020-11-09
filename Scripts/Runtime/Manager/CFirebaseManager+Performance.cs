@@ -17,16 +17,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit) {
 			var oDataList = a_oDataList ?? new Dictionary<string, string>();
 
-			oDataList.ExAddValue(KCDefine.U_LOG_KEY_DEVICE_ID, 
+			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_DEVICE_ID, 
 				CCommonAppInfoStorage.Instance.AppInfo.DeviceID);
 
-			oDataList.ExAddValue(KCDefine.U_LOG_KEY_PLATFORM, 
+			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_PLATFORM, 
 				CCommonAppInfoStorage.Instance.Platform);
 
-#if AUTO_LOG_PARAMS_ENABLE
-			oDataList.ExAddValue(KCDefine.U_LOG_KEY_USER_TYPE, 
+			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_USER_TYPE, 
 				CCommonUserInfoStorage.Instance.UserInfo.UserType.ToString());
-#endif			// #if AUTO_LOG_PARAMS_ENABLE
 
 			CUnityMsgSender.Instance.SendTrackingMsg(a_oName, a_oDataList, true);
 		}

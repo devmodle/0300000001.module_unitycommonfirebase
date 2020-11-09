@@ -47,9 +47,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 	//! 로그를 전송한다
-	public void SendLog(string a_oName, string a_oParam, Dictionary<string, string> a_oDataList) {
+	public void SendLog(string a_oName, string a_oParams, Dictionary<string, string> a_oDataList) {
 		this.SendLog(a_oName, new Dictionary<string, string>() {
-			[a_oParam] = a_oDataList.ExToString(KCDefine.B_TOKEN_CSV_STRING)
+			[a_oParams] = a_oDataList.ExToString(KCDefine.B_TOKEN_CSV_STRING)
 		});
 	}
 
@@ -93,14 +93,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 매개 변수를 생성한다
 	private Parameter[] MakeParams(Dictionary<string, string> a_oDataList) {
-		var oParamList = new List<Parameter>();
+		var oParamsList = new List<Parameter>();
 
 		foreach(var stKeyValue in a_oDataList) {
-			var oParam = new Parameter(stKeyValue.Key, stKeyValue.Value);
-			oParamList.Add(oParam);
+			var oParams = new Parameter(stKeyValue.Key, stKeyValue.Value);
+			oParamsList.Add(oParams);
 		}
 
-		return oParamList.ToArray();
+		return oParamsList.ToArray();
 	}
 #endif			// #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 
