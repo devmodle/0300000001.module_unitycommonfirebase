@@ -66,7 +66,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 			CFunc.ShowLog("CFirebaseManager.OnSaveDB: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
-			m_oSaveDBCallback?.Invoke(this, a_oTask.ExIsComplete());
+			CFunc.Invoke(ref m_oSaveDBCallback, this, a_oTask.ExIsComplete());
 		});
 	}
 
@@ -82,6 +82,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			} else {
 				m_oLoadDBCallback?.Invoke(this, string.Empty, false);
 			}
+
+			m_oLoadDBCallback = null;
 		});
 	}
 

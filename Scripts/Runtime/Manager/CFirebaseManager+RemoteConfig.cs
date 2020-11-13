@@ -57,6 +57,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			} else {
 				m_oLoadConfigCallback?.Invoke(this, false);
 			}
+
+			m_oLoadConfigCallback = null;
 		});
 	}
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)

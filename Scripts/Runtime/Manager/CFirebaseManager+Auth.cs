@@ -99,7 +99,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
 				KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);
 
-			m_oLoginCallback?.Invoke(this, this.IsLogin);
+			CFunc.Invoke(ref m_oLoginCallback, this, this.IsLogin);
 		});
 	}
 
@@ -129,7 +129,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			if(a_oTask.ExIsComplete()) {
 				this.LoginWithCredential(a_oTask.Result, m_oLoginCallback);
 			} else {
-				m_oLoginCallback?.Invoke(this, false);
+				CFunc.Invoke(ref m_oLoginCallback, this, false);
 			}
 		});
 	}
