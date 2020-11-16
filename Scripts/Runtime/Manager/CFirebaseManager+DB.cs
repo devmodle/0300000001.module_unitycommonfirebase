@@ -92,7 +92,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oNodeList != null);
 		var oDB = FirebaseDatabase.DefaultInstance.RootReference;
 
-		for(int i = KCDefine.B_VALUE_INT_0; i < a_oNodeList.Count; ++i) {
+		for(int i = 0; i < a_oNodeList.Count; ++i) {
 			// 노드가 유효 할 경우
 			if(a_oNodeList[i].ExIsValid()) {
 				oDB = oDB.Child(a_oNodeList[i]);
