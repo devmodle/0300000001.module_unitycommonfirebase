@@ -23,7 +23,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oLoginCallback = a_oCallback;
 			var oTask = FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync();
 
-			CTaskManager.Instance.WaitAsyncTask(oTask, this.OnLogin);
+			CTaskManager.Inst.WaitAsyncTask(oTask, this.OnLogin);
 		}
 #else
 		a_oCallback?.Invoke(this, false);
@@ -58,7 +58,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		m_oLoginCallback = a_oCallback;
 
 #if UNITY_IOS
-		CTaskManager.Instance.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), 
+		CTaskManager.Inst.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), 
 			this.OnReceiveGameCenterCredential);
 #else
 		CAccess.Assert(a_oAuthCode.ExIsValid());
@@ -90,7 +90,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 로그인 되었을 경우
 	private void OnLogin(Task<FirebaseUser> a_oTask) {
-		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => {
 			bool bIsComplete = a_oTask.ExIsComplete();
 
 			string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
@@ -117,14 +117,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oLoginCallback = a_oCallback;
 			var oTask = FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential);
 
-			CTaskManager.Instance.WaitAsyncTask(oTask, this.OnLogin);
+			CTaskManager.Inst.WaitAsyncTask(oTask, this.OnLogin);
 		}
 	}
 
 #if UNITY_IOS && GAME_CENTER_MODULE_ENABLE
 	//! 게임 센터 인증을 수신했을 경우
 	private void OnReceiveGameCenterCredential(Task<Credential> a_oTask) {
-		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_GAME_CENTER_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_GAME_CENTER_CALLBACK, () => {
 			// 게임 센터에 인증 되었을 경우
 			if(a_oTask.ExIsComplete()) {
 				this.LoginWithCredential(a_oTask.Result, m_oLoginCallback);

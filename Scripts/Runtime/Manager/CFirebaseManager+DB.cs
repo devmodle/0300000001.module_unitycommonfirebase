@@ -25,7 +25,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oSaveDBCallback = a_oCallback;
 			var oDB = this.GetDB(a_oNodeList);
 
-			CTaskManager.Instance.WaitAsyncTask(oDB.SetRawJsonValueAsync(a_oJSONString), 
+			CTaskManager.Inst.WaitAsyncTask(oDB.SetRawJsonValueAsync(a_oJSONString), 
 				this.OnSaveDB);
 		} else {
 			a_oCallback?.Invoke(this, false);
@@ -47,7 +47,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oLoadDBCallback = a_oCallback;
 			var oDB = this.GetDB(a_oNodeList);
 			
-			CTaskManager.Instance.WaitAsyncTask(oDB.GetValueAsync(), 
+			CTaskManager.Inst.WaitAsyncTask(oDB.GetValueAsync(), 
 				this.OnLoadDB);
 		} else {
 			a_oCallback?.Invoke(this, string.Empty, false);
@@ -62,7 +62,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 데이터를 저장했을 경우
 	private void OnSaveDB(Task a_oTask) {
-		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DB_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DB_CALLBACK, () => {
 			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 			CFunc.ShowLog("CFirebaseManager.OnSaveDB: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
@@ -72,7 +72,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	//! 데이터를 로드했을 경우
 	private void OnLoadDB(Task<DataSnapshot> a_oTask) {
-		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_DB_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_DB_CALLBACK, () => {
 			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 			CFunc.ShowLog("CFirebaseManager.OnLoadDB: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 

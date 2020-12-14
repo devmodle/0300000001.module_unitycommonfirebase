@@ -86,7 +86,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oConfigList = a_oConfigList;
 			m_oInitCallback = a_oCallback;
 
-			CTaskManager.Instance.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), 
+			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), 
 				this.OnInit);
 		}
 #else
@@ -99,7 +99,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	//! 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
-		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
 			this.IsInit = a_oTask.Result == DependencyStatus.Available;
 			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 			
@@ -115,7 +115,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_AUTH_ENABLE
 
 #if UNITY_EDITOR && FIREBASE_DB_ENABLE
-				string oURL = CPluginInfoTable.Instance.FirebaseDBURL;
+				string oURL = CPluginInfoTable.Inst.FirebaseDBURL;
 				m_oApp.Options.DatabaseUrl = new System.Uri(oURL);
 #endif			// #if UNITY_EDITOR && FIREBASE_DB_ENABLE
 

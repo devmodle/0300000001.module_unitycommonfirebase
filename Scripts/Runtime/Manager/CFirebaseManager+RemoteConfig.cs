@@ -32,7 +32,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit) {
 			m_oLoadConfigCallback = a_oCallback;
 
-			CTaskManager.Instance.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_TIMEOUT_FIREBASE_FETCH_CONFIG), 
+			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.FetchAsync(KCDefine.U_TIMEOUT_FIREBASE_FETCH_CONFIG), 
 				this.OnLoadConfig);
 		} else {
 			a_oCallback?.Invoke(this, false);
@@ -47,7 +47,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 속성을 로드했을 경우
 	private void OnLoadConfig(Task a_oTask) {
-		CScheduleManager.Instance.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIG_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIG_CALLBACK, () => {
 			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 			CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 

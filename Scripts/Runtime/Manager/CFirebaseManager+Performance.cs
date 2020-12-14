@@ -18,15 +18,15 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			var oDataList = a_oDataList ?? new Dictionary<string, string>();
 
 			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_DEVICE_ID, 
-				CCommonAppInfoStorage.Instance.AppInfo.DeviceID);
+				CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
 
 			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_PLATFORM, 
-				CCommonAppInfoStorage.Instance.Platform);
+				CCommonAppInfoStorage.Inst.Platform);
 
 			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_USER_TYPE, 
-				CCommonUserInfoStorage.Instance.UserInfo.UserType.ToString());
+				CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
 
-			CUnityMsgSender.Instance.SendTrackingMsg(a_oName, a_oDataList, true);
+			CUnityMsgSender.Inst.SendTrackingMsg(a_oName, a_oDataList, true);
 		}
 #endif			// #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 #endif			// #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
@@ -41,7 +41,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			CUnityMsgSender.Instance.SendTrackingMsg(a_oName, null, false);
+			CUnityMsgSender.Inst.SendTrackingMsg(a_oName, null, false);
 		}
 #endif			// #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 #endif			// #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
