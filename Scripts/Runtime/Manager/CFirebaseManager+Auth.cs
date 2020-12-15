@@ -34,12 +34,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void LoginWithFacebook(string a_oAccessToken, 
 		System.Action<CFirebaseManager, bool> a_oCallback) 
 	{
+		CAccess.Assert(a_oAccessToken.ExIsValid());
+
 		CFunc.ShowLog("CFirebaseManager.LoginWithFacebook: {0}", 
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oAccessToken);
 			
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
-		CAccess.Assert(a_oAccessToken.ExIsValid());
-
 		var oCredential = FacebookAuthProvider.GetCredential(a_oAccessToken);
 		this.LoginWithCredential(oCredential, a_oCallback);
 #else
@@ -51,6 +51,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void LoginWithGameCenter(string a_oAuthCode, 
 		System.Action<CFirebaseManager, bool> a_oCallback) 
 	{
+		CAccess.Assert(a_oAuthCode.ExIsValid());
+
 		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", 
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
 
@@ -61,8 +63,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CTaskManager.Inst.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), 
 			this.OnReceiveGameCenterCredential);
 #else
-		CAccess.Assert(a_oAuthCode.ExIsValid());
-
 		var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
 		this.LoginWithCredential(oCredential, a_oCallback);
 #endif			// #if UNITY_IOS
@@ -92,9 +92,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private void OnLogin(Task<FirebaseUser> a_oTask) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => {
 			bool bIsComplete = a_oTask.ExIsComplete();
-
 			string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
-			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+
+			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message 
+				: string.Empty;
 
 			CFunc.ShowLog("CFirebaseManager.OnLogin: {0}, {1}, {2}", 
 				KCDefine.B_LOG_COLOR_PLUGIN, bIsComplete, oUserID, oErrorMsg);

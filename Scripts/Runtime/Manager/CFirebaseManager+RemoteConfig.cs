@@ -13,11 +13,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	//! 속성을 반환한다
 	public string GetConfig(string a_oKey) {
-		CFunc.ShowLog("CFirebaseManager.GetConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
+		CAccess.Assert(a_oKey.ExIsValid());
+
+		CFunc.ShowLog("CFirebaseManager.GetConfig: {0}", 
+			KCDefine.B_LOG_COLOR_PLUGIN, a_oKey);
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
-		CAccess.Assert(a_oKey.ExIsValid());
-		return this.IsInit ? FirebaseRemoteConfig.GetValue(a_oKey).StringValue : string.Empty;
+		return this.IsInit ? FirebaseRemoteConfig.GetValue(a_oKey).StringValue 
+			: string.Empty;
 #else
 		return string.Empty;
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
@@ -48,8 +51,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 속성을 로드했을 경우
 	private void OnLoadConfig(Task a_oTask) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIG_CALLBACK, () => {
-			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-			CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
+			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message 
+				: string.Empty;
+				
+			CFunc.ShowLog("CFirebaseManager.OnLoadConfig: {0}", 
+				KCDefine.B_LOG_COLOR_PLUGIN, oErrorMsg);
 
 			// 속성이 로드 되었을 경우
 			if(a_oTask.ExIsComplete()) {
