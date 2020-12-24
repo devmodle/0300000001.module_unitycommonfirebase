@@ -21,8 +21,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	//! 메세지를 수신했을 경우
 	private void OnReceiveMsg(object a_oSender, MessageReceivedEventArgs a_oArgs) {
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_MSG_CALLBACK, () => 
-			CFunc.ShowLog("CFirebaseManager.OnReceiveMsg: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oArgs));
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_MSG_CALLBACK, () => {
+			CFunc.ShowLog("CFirebaseManager.OnReceiveMsg: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oArgs);
+		});
 	}
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	#endregion			// 조건부 함수
