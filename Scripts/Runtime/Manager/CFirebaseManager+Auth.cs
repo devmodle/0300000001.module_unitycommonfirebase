@@ -56,9 +56,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.LoginWithGameCenter: {0}", 
 			KCDefine.B_LOG_COLOR_PLUGIN, a_oAuthCode);
 
-#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		m_oLoginCallback = a_oCallback;
-
+		
 #if UNITY_IOS
 		CTaskManager.Inst.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), 
 			this.OnReceiveGameCenterCredential);
@@ -68,7 +68,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if UNITY_IOS
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	//! 로그아웃을 처리한다
