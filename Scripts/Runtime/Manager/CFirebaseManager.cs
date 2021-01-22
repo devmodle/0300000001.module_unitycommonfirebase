@@ -61,8 +61,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public string UserID {
 		get {
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
-			return this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId 
-				: string.Empty;
+			return this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
 #else
 			return string.Empty;
 #endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
@@ -72,13 +71,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 함수
 	//! 초기화
-	public virtual void Init(Dictionary<string, object> a_oConfigList, 
-		System.Action<CFirebaseManager, bool> a_oCallback) 
-	{
+	public virtual void Init(Dictionary<string, object> a_oConfigList, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CAccess.Assert(a_oConfigList != null);
-		
-		CFunc.ShowLog("CFirebaseManager.Init: {0}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oConfigList);
+		CFunc.ShowLog("CFirebaseManager.Init: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oConfigList);
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
@@ -88,8 +83,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oConfigList = a_oConfigList;
 			m_oInitCallback = a_oCallback;
 
-			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), 
-				this.OnInit);
+			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
 		}
 #else
 		a_oCallback?.Invoke(this, false);
@@ -103,12 +97,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private void OnInit(Task<DependencyStatus> a_oTask) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
 			this.IsInit = a_oTask.Result == DependencyStatus.Available;
+			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 			
-			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message 
-				: string.Empty;
-			
-			CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", 
-				KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, oErrorMsg);
+			CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, oErrorMsg);
 
 			// 초기화 되었을 경우
 			if(this.IsInit) {

@@ -9,9 +9,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 추적을 시작한다
 	public void StartTracking(string a_oName, Dictionary<string, string> a_oDataList) {
 		CAccess.Assert(a_oName.ExIsValid());
-
-		CFunc.ShowLog("CFirebaseManager.StartTracking: {0}, {1}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oName, a_oDataList);
+		CFunc.ShowLog("CFirebaseManager.StartTracking: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, a_oName, a_oDataList);
 
 #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
@@ -19,14 +17,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit) {
 			var oDataList = a_oDataList ?? new Dictionary<string, string>();
 
-			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_DEVICE_ID, 
-				CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
-
-			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_PLATFORM, 
-				CCommonAppInfoStorage.Inst.Platform);
-
-			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_USER_TYPE, 
-				CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
+			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_DEVICE_ID, CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
+			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
+			oDataList.ExAddValue(KCDefine.U_TRACKING_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
 
 			CUnityMsgSender.Inst.SendTrackingMsg(a_oName, a_oDataList, true);
 		}
@@ -37,9 +30,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 추적을 중지한다
 	public void StopTracking(string a_oName) {
 		CAccess.Assert(a_oName.ExIsValid());
-		
-		CFunc.ShowLog("CFirebaseManager.StopTracking: {0}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oName);
+		CFunc.ShowLog("CFirebaseManager.StopTracking: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oName);
 
 #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)

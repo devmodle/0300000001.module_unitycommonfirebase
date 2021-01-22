@@ -17,9 +17,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 분석 유저 식별자를 변경한다
 	public void SetAnalyticsUserID(string a_oID) {
 		CAccess.Assert(a_oID.ExIsValid());
-
-		CFunc.ShowLog("CFirebaseManager.SetAnalyticsUserID: {0}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oID);
+		CFunc.ShowLog("CFirebaseManager.SetAnalyticsUserID: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oID);
 
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
@@ -32,9 +30,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 분석 데이터를 변경한다
 	public void SetAnalyticsDatas(Dictionary<string, string> a_oDataList) {
 		CAccess.Assert(a_oDataList != null);
-
-		CFunc.ShowLog("CFirebaseManager.SetAnalyticsDatas: {0}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oDataList);
+		CFunc.ShowLog("CFirebaseManager.SetAnalyticsDatas: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oDataList);
 
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
@@ -49,9 +45,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 로그를 전송한다
 	public void SendLog(string a_oName, Dictionary<string, string> a_oDataList) {
 		CAccess.Assert(a_oName.ExIsValid());
-
-		CFunc.ShowLog("CFirebaseManager.SendLog: {0}, {1}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oName, a_oDataList);
+		CFunc.ShowLog("CFirebaseManager.SendLog: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, a_oName, a_oDataList);
 
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
@@ -59,21 +53,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit) {
 			var oDataList = a_oDataList ?? new Dictionary<string, string>();
 
-			oDataList.ExAddValue(KCDefine.U_LOG_KEY_DEVICE_ID, 
-				CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
-
-			oDataList.ExAddValue(KCDefine.U_LOG_KEY_PLATFORM, 
-				CCommonAppInfoStorage.Inst.Platform);
+			oDataList.ExAddValue(KCDefine.U_LOG_KEY_DEVICE_ID, CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
+			oDataList.ExAddValue(KCDefine.U_LOG_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
 
 #if AUTO_LOG_PARAMS_ENABLE
-			oDataList.ExAddValue(KCDefine.U_LOG_KEY_USER_TYPE, 
-				CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
-
-			oDataList.ExAddValue(KCDefine.U_LOG_KEY_LOG_TIME, 
-				System.DateTime.UtcNow.ExToLongString());
-
-			oDataList.ExAddValue(KCDefine.U_LOG_KEY_INSTALL_TIME, 
-				CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongString());
+			oDataList.ExAddValue(KCDefine.U_LOG_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
+			oDataList.ExAddValue(KCDefine.U_LOG_KEY_LOG_TIME, System.DateTime.UtcNow.ExToLongString());
+			oDataList.ExAddValue(KCDefine.U_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongString());
 #endif			// #if AUTO_LOG_PARAMS_ENABLE
 
 			var oParams = this.MakeParams(oDataList);
@@ -104,9 +90,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 결제 로그를 전송한다
 	public void SendPurchaseLog(Product a_oProduct) {
 		CAccess.Assert(a_oProduct != null);
-		
-		CFunc.ShowLog("CFirebaseManager.SendPurchaseLog: {0}", 
-			KCDefine.B_LOG_COLOR_PLUGIN, a_oProduct);
+		CFunc.ShowLog("CFirebaseManager.SendPurchaseLog: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oProduct);
 
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
