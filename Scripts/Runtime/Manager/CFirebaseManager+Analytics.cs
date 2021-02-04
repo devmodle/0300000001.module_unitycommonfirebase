@@ -79,7 +79,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		foreach(var stKeyValue in a_oDataList) {
 			var oParams = new Parameter(stKeyValue.Key, stKeyValue.Value);
-			oParamsList.Add(oParams);
+			oParamsList.ExAddValue(oParams);
 		}
 
 		return oParamsList.ToArray();
