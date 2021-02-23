@@ -25,12 +25,10 @@ using Firebase.Messaging;
 //! 파이어 베이스 관리자
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 변수
-	private FirebaseApp m_oApp = null;
 	private Dictionary<string, object> m_oConfigList = null;
 	private System.Action<CFirebaseManager, bool> m_oInitCallback = null;
 
 #if FIREBASE_AUTH_ENABLE
-	private FirebaseAuth m_oAuth = null;
 	private System.Action<CFirebaseManager, bool> m_oLoginCallback = null;
 #endif			// #if FIREBASE_AUTH_ENABLE
 
@@ -103,15 +101,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 			// 초기화 되었을 경우
 			if(this.IsInit) {
-				m_oApp = FirebaseApp.DefaultInstance;
-
-#if FIREBASE_AUTH_ENABLE
-				m_oAuth = FirebaseAuth.DefaultInstance;
-#endif			// #if FIREBASE_AUTH_ENABLE
+				var oApp = FirebaseApp.DefaultInstance;
 
 #if UNITY_EDITOR && FIREBASE_DB_ENABLE
 				string oURL = CPluginInfoTable.Inst.FirebaseDBURL;
-				m_oApp.Options.DatabaseUrl = new System.Uri(oURL);
+				oApp.Options.DatabaseUrl = new System.Uri(oURL);
 #endif			// #if UNITY_EDITOR && FIREBASE_DB_ENABLE
 
 #if FIREBASE_ANALYTICS_ENABLE
