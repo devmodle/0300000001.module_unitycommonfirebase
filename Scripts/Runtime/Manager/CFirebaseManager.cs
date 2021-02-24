@@ -25,7 +25,6 @@ using Firebase.Messaging;
 //! 파이어 베이스 관리자
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 변수
-	private Dictionary<string, object> m_oConfigList = null;
 	private System.Action<CFirebaseManager, bool> m_oInitCallback = null;
 
 #if FIREBASE_AUTH_ENABLE
@@ -38,6 +37,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_DB_ENABLE
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
+	private bool m_bIsSetupDefConfigs = false;
+	
+	private Dictionary<string, object> m_oConfigList = null;
 	private System.Action<CFirebaseManager, bool> m_oLoadConfigCallback = null;
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 	#endregion			// 변수
@@ -53,6 +55,16 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #else
 			return false;
 #endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+		}
+	}
+
+	public bool IsSetupDefConfigs {
+		get {
+#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+			return this.IsInit && m_bIsSetupDefConfigs;
+#else
+			return false;
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		}
 	}
 
@@ -78,9 +90,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit) {
 			a_oCallback?.Invoke(this, true);
 		} else {
+#if FIREBASE_REMOTE_CONFIG_ENABLE
 			m_oConfigList = a_oConfigList;
-			m_oInitCallback = a_oCallback;
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
+			m_oInitCallback = a_oCallback;
 			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
 		}
 #else
@@ -121,7 +135,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_REMOTE_CONFIG_ENABLE
 				// 속성이 유효 할 경우
 				if(m_oConfigList != null) {
-					FirebaseRemoteConfig.SetDefaults(m_oConfigList);
+					CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(m_oConfigList), this.OnSetupDefConfigs);
 				}
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
@@ -134,6 +148,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CFunc.Invoke(ref m_oInitCallback, this, this.IsInit);
 		});
 	}
+
+#if FIREBASE_REMOTE_CONFIG_ENABLE
+	//! 기본 속성을 설정했을 경우
+	private void OnSetupDefConfigs(Task a_oTask) {
+		m_bIsSetupDefConfigs = a_oTask.ExIsComplete();
+	}
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	#endregion			// 조건부 함수
 }
