@@ -24,7 +24,13 @@ using Firebase.Messaging;
 
 //! 파이어 베이스 관리자
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
+	//! 매개 변수
+	public struct STParams {
+		public Dictionary<string, object> m_oConfigList;
+	}
+
 	#region 변수
+	private STParams m_stParams;
 	private System.Action<CFirebaseManager, bool> m_oInitCallback = null;
 
 #if FIREBASE_AUTH_ENABLE
@@ -38,8 +44,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
 	private bool m_bIsSetupDefConfigs = false;
-	
-	private Dictionary<string, object> m_oConfigList = null;
 	private System.Action<CFirebaseManager, bool> m_oLoadConfigCallback = null;
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 	#endregion			// 변수
@@ -81,20 +85,18 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 함수
 	//! 초기화
-	public virtual void Init(Dictionary<string, object> a_oConfigList, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oConfigList != null);
-		CFunc.ShowLog("CFirebaseManager.Init: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oConfigList);
+	public virtual void Init(STParams a_stParams, System.Action<CFirebaseManager, bool> a_oCallback) {
+		CAccess.Assert(a_stParams.m_oConfigList != null);
+		CFunc.ShowLog("CFirebaseManager.Init: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_stParams.m_oConfigList);
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			a_oCallback?.Invoke(this, true);
 		} else {
-#if FIREBASE_REMOTE_CONFIG_ENABLE
-			m_oConfigList = a_oConfigList;
-#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
-
+			m_stParams = a_stParams;
 			m_oInitCallback = a_oCallback;
+
 			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
 		}
 #else
@@ -134,8 +136,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
 				// 속성이 유효 할 경우
-				if(m_oConfigList != null) {
-					CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(m_oConfigList), this.OnSetupDefConfigs);
+				if(m_stParams.m_oConfigList != null) {
+					CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(m_stParams.m_oConfigList), this.OnSetupDefConfigs);
 				}
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
