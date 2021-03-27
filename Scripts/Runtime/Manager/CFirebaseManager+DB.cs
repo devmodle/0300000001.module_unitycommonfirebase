@@ -12,9 +12,9 @@ using Firebase.Database;
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	//! 데이터를 저장한다
-	public void SaveDB(List<string> a_oNodeList, string a_oJSONString, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oNodeList != null && a_oJSONString.ExIsValid());
-		CFunc.ShowLog("CFirebaseManager.SaveDB: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, a_oNodeList, a_oJSONString);
+	public void SaveDB(List<string> a_oNodeList, string a_oJSONStr, System.Action<CFirebaseManager, bool> a_oCallback) {
+		CAccess.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
+		CFunc.ShowLog("CFirebaseManager.SaveDB: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, a_oNodeList, a_oJSONStr);
 
 #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 로그인 되었을 경우
@@ -22,7 +22,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oSaveDBCallback = a_oCallback;
 			var oDB = this.GetDB(a_oNodeList);
 
-			CTaskManager.Inst.WaitAsyncTask(oDB.SetRawJsonValueAsync(a_oJSONString), this.OnSaveDB);
+			CTaskManager.Inst.WaitAsyncTask(oDB.SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDB);
 		} else {
 			a_oCallback?.Invoke(this, false);
 		}
