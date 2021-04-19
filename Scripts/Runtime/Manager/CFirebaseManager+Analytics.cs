@@ -35,8 +35,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			foreach(var stKeyValue in a_oDataList) {
-				FirebaseAnalytics.SetUserProperty(stKeyValue.Key, stKeyValue.Value);
+			foreach(var stKeyVal in a_oDataList) {
+				FirebaseAnalytics.SetUserProperty(stKeyVal.Key, stKeyVal.Value);
 			}
 		}
 #endif			// #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
@@ -53,13 +53,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit) {
 			var oDataList = a_oDataList ?? new Dictionary<string, string>();
 
-			oDataList.ExAddValue(KCDefine.L_LOG_KEY_DEVICE_ID, CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
-			oDataList.ExAddValue(KCDefine.L_LOG_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
+			oDataList.ExAddVal(KCDefine.L_LOG_KEY_DEVICE_ID, CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
+			oDataList.ExAddVal(KCDefine.L_LOG_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
 
 #if AUTO_LOG_PARAMS_ENABLE
-			oDataList.ExAddValue(KCDefine.L_LOG_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
-			oDataList.ExAddValue(KCDefine.L_LOG_KEY_LOG_TIME, System.DateTime.UtcNow.ExToLongStr());
-			oDataList.ExAddValue(KCDefine.L_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongStr());
+			oDataList.ExAddVal(KCDefine.L_LOG_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
+			oDataList.ExAddVal(KCDefine.L_LOG_KEY_LOG_TIME, System.DateTime.UtcNow.ExToLongStr());
+			oDataList.ExAddVal(KCDefine.L_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongStr());
 #endif			// #if AUTO_LOG_PARAMS_ENABLE
 
 			var oParams = this.MakeParams(oDataList);
@@ -77,9 +77,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oDataList != null);
 		var oParamsList = new List<Parameter>();
 
-		foreach(var stKeyValue in a_oDataList) {
-			var oParams = new Parameter(stKeyValue.Key, stKeyValue.Value);
-			oParamsList.ExAddValue(oParams);
+		foreach(var stKeyVal in a_oDataList) {
+			var oParams = new Parameter(stKeyVal.Key, stKeyVal.Value);
+			oParamsList.ExAddVal(oParams);
 		}
 
 		return oParamsList.ToArray();

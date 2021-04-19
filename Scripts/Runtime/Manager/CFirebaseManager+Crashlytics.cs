@@ -30,8 +30,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_CRASHLYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			foreach(var stKeyValue in a_oDataList) {
-				Crashlytics.SetCustomKey(stKeyValue.Key, stKeyValue.Value);
+			foreach(var stKeyVal in a_oDataList) {
+				Crashlytics.SetCustomKey(stKeyVal.Key, stKeyVal.Value);
 			}
 		}
 #endif			// #if FIREBASE_CRASHLYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
