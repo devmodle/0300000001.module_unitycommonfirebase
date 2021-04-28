@@ -9,7 +9,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 추적을 시작한다
 	public void StartTracking(string a_oName, Dictionary<string, string> a_oDataList) {
 		CAccess.Assert(a_oName.ExIsValid());
-		CFunc.ShowLog("CFirebaseManager.StartTracking: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, a_oName, a_oDataList);
+		CFunc.ShowLog($"CFirebaseManager.StartTracking: {a_oName}, {a_oDataList}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
@@ -30,7 +30,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 추적을 중지한다
 	public void StopTracking(string a_oName) {
 		CAccess.Assert(a_oName.ExIsValid());
-		CFunc.ShowLog("CFirebaseManager.StopTracking: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oName);
+		CFunc.ShowLog($"CFirebaseManager.StopTracking: {a_oName}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)

@@ -87,7 +87,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 초기화
 	public virtual void Init(STParams a_stParams, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CAccess.Assert(a_stParams.m_oConfigList != null);
-		CFunc.ShowLog("CFirebaseManager.Init: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_stParams.m_oConfigList);
+		CFunc.ShowLog($"CFirebaseManager.Init: {a_stParams.m_oConfigList}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
@@ -113,7 +113,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			this.IsInit = a_oTask.Result == DependencyStatus.Available;
 			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 			
-			CFunc.ShowLog("CFirebaseManager.OnInit: {0}, {1}", KCDefine.B_LOG_COLOR_PLUGIN, this.IsInit, oErrorMsg);
+			CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 			// 초기화 되었을 경우
 			if(this.IsInit) {

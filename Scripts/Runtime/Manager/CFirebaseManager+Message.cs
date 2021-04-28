@@ -14,7 +14,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 토큰을 수신했을 경우
 	private void OnReceiveToken(object a_oSender, TokenReceivedEventArgs a_oArgs) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_TOKEN_CALLBACK, () => {
-			CFunc.ShowLog("CFirebaseManager.OnReceiveToken: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oArgs);
+			CFunc.ShowLog($"CFirebaseManager.OnReceiveToken: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
 			this.MsgToken = a_oArgs.Token;
 		});	
 	}
@@ -22,7 +22,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 메세지를 수신했을 경우
 	private void OnReceiveMsg(object a_oSender, MessageReceivedEventArgs a_oArgs) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_MSG_CALLBACK, () => {
-			CFunc.ShowLog("CFirebaseManager.OnReceiveMsg: {0}", KCDefine.B_LOG_COLOR_PLUGIN, a_oArgs);
+			CFunc.ShowLog($"CFirebaseManager.OnReceiveMsg: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
 		});
 	}
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
