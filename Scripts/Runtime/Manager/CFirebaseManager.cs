@@ -54,31 +54,31 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	public bool IsLogin {
 		get {
-#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if FIREBASE_AUTH_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 			return this.IsInit && FirebaseAuth.DefaultInstance.CurrentUser != null;
 #else
 			return false;
-#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 		}
 	}
 
 	public bool IsSetupDefConfigs {
 		get {
-#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 			return this.IsInit && m_bIsSetupDefConfigs;
 #else
 			return false;
-#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 		}
 	}
 
 	public string UserID {
 		get {
-#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if FIREBASE_AUTH_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 			return this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
 #else
 			return string.Empty;
-#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 		}
 	}
 	#endregion			// 프로퍼티
@@ -89,7 +89,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_stParams.m_oConfigList != null);
 		CFunc.ShowLog($"CFirebaseManager.Init: {a_stParams.m_oConfigList}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if UNITY_IOS || UNITY_ANDROID
+#if UNITY_STANDALONE || (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			a_oCallback?.Invoke(this, true);
@@ -101,12 +101,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if UNITY_STANDALONE || (UNITY_IOS || UNITY_ANDROID)
 	}
 	#endregion			// 함수
 
 	#region 조건부 함수
-#if UNITY_IOS || UNITY_ANDROID
+#if UNITY_STANDALONE || (UNITY_IOS || UNITY_ANDROID)
 	//! 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
@@ -157,7 +157,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		m_bIsSetupDefConfigs = a_oTask.ExIsComplete();
 	}
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
-#endif			// #if UNITY_IOS || UNITY_ANDROID
+#endif			// #if UNITY_STANDALONE || (UNITY_IOS || UNITY_ANDROID)
 	#endregion			// 조건부 함수
 }
 #endif			// #if FIREBASE_MODULE_ENABLE

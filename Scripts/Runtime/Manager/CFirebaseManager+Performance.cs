@@ -11,7 +11,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oName.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.StartTracking: {a_oName}, {a_oDataList}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if FIREBASE_PERFORMANCE_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
@@ -24,7 +24,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CUnityMsgSender.Inst.SendTrackingMsg(a_oName, a_oDataList, true);
 		}
 #endif			// #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
-#endif			// #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 	}
 
 	//! 추적을 중지한다
@@ -32,14 +32,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oName.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.StopTracking: {a_oName}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if FIREBASE_PERFORMANCE_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			CUnityMsgSender.Inst.SendTrackingMsg(a_oName, null, false);
 		}
 #endif			// #if PERFORMANCE_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
-#endif			// #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if FIREBASE_PERFORMANCE_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
 	}
 	#endregion			// 함수
 }
