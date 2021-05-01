@@ -16,18 +16,18 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oKey.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.GetConfig: {a_oKey}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
+#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 		return this.IsSetupDefConfigs ? FirebaseRemoteConfig.DefaultInstance.GetValue(a_oKey).StringValue : string.Empty;
 #else
 		return string.Empty;
-#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 	}
 
 	//! 속성을 로드한다
 	public void LoadConfig(System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoadConfig", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
+#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 		// 기본 속성이 설정 되었을 경우
 		if(this.IsSetupDefConfigs) {
 			m_oLoadConfigCallback = a_oCallback;
@@ -37,12 +37,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 	}
 	#endregion			// 함수
 
 	#region 조건부 함수
-#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
+#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 	//! 속성이 로드 되었을 경우
 	private void OnLoadConfig(Task<bool> a_oTask) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIG_CALLBACK, () => {
@@ -52,7 +52,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CFunc.Invoke(ref m_oLoadConfigCallback, this, a_oTask.ExIsComplete() && a_oTask.Result);
 		});
 	}
-#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID)
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 	#endregion			// 조건부 함수
 }
 #endif			// #if FIREBASE_MODULE_ENABLE
