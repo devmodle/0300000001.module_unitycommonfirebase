@@ -18,7 +18,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_DB_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin && CAccess.IsMobile) {
+		if(this.IsInit && this.IsLogin) {
 			m_oSaveDBCallback = a_oCallback;
 			var oDB = this.GetDB(a_oNodeList);
 
@@ -38,7 +38,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_DB_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin && CAccess.IsMobile) {
+		if(this.IsInit && this.IsLogin) {
 			m_oLoadDBCallback = a_oCallback;
 			var oDB = this.GetDB(a_oNodeList);
 			
