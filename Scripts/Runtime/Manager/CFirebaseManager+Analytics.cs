@@ -47,8 +47,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oName.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.SendLog: {a_oName}, {a_oDataList}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
-#if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
+#if (FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oDataList = a_oDataList ?? new Dictionary<string, string>();
@@ -65,8 +64,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			var oParams = this.MakeParams(oDataList);
 			FirebaseAnalytics.LogEvent(a_oName, oParams);
 		}
-#endif			// #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
-#endif			// #if FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
 	}
 	#endregion			// 함수
 
@@ -92,8 +90,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oProduct != null);
 		CFunc.ShowLog($"CFirebaseManager.SendPurchaseLog: {a_oProduct}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
-#if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
+#if (FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oParams = this.MakeParams(new Dictionary<string, string>() {
@@ -106,8 +103,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			
 			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParams);
 		}
-#endif			// #if ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD)
-#endif			// #if FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
 	}
 #endif			// #if PURCHASE_MODULE_ENABLE
 	#endregion			// 조건부 함수
