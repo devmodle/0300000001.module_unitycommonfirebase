@@ -107,7 +107,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 조건부 함수
 #if UNITY_EDITOR || (UNITY_IOS || UNITY_ANDROID)
-	//! 초기화 되었을 경우
+	// 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
 			this.IsInit = a_oTask.Result == DependencyStatus.Available;
