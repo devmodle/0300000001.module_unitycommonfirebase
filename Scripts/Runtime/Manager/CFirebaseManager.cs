@@ -26,7 +26,7 @@ using Firebase.Messaging;
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 매개 변수
 	public struct STParams {
-		public Dictionary<string, object> m_oConfigList;
+		public Dictionary<string, object> m_oConfigDict;
 	}
 
 	#region 변수
@@ -86,8 +86,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	//! 초기화
 	public virtual void Init(STParams a_stParams, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_stParams.m_oConfigList != null);
-		CFunc.ShowLog($"CFirebaseManager.Init: {a_stParams.m_oConfigList}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_stParams.m_oConfigDict != null);
+		CFunc.ShowLog($"CFirebaseManager.Init: {a_stParams.m_oConfigDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if UNITY_EDITOR || (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
@@ -136,8 +136,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
 				// 속성이 유효 할 경우
-				if(m_stParams.m_oConfigList != null) {
-					CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(m_stParams.m_oConfigList), this.OnSetupDefConfigs);
+				if(m_stParams.m_oConfigDict != null) {
+					CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(m_stParams.m_oConfigDict), this.OnSetupDefConfigs);
 				}
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 

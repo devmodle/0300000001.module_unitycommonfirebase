@@ -28,14 +28,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 	//! 분석 데이터를 변경한다
-	public void SetAnalyticsDatas(Dictionary<string, string> a_oDataList) {
-		CAccess.Assert(a_oDataList != null);
-		CFunc.ShowLog($"CFirebaseManager.SetAnalyticsDatas: {a_oDataList}", KCDefine.B_LOG_COLOR_PLUGIN);
+	public void SetAnalyticsDatas(Dictionary<string, string> a_oDataDict) {
+		CAccess.Assert(a_oDataDict != null);
+		CFunc.ShowLog($"CFirebaseManager.SetAnalyticsDatas: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			foreach(var stKeyVal in a_oDataList) {
+			foreach(var stKeyVal in a_oDataDict) {
 				FirebaseAnalytics.SetUserProperty(stKeyVal.Key, stKeyVal.Value);
 			}
 		}
@@ -43,25 +43,25 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 	
 	//! 로그를 전송한다
-	public void SendLog(string a_oName, Dictionary<string, string> a_oDataList) {
+	public void SendLog(string a_oName, Dictionary<string, string> a_oDataDict) {
 		CAccess.Assert(a_oName.ExIsValid());
-		CFunc.ShowLog($"CFirebaseManager.SendLog: {a_oName}, {a_oDataList}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CFunc.ShowLog($"CFirebaseManager.SendLog: {a_oName}, {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if (FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			var oDataList = a_oDataList ?? new Dictionary<string, string>();
+			var oDataDict = a_oDataDict ?? new Dictionary<string, string>();
 
-			oDataList.ExAddVal(KCDefine.L_LOG_KEY_DEVICE_ID, CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
-			oDataList.ExAddVal(KCDefine.L_LOG_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
+			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_DEVICE_ID, CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
+			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
 
 #if AUTO_LOG_PARAMS_ENABLE
-			oDataList.ExAddVal(KCDefine.L_LOG_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
-			oDataList.ExAddVal(KCDefine.L_LOG_KEY_LOG_TIME, System.DateTime.UtcNow.ExToLongStr());
-			oDataList.ExAddVal(KCDefine.L_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongStr());
+			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
+			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_LOG_TIME, System.DateTime.UtcNow.ExToLongStr());
+			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongStr());
 #endif			// #if AUTO_LOG_PARAMS_ENABLE
 
-			var oParams = this.MakeParams(oDataList);
+			var oParams = this.MakeParams(oDataDict);
 			FirebaseAnalytics.LogEvent(a_oName, oParams);
 		}
 #endif			// #if (FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
@@ -71,11 +71,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 조건부 함수
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 	//! 매개 변수를 생성한다
-	private Parameter[] MakeParams(Dictionary<string, string> a_oDataList) {
-		CAccess.Assert(a_oDataList != null);
+	private Parameter[] MakeParams(Dictionary<string, string> a_oDataDict) {
+		CAccess.Assert(a_oDataDict != null);
 		var oParamsList = new List<Parameter>();
 
-		foreach(var stKeyVal in a_oDataList) {
+		foreach(var stKeyVal in a_oDataDict) {
 			var oParams = new Parameter(stKeyVal.Key, stKeyVal.Value);
 			oParamsList.ExAddVal(oParams);
 		}
