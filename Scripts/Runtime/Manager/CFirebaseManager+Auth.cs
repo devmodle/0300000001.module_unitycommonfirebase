@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 #if FIREBASE_MODULE_ENABLE
 #if FIREBASE_AUTH_ENABLE

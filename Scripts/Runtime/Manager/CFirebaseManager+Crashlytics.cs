@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 #if FIREBASE_MODULE_ENABLE
 #if FIREBASE_CRASHLYTICS_ENABLE
