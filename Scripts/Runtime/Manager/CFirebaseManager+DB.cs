@@ -12,26 +12,6 @@ using Firebase.Database;
 //! 파이어 베이스 관리자 - 데이터 베이스
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
-	//! 데이터를 저장한다
-	public void SaveDB(List<string> a_oNodeList, string a_oJSONStr, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
-		CFunc.ShowLog($"CFirebaseManager.SaveDB: {a_oNodeList}, {a_oJSONStr}", KCDefine.B_LOG_COLOR_PLUGIN);
-
-#if FIREBASE_DB_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
-		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin) {
-			m_oSaveDBCallback = a_oCallback;
-			var oDB = this.GetDB(a_oNodeList);
-
-			CTaskManager.Inst.WaitAsyncTask(oDB.SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDB);
-		} else {
-			a_oCallback?.Invoke(this, false);
-		}
-#else
-		a_oCallback?.Invoke(this, false);
-#endif			// #if FIREBASE_DB_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
-	}
-
 	//! 데이터를 로드한다
 	public void LoadDB(List<string> a_oNodeList, System.Action<CFirebaseManager, string, bool> a_oCallback) {
 		CAccess.Assert(a_oNodeList != null);
@@ -51,20 +31,30 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		a_oCallback?.Invoke(this, string.Empty, false);
 #endif			// #if FIREBASE_DB_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
 	}
+
+	//! 데이터를 저장한다
+	public void SaveDB(List<string> a_oNodeList, string a_oJSONStr, System.Action<CFirebaseManager, bool> a_oCallback) {
+		CAccess.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
+		CFunc.ShowLog($"CFirebaseManager.SaveDB: {a_oNodeList}, {a_oJSONStr}", KCDefine.B_LOG_COLOR_PLUGIN);
+
+#if FIREBASE_DB_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
+		// 로그인 되었을 경우
+		if(this.IsInit && this.IsLogin) {
+			m_oSaveDBCallback = a_oCallback;
+			var oDB = this.GetDB(a_oNodeList);
+
+			CTaskManager.Inst.WaitAsyncTask(oDB.SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDB);
+		} else {
+			a_oCallback?.Invoke(this, false);
+		}
+#else
+		a_oCallback?.Invoke(this, false);
+#endif			// #if FIREBASE_DB_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
+	}
 	#endregion			// 함수
 
 	#region 조건부 함수
 #if FIREBASE_DB_ENABLE && (UNITY_EDITOR || UNITY_IOS || UNITY_ANDROID)
-	//! 데이터가 저장 되었을 경우
-	private void OnSaveDB(Task a_oTask) {
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DB_CALLBACK, () => {
-			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-			CFunc.ShowLog($"CFirebaseManager.OnSaveDB: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
-
-			CFunc.Invoke(ref m_oSaveDBCallback, this, a_oTask.ExIsComplete());
-		});
-	}
-
 	//! 데이터가 로드 되었을 경우
 	private void OnLoadDB(Task<DataSnapshot> a_oTask) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_DB_CALLBACK, () => {
@@ -79,6 +69,16 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			}
 
 			m_oLoadDBCallback = null;
+		});
+	}
+
+	//! 데이터가 저장 되었을 경우
+	private void OnSaveDB(Task a_oTask) {
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DB_CALLBACK, () => {
+			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+			CFunc.ShowLog($"CFirebaseManager.OnSaveDB: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
+
+			CFunc.Invoke(ref m_oSaveDBCallback, this, a_oTask.ExIsComplete());
 		});
 	}
 
