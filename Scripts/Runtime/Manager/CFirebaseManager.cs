@@ -32,7 +32,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	//! 콜백 매개 변수
 	public struct STCallbackParams {
-		public System.Action<CFirebaseManager, bool> m_oInitCallback;
+		public System.Action<CFirebaseManager, bool> m_oCallback;
 	}
 
 	#region 변수
@@ -98,7 +98,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			a_stCallbackParams.m_oInitCallback?.Invoke(this, true);
+			a_stCallbackParams.m_oCallback?.Invoke(this, true);
 		} else {
 			m_stParams = a_stParams;
 			m_stCallbackParams = a_stCallbackParams;
@@ -106,7 +106,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
 		}
 #else
-		a_stCallbackParams.m_oInitCallback?.Invoke(this, false);
+		a_stCallbackParams.m_oCallback?.Invoke(this, false);
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 	#endregion			// 함수
@@ -146,7 +146,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 			}
 
-			CFunc.Invoke(ref m_stCallbackParams.m_oInitCallback, this, this.IsInit);
+			CFunc.Invoke(ref m_stCallbackParams.m_oCallback, this, this.IsInit);
 		});
 	}
 
