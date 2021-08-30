@@ -33,8 +33,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	//! 애플 로그인을 처리한다
 	public void LoginWithApple(string a_oUserID, string a_oIDToken, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oUserID.ExIsValid() && a_oIDToken.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.LoginWithApple: {a_oUserID}, {a_oIDToken}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oUserID.ExIsValid() && a_oIDToken.ExIsValid());
 
 #if FIREBASE_AUTH_ENABLE && UNITY_IOS
 		var oAuth = FirebaseAuth.DefaultInstance;
@@ -48,8 +48,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	//! 페이스 북 로그인을 처리한다
 	public void LoginWithFacebook(string a_oAccessToken, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oAccessToken.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.LoginWithFacebook: {a_oAccessToken}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oAccessToken.ExIsValid());
 			
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		var oAuth = FirebaseAuth.DefaultInstance;
@@ -63,8 +63,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	//! 게임 센터 로그인을 처리한다
 	public void LoginWithGameCenter(string a_oAuthCode, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oAuthCode.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.LoginWithGameCenter: {a_oAuthCode}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oAuthCode.ExIsValid());
 
 #if (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE) && (UNITY_IOS || UNITY_ANDROID)
 		m_oLoginCallback = a_oCallback;
@@ -101,21 +101,20 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	//! 로그인 되었을 경우
 	private void OnLogin(Task<FirebaseUser> a_oTask) {
+		string oUserID = a_oTask.ExIsComplete() ? a_oTask.Result.UserId : string.Empty;
+		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+
+		CFunc.ShowLog($"CFirebaseManager.OnLogin: {a_oTask.ExIsComplete()}, {oUserID}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
+		
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => {
-			bool bIsComplete = a_oTask.ExIsComplete();
-
-			string oUserID = bIsComplete ? a_oTask.Result.UserId : string.Empty;
-			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-
-			CFunc.ShowLog($"CFirebaseManager.OnLogin: {bIsComplete}, {oUserID}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 			CFunc.Invoke(ref m_oLoginCallback, this, this.IsLogin);
 		});
 	}
 
 	//! 인증 로그인을 처리한다
 	private void LoginWithCredential(Credential a_oCredential, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CAccess.Assert(a_oCredential != null);
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oCredential != null);
 
 		// 로그인 되었을 경우
 		if(!this.IsInit || this.IsLogin) {

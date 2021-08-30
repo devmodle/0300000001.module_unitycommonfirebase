@@ -13,8 +13,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	//! 크래시 유저 식별자를 변경한다
 	public void SetCrashUserID(string a_oID) {
-		CAccess.Assert(a_oID.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.SetCrashUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oID.ExIsValid());
 
 #if FIREBASE_CRASHLYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
@@ -27,6 +27,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	//! 크래시 데이터를 변경한다
 	public void SetCrashDatas(Dictionary<string, string> a_oDataDict) {
 		CFunc.ShowLog($"CFirebaseManager.SetCrashDatas: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oDataDict.ExIsValid());
 
 #if FIREBASE_CRASHLYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우

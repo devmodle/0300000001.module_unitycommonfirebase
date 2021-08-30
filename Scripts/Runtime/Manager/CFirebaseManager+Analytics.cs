@@ -17,8 +17,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	//! 분석 유저 식별자를 변경한다
 	public void SetAnalyticsUserID(string a_oID) {
-		CAccess.Assert(a_oID.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.SetAnalyticsUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oID.ExIsValid());
 
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
@@ -27,26 +27,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #endif			// #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
-
-	//! 분석 데이터를 변경한다
-	public void SetAnalyticsDatas(Dictionary<string, string> a_oDataDict) {
-		CAccess.Assert(a_oDataDict != null);
-		CFunc.ShowLog($"CFirebaseManager.SetAnalyticsDatas: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
-
-#if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
-		// 초기화 되었을 경우
-		if(this.IsInit) {
-			foreach(var stKeyVal in a_oDataDict) {
-				FirebaseAnalytics.SetUserProperty(stKeyVal.Key, stKeyVal.Value);
-			}
-		}
-#endif			// #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
-	}
 	
 	//! 로그를 전송한다
 	public void SendLog(string a_oName, Dictionary<string, string> a_oDataDict) {
-		CAccess.Assert(a_oName.ExIsValid());
 		CFunc.ShowLog($"CFirebaseManager.SendLog: {a_oName}, {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oName.ExIsValid());
 
 #if (FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
 		// 초기화 되었을 경우
@@ -88,8 +73,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if PURCHASE_MODULE_ENABLE
 	//! 결제 로그를 전송한다
 	public void SendPurchaseLog(Product a_oProduct) {
-		CAccess.Assert(a_oProduct != null);
 		CFunc.ShowLog($"CFirebaseManager.SendPurchaseLog: {a_oProduct}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oProduct != null);
 
 #if (FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
 		// 초기화 되었을 경우

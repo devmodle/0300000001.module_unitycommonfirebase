@@ -92,8 +92,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	//! 초기화
 	public virtual void Init(STParams a_stParams, STCallbackParams a_stCallbackParams) {
-		CAccess.Assert(a_stParams.m_oConfigDict != null);
 		CFunc.ShowLog($"CFirebaseManager.Init: {a_stParams.m_oConfigDict}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_stParams.m_oConfigDict != null);
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
@@ -115,12 +115,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
+		this.IsInit = a_oTask.Result == DependencyStatus.Available;
+		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+		
+		CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
+		
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
-			this.IsInit = a_oTask.Result == DependencyStatus.Available;
-			string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-			
-			CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
-
 			// 초기화 되었을 경우
 			if(this.IsInit) {
 #if FIREBASE_ANALYTICS_ENABLE
