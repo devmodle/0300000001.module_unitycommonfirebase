@@ -60,31 +60,31 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	public bool IsLogin {
 		get {
-#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 			return this.IsInit && FirebaseAuth.DefaultInstance.CurrentUser != null;
 #else
 			return false;
-#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		}
 	}
 
 	public bool IsSetupDefConfigs {
 		get {
-#if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_REMOTE_CONFIG_ENABLE
 			return this.IsInit && m_bIsSetupDefConfigs;
 #else
 			return false;
-#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_REMOTE_CONFIG_ENABLE
 		}
 	}
 
 	public string UserID {
 		get {
-#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 			return this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
 #else
 			return string.Empty;
-#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		}
 	}
 	#endregion			// 프로퍼티

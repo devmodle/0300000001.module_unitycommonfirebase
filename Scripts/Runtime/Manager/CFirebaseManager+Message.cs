@@ -11,7 +11,7 @@ using Firebase.Messaging;
 //! 파이어 베이스 관리자 - 메세지
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 조건부 함수
-#if FIREBASE_CLOUD_MSG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CLOUD_MSG_ENABLE
 	//! 토큰을 수신했을 경우
 	private void OnReceiveToken(object a_oSender, TokenReceivedEventArgs a_oArgs) {
 		CFunc.ShowLog($"CFirebaseManager.OnReceiveToken: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
@@ -29,7 +29,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			// Do Something	
 		});
 	}
-#endif			// #if FIREBASE_CLOUD_MSG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CLOUD_MSG_ENABLE
 	#endregion			// 조건부 함수
 }
 #endif			// #if FIREBASE_MODULE_ENABLE

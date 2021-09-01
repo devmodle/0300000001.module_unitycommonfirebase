@@ -17,7 +17,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.LoadDB: {a_oNodeList}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oNodeList != null);
 
-#if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(this.IsInit && this.IsLogin) {
 			m_oLoadDBCallback = a_oCallback;
@@ -29,7 +29,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		a_oCallback?.Invoke(this, string.Empty, false);
-#endif			// #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 	}
 
 	//! 데이터를 저장한다
@@ -37,7 +37,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SaveDB: {a_oNodeList}, {a_oJSONStr}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
 
-#if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(this.IsInit && this.IsLogin) {
 			m_oSaveDBCallback = a_oCallback;
@@ -49,12 +49,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 	}
 	#endregion			// 함수
 
 	#region 조건부 함수
-#if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 	//! 데이터가 로드 되었을 경우
 	private void OnLoadDB(Task<DataSnapshot> a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -96,7 +96,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		
 		return oDB.Child(this.UserID);
 	}
-#endif			// #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 	#endregion			// 조건부 함수
 }
 #endif			// #if FIREBASE_MODULE_ENABLE

@@ -20,12 +20,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SetAnalyticsUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oID.ExIsValid());
 
-#if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			FirebaseAnalytics.SetUserId(a_oID);
 		}
-#endif			// #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 	}
 	
 	//! 로그를 전송한다
@@ -33,7 +33,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SendLog: {a_oName}, {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oName.ExIsValid());
 
-#if (FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
+#if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || ADHOC_BUILD || STORE_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oDataDict = a_oDataDict ?? new Dictionary<string, string>();
@@ -50,12 +50,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			var oParams = this.MakeParams(oDataDict);
 			FirebaseAnalytics.LogEvent(a_oName, oParams);
 		}
-#endif			// #if (FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
+#endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || ADHOC_BUILD || STORE_BUILD)
 	}
 	#endregion			// 함수
 
 	#region 조건부 함수
-#if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 	//! 매개 변수를 생성한다
 	private Parameter[] MakeParams(Dictionary<string, string> a_oDataDict) {
 		CAccess.Assert(a_oDataDict != null);
@@ -68,28 +68,29 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		return oParamsList.ToArray();
 	}
-#endif			// #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 
 #if PURCHASE_MODULE_ENABLE
 	//! 결제 로그를 전송한다
-	public void SendPurchaseLog(Product a_oProduct) {
-		CFunc.ShowLog($"CFirebaseManager.SendPurchaseLog: {a_oProduct}", KCDefine.B_LOG_COLOR_PLUGIN);
+	public void SendPurchaseLog(Product a_oProduct, int a_nNumProducts) {
+		CFunc.ShowLog($"CFirebaseManager.SendPurchaseLog: {a_oProduct}, {a_nNumProducts}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oProduct != null);
 
-#if (FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
+#if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || ADHOC_BUILD || STORE_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oParams = this.MakeParams(new Dictionary<string, string>() {
 				[FirebaseAnalytics.ParameterItemId] = a_oProduct.definition.id,
 				[FirebaseAnalytics.ParameterItemName] = a_oProduct.metadata.localizedTitle,
 				[FirebaseAnalytics.ParameterCurrency] = a_oProduct.metadata.isoCurrencyCode,
-				[FirebaseAnalytics.ParameterPrice] = a_oProduct.metadata.localizedPrice.ToString(),
+				[FirebaseAnalytics.ParameterQuantity] = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, a_nNumProducts),
+				[FirebaseAnalytics.ParameterPrice] = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, a_oProduct.metadata.localizedPrice),
 				[FirebaseAnalytics.ParameterTransactionId] = a_oProduct.transactionID
 			});
 			
 			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParams);
 		}
-#endif			// #if (FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)) && (ANALYTICS_TEST_ENABLE || (ADHOC_BUILD || STORE_BUILD))
+#endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || ADHOC_BUILD || STORE_BUILD)
 	}
 #endif			// #if PURCHASE_MODULE_ENABLE
 	#endregion			// 조건부 함수

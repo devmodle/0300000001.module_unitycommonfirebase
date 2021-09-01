@@ -16,7 +16,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void Login(System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.Login", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		// 로그인 되었을 경우
 		if(!this.IsInit || this.IsLogin) {
 			a_oCallback?.Invoke(this, this.IsLogin);
@@ -28,7 +28,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 	}
 
 	//! 애플 로그인을 처리한다
@@ -36,14 +36,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithApple: {a_oUserID}, {a_oIDToken}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oUserID.ExIsValid() && a_oIDToken.ExIsValid());
 
-#if FIREBASE_AUTH_ENABLE && UNITY_IOS
+#if UNITY_IOS && (FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE)
 		var oAuth = FirebaseAuth.DefaultInstance;
 		var oCredential = OAuthProvider.GetCredential(KCDefine.U_PROVIDER_ID_FIREBASE_M_APPLE_LOGIN, a_oUserID, a_oIDToken, null);
 
 		this.LoginWithCredential(oCredential, a_oCallback);
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if FIREBASE_AUTH_ENABLE && UNITY_IOS
+#endif			// #if UNITY_IOS && (FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE)
 	}
 
 	//! 페이스 북 로그인을 처리한다
@@ -51,14 +51,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithFacebook: {a_oAccessToken}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oAccessToken.ExIsValid());
 			
-#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && FACEBOOK_MODULE_ENABLE)
 		var oAuth = FirebaseAuth.DefaultInstance;
 		var oCredential = FacebookAuthProvider.GetCredential(a_oAccessToken);
 
 		this.LoginWithCredential(oCredential, a_oCallback);
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && FACEBOOK_MODULE_ENABLE)
 	}
 
 	//! 게임 센터 로그인을 처리한다
@@ -66,7 +66,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithGameCenter: {a_oAuthCode}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oAuthCode.ExIsValid());
 
-#if (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE) && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE)
 		m_oLoginCallback = a_oCallback;
 		
 #if UNITY_IOS
@@ -79,26 +79,26 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if UNITY_IOS
 #else
 		a_oCallback?.Invoke(this, false);
-#endif			// #if (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE) && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE)
 	}
 
 	//! 로그아웃을 처리한다
 	public void Logout(System.Action<CFirebaseManager> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.Logout", KCDefine.B_LOG_COLOR_PLUGIN);
 
-#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		// 로그인 되었을 경우
 		if(this.IsInit && this.IsLogin) {
 			FirebaseAuth.DefaultInstance.SignOut();
 		}
-#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 
 		a_oCallback?.Invoke(this);
 	}
 	#endregion			// 함수
 
 	#region 조건부 함수
-#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 	//! 로그인 되었을 경우
 	private void OnLogin(Task<FirebaseUser> a_oTask) {
 		string oUserID = a_oTask.ExIsComplete() ? a_oTask.Result.UserId : string.Empty;
@@ -140,7 +140,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 #endif			// #if UNITY_IOS && GAME_CENTER_MODULE_ENABLE
-#endif			// #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 	#endregion			// 조건부 함수
 }
 #endif			// #if FIREBASE_MODULE_ENABLE
