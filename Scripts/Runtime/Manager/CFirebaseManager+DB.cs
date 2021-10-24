@@ -9,10 +9,10 @@ using UnityEngine.UI;
 using Firebase.Database;
 #endif			// #if FIREBASE_DB_ENABLE
 
-//! 파이어 베이스 관리자 - 데이터 베이스
+/** 파이어 베이스 관리자 - 데이터 베이스 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
-	//! 데이터를 로드한다
+	/** 데이터를 로드한다 */
 	public void LoadDB(List<string> a_oNodeList, System.Action<CFirebaseManager, string, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoadDB: {a_oNodeList}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oNodeList != null);
@@ -32,7 +32,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 	}
 
-	//! 데이터를 저장한다
+	/** 데이터를 저장한다 */
 	public void SaveDB(List<string> a_oNodeList, string a_oJSONStr, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.SaveDB: {a_oNodeList}, {a_oJSONStr}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
@@ -55,7 +55,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 조건부 함수
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
-	//! 데이터가 로드 되었을 경우
+	/** 데이터가 로드 되었을 경우 */
 	private void OnLoadDB(Task<DataSnapshot> a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadDB: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
@@ -72,7 +72,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 
-	//! 데이터가 저장 되었을 경우
+	/** 데이터가 저장 되었을 경우 */
 	private void OnSaveDB(Task a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnSaveDB: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
@@ -82,7 +82,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 
-	//! 데이터 베이스를 반환한다
+	/** 데이터 베이스를 반환한다 */
 	private DatabaseReference GetDB(List<string> a_oNodeList) {
 		CAccess.Assert(a_oNodeList != null);
 		var oDB = FirebaseDatabase.DefaultInstance.RootReference;

@@ -23,14 +23,14 @@ using Firebase.RemoteConfig;
 using Firebase.Messaging;
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 
-//! 파이어 베이스 관리자
+/** 파이어 베이스 관리자 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
-	//! 매개 변수
+	/** 매개 변수 */
 	public struct STParams {
 		public Dictionary<string, object> m_oConfigDict;
 	}
 
-	//! 콜백 매개 변수
+	/** 콜백 매개 변수 */
 	public struct STCallbackParams {
 		public System.Action<CFirebaseManager, bool> m_oCallback;
 	}
@@ -90,7 +90,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#endregion			// 프로퍼티
 
 	#region 함수
-	//! 초기화
+	/** 초기화 */
 	public virtual void Init(STParams a_stParams, STCallbackParams a_stCallbackParams) {
 		CFunc.ShowLog($"CFirebaseManager.Init: {a_stParams.m_oConfigDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_stParams.m_oConfigDict != null);
@@ -151,7 +151,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
-	//! 기본 속성을 설정했을 경우
+	/** 기본 속성을 설정했을 경우 */
 	private void OnSetupDefConfigs(Task a_oTask) {
 		m_bIsSetupDefConfigs = a_oTask.ExIsComplete();
 	}

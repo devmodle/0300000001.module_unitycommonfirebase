@@ -9,10 +9,10 @@ using UnityEngine.UI;
 using Firebase.Auth;
 #endif			// #if FIREBASE_AUTH_ENABLE
 
-//! 파이어 베이스 관리자 - 인증
+/** 파이어 베이스 관리자 - 인증 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
-	//! 익명 로그인을 처리한다
+	/** 익명 로그인을 처리한다 */
 	public void Login(System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.Login", KCDefine.B_LOG_COLOR_PLUGIN);
 
@@ -31,7 +31,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 	}
 
-	//! 애플 로그인을 처리한다
+	/** 애플 로그인을 처리한다 */
 	public void LoginWithApple(string a_oUserID, string a_oIDToken, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithApple: {a_oUserID}, {a_oIDToken}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oUserID.ExIsValid() && a_oIDToken.ExIsValid());
@@ -46,7 +46,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if UNITY_IOS && (FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE)
 	}
 
-	//! 페이스 북 로그인을 처리한다
+	/** 페이스 북 로그인을 처리한다 */
 	public void LoginWithFacebook(string a_oAccessToken, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithFacebook: {a_oAccessToken}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oAccessToken.ExIsValid());
@@ -61,7 +61,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && FACEBOOK_MODULE_ENABLE)
 	}
 
-	//! 게임 센터 로그인을 처리한다
+	/** 게임 센터 로그인을 처리한다 */
 	public void LoginWithGameCenter(string a_oAuthCode, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithGameCenter: {a_oAuthCode}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oAuthCode.ExIsValid());
@@ -82,7 +82,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE)
 	}
 
-	//! 로그아웃을 처리한다
+	/** 로그아웃을 처리한다 */
 	public void Logout(System.Action<CFirebaseManager> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.Logout", KCDefine.B_LOG_COLOR_PLUGIN);
 
@@ -99,7 +99,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 조건부 함수
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-	//! 로그인 되었을 경우
+	/** 로그인 되었을 경우 */
 	private void OnLogin(Task<FirebaseUser> a_oTask) {
 		string oUserID = a_oTask.ExIsComplete() ? a_oTask.Result.UserId : string.Empty;
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -111,7 +111,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 
-	//! 인증 로그인을 처리한다
+	/** 인증 로그인을 처리한다 */
 	private void LoginWithCredential(Credential a_oCredential, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oCredential != null);
@@ -128,7 +128,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 #if UNITY_IOS && GAME_CENTER_MODULE_ENABLE
-	//! 게임 센터 인증을 수신했을 경우
+	/** 게임 센터 인증을 수신했을 경우 */
 	private void OnReceiveGameCenterCredential(Task<Credential> a_oTask) {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_GAME_CENTER_CALLBACK, () => {
 			// 게임 센터에 인증 되었을 경우

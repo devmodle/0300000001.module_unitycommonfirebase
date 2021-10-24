@@ -9,10 +9,10 @@ using UnityEngine.UI;
 using Firebase.RemoteConfig;
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
-//! 파이어 베이스 관리자 - 원격 속성
+/** 파이어 베이스 관리자 - 원격 속성 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
-	//! 속성을 반환한다
+	/** 속성을 반환한다 */
 	public string GetConfig(string a_oKey) {
 		CFunc.ShowLog($"CFirebaseManager.GetConfig: {a_oKey}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oKey.ExIsValid());
@@ -24,7 +24,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_REMOTE_CONFIG_ENABLE
 	}
 
-	//! 속성을 로드한다
+	/** 속성을 로드한다 */
 	public void LoadConfig(System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoadConfig", KCDefine.B_LOG_COLOR_PLUGIN);
 
@@ -44,7 +44,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 조건부 함수
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_REMOTE_CONFIG_ENABLE
-	//! 속성이 로드 되었을 경우
+	/** 속성이 로드 되었을 경우 */
 	private void OnLoadConfig(Task<bool> a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadConfig: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);

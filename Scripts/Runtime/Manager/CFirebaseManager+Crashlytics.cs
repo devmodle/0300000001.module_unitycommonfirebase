@@ -8,10 +8,10 @@ using UnityEngine.UI;
 using Firebase.Crashlytics;
 #endif			// #if FIREBASE_CRASHLYTICS_ENABLE
 
-//! 파이어 베이스 관리자 - 크래시 리포트
+/** 파이어 베이스 관리자 - 크래시 리포트 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
-	//! 크래시 유저 식별자를 변경한다
+	/** 크래시 유저 식별자를 변경한다 */
 	public void SetCrashUserID(string a_oID) {
 		CFunc.ShowLog($"CFirebaseManager.SetCrashUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oID.ExIsValid());
@@ -24,7 +24,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
 	}
 
-	//! 크래시 데이터를 변경한다
+	/** 크래시 데이터를 변경한다 */
 	public void SetCrashDatas(Dictionary<string, string> a_oDataDict) {
 		CFunc.ShowLog($"CFirebaseManager.SetCrashDatas: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oDataDict.ExIsValid());
