@@ -47,8 +47,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongStr());
 #endif			// #if AUTO_LOG_PARAMS_ENABLE
 
-			var oParams = this.MakeParams(oDataDict);
-			FirebaseAnalytics.LogEvent(a_oName, oParams);
+			var oParamsList = this.MakeParams(oDataDict);
+			FirebaseAnalytics.LogEvent(a_oName, oParamsList.ToArray());
 		}
 #endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_BUILD)
 	}
@@ -57,7 +57,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 조건부 함수
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 	/** 매개 변수를 생성한다 */
-	private Parameter[] MakeParams(Dictionary<string, string> a_oDataDict) {
+	private List<Parameter> MakeParams(Dictionary<string, string> a_oDataDict) {
 		CAccess.Assert(a_oDataDict != null);
 		var oParamsList = new List<Parameter>();
 
@@ -66,7 +66,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			oParamsList.ExAddVal(oParams);
 		}
 
-		return oParamsList.ToArray();
+		return oParamsList
 	}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 
@@ -79,16 +79,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			var oParams = this.MakeParams(new Dictionary<string, string>() {
-				[FirebaseAnalytics.ParameterItemId] = a_oProduct.definition.id,
-				[FirebaseAnalytics.ParameterItemName] = a_oProduct.metadata.localizedTitle,
-				[FirebaseAnalytics.ParameterCurrency] = a_oProduct.metadata.isoCurrencyCode,
-				[FirebaseAnalytics.ParameterQuantity] = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, a_nNumProducts),
-				[FirebaseAnalytics.ParameterPrice] = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, a_oProduct.metadata.localizedPrice),
-				[FirebaseAnalytics.ParameterTransactionId] = a_oProduct.transactionID
+			var oParamsList = this.MakeParams(new Dictionary<string, string>() {
+				[FirebaseAnalytics.ParameterItemId] = a_oProduct.definition.id, [FirebaseAnalytics.ParameterItemName] = a_oProduct.metadata.localizedTitle, [FirebaseAnalytics.ParameterCurrency] = a_oProduct.metadata.isoCurrencyCode, [FirebaseAnalytics.ParameterQuantity] = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, a_nNumProducts), [FirebaseAnalytics.ParameterPrice] = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, a_oProduct.metadata.localizedPrice), [FirebaseAnalytics.ParameterTransactionId] = a_oProduct.transactionID
 			});
 			
-			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParams);
+			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParamsList.ToArray());
 		}
 #endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_BUILD)
 	}

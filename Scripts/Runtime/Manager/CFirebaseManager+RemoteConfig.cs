@@ -49,9 +49,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadConfig: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIG_CALLBACK, () => {
-			CFunc.Invoke(ref m_oLoadConfigCallback, this, a_oTask.ExIsComplete() && a_oTask.Result);
-		});
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIG_CALLBACK, () => CFunc.Invoke(ref m_oLoadConfigCallback, this, a_oTask.ExIsComplete() && a_oTask.Result));
 	}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_REMOTE_CONFIG_ENABLE
 	#endregion			// 조건부 함수

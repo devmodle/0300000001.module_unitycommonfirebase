@@ -15,16 +15,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 토큰을 수신했을 경우 */
 	private void OnReceiveToken(object a_oSender, TokenReceivedEventArgs a_oArgs) {
 		CFunc.ShowLog($"CFirebaseManager.OnReceiveToken: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
-
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_TOKEN_CALLBACK, () => {
-			this.MsgToken = a_oArgs.Token;
-		});	
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_TOKEN_CALLBACK, () => this.MsgToken = a_oArgs.Token);
 	}
 
 	/** 메세지를 수신했을 경우 */
 	private void OnReceiveMsg(object a_oSender, MessageReceivedEventArgs a_oArgs) {
 		CFunc.ShowLog($"CFirebaseManager.OnReceiveMsg: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
-
+		
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_MSG_CALLBACK, () => {
 			// Do Something	
 		});
