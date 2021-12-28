@@ -42,13 +42,17 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
 
 #if AUTO_LOG_PARAMS_ENABLE
+#if ANALYTICS_TEST_ENABLE || (DEBUG || DEVELOPMENT_BUILD)
+			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_USER_TYPE, KCDefine.B_UNKNOWN_STR);
+#else
 			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
+#endif			// #if ANALYTICS_TEST_ENABLE || (DEBUG || DEVELOPMENT_BUILD)
+
 			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_LOG_TIME, System.DateTime.UtcNow.ExToLongStr());
 			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongStr());
 #endif			// #if AUTO_LOG_PARAMS_ENABLE
 
-			var oParamsList = this.MakeParams(oDataDict);
-			FirebaseAnalytics.LogEvent(a_oName, oParamsList.ToArray());
+			FirebaseAnalytics.LogEvent(a_oName, this.MakeParams(oDataDict).ToArray());
 		}
 #endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_BUILD)
 	}
