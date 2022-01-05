@@ -84,7 +84,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oParamsList = this.MakeParams(new Dictionary<string, string>() {
-				[FirebaseAnalytics.ParameterItemId] = a_oProduct.definition.id, [FirebaseAnalytics.ParameterItemName] = a_oProduct.metadata.localizedTitle, [FirebaseAnalytics.ParameterCurrency] = a_oProduct.metadata.isoCurrencyCode, [FirebaseAnalytics.ParameterQuantity] = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, a_nNumProducts), [FirebaseAnalytics.ParameterPrice] = string.Format(KCDefine.B_TEXT_FMT_1_DIGITS, a_oProduct.metadata.localizedPrice), [FirebaseAnalytics.ParameterTransactionId] = a_oProduct.transactionID
+				[FirebaseAnalytics.ParameterItemId] = a_oProduct.definition.id, [FirebaseAnalytics.ParameterItemName] = a_oProduct.metadata.localizedTitle, [FirebaseAnalytics.ParameterCurrency] = a_oProduct.metadata.isoCurrencyCode, [FirebaseAnalytics.ParameterQuantity] = $"{a_nNumProducts}", [FirebaseAnalytics.ParameterPrice] = $"{a_oProduct.metadata.localizedPrice}", [FirebaseAnalytics.ParameterTransactionId] = a_oProduct.transactionID
 			});
 			
 			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParamsList.ToArray());
