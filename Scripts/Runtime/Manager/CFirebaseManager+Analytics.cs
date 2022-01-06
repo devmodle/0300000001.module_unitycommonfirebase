@@ -33,7 +33,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SendLog: {a_oName}, {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oName.ExIsValid());
 
-#if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_BUILD)
+#if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oDataDict = a_oDataDict ?? new Dictionary<string, string>();
@@ -54,7 +54,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 			FirebaseAnalytics.LogEvent(a_oName, this.MakeParams(oDataDict).ToArray());
 		}
-#endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_BUILD)
+#endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 	}
 	#endregion			// 함수
 
@@ -80,7 +80,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SendPurchaseLog: {a_oProduct}, {a_nNumProducts}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oProduct != null);
 
-#if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_BUILD)
+#if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oParamsList = this.MakeParams(new Dictionary<string, string>() {
@@ -89,7 +89,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			
 			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParamsList.ToArray());
 		}
-#endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_BUILD)
+#endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 	}
 #endif			// #if PURCHASE_MODULE_ENABLE
 	#endregion			// 조건부 함수

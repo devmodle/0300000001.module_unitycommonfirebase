@@ -126,11 +126,11 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_ANALYTICS_ENABLE
 				FirebaseAnalytics.SetSessionTimeoutDuration(KCDefine.U_TIMEOUT_FIREBASE_SESSION);
 			
-#if ANALYTICS_TEST_ENABLE || STORE_BUILD
+#if ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD
 				FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
 #else
 				FirebaseAnalytics.SetAnalyticsCollectionEnabled(false);
-#endif			// #if ANALYTICS_TEST_ENABLE || STORE_BUILD
+#endif			// #if ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD
 #endif			// #if FIREBASE_ANALYTICS_ENABLE
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
