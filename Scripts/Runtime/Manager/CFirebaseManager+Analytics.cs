@@ -66,8 +66,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		var oParamsList = new List<Parameter>();
 
 		foreach(var stKeyVal in a_oDataDict) {
-			var oParams = new Parameter(stKeyVal.Key, stKeyVal.Value);
-			oParamsList.ExAddVal(oParams);
+			oParamsList.ExAddVal(new Parameter(stKeyVal.Key, stKeyVal.Value));
 		}
 
 		return oParamsList
