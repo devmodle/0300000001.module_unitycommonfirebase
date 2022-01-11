@@ -38,18 +38,18 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit) {
 			var oDataDict = a_oDataDict ?? new Dictionary<string, string>();
 
-			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_DEVICE_ID, CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
-			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
+			oDataDict.TryAdd(KCDefine.L_LOG_KEY_DEVICE_ID, CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
+			oDataDict.TryAdd(KCDefine.L_LOG_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
 
 #if AUTO_LOG_PARAMS_ENABLE
 #if ANALYTICS_TEST_ENABLE || (DEBUG || DEVELOPMENT_BUILD)
-			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_USER_TYPE, KCDefine.B_TEXT_UNKNOWN);
+			oDataDict.TryAdd(KCDefine.L_LOG_KEY_USER_TYPE, KCDefine.B_TEXT_UNKNOWN);
 #else
-			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
+			oDataDict.TryAdd(KCDefine.L_LOG_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
 #endif			// #if ANALYTICS_TEST_ENABLE || (DEBUG || DEVELOPMENT_BUILD)
 
-			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_LOG_TIME, System.DateTime.UtcNow.ExToLongStr());
-			oDataDict.ExAddVal(KCDefine.L_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongStr());
+			oDataDict.TryAdd(KCDefine.L_LOG_KEY_LOG_TIME, System.DateTime.UtcNow.ExToLongStr());
+			oDataDict.TryAdd(KCDefine.L_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongStr());
 #endif			// #if AUTO_LOG_PARAMS_ENABLE
 
 			FirebaseAnalytics.LogEvent(a_oName, this.MakeParams(oDataDict).ToArray());
