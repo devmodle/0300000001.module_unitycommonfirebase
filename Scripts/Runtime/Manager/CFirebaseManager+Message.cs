@@ -23,7 +23,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnReceiveMsg: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
 		
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_MSG_CALLBACK, () => {
-			// Do Something	
+			// Do Something
 		});
 	}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CLOUD_MSG_ENABLE
