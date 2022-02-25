@@ -69,7 +69,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			oParamsList.ExAddVal(new Parameter(stKeyVal.Key, stKeyVal.Value));
 		}
 
-		return oParamsList
+		return oParamsList;
 	}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 
