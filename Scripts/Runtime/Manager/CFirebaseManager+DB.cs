@@ -20,15 +20,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(this.IsInit && this.IsLogin) {
-			m_oLoadDBCallback = a_oCallback;
-			var oDB = this.GetDB(a_oNodeList);
-			
-			CTaskManager.Inst.WaitAsyncTask(oDB.GetValueAsync(), this.OnLoadDB);
+			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_DB, a_oCallback);
+			CTaskManager.Inst.WaitAsyncTask(this.GetDB(a_oNodeList).GetValueAsync(), this.OnLoadDB);
 		} else {
-			a_oCallback?.Invoke(this, string.Empty, false);
+			CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
 		}
 #else
-		a_oCallback?.Invoke(this, string.Empty, false);
+		CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 	}
 
@@ -40,15 +38,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(this.IsInit && this.IsLogin) {
-			m_oSaveDBCallback = a_oCallback;
-			var oDB = this.GetDB(a_oNodeList);
-
-			CTaskManager.Inst.WaitAsyncTask(oDB.SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDB);
+			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SAVE_DB, a_oCallback);
+			CTaskManager.Inst.WaitAsyncTask(this.GetDB(a_oNodeList).SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDB);
 		} else {
-			a_oCallback?.Invoke(this, false);
+			CFunc.Invoke(ref a_oCallback, this, false);
 		}
 #else
-		a_oCallback?.Invoke(this, false);
+		CFunc.Invoke(ref a_oCallback, this, false);
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 	}
 	#endregion			// 함수
@@ -61,14 +57,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnLoadDB: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_DB_CALLBACK, () => {
-			// 데이터가 로드 되었을 경우
-			if(a_oTask.ExIsComplete()) {
-				m_oLoadDBCallback?.Invoke(this, a_oTask.Result.GetRawJsonValue(), true);
-			} else {
-				m_oLoadDBCallback?.Invoke(this, string.Empty, false);
-			}
-
-			m_oLoadDBCallback = null;
+			m_oCallbackDictB.GetValueOrDefault(EFirebaseCallback.LOAD_DB)?.Invoke(this, a_oTask.ExIsComplete() ? a_oTask.Result.GetRawJsonValue() : string.Empty, a_oTask.ExIsComplete());
 		});
 	}
 
@@ -77,7 +66,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnSaveDB: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DB_CALLBACK, () => CFunc.Invoke(ref m_oSaveDBCallback, this, a_oTask.ExIsComplete()));
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DB_CALLBACK, () => m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.SAVE_DB)?.Invoke(this, a_oTask.ExIsComplete()));
 	}
 
 	/** 데이터 베이스를 반환한다 */

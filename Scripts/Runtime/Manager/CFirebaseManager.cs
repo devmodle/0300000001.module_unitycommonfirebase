@@ -25,32 +25,46 @@ using Firebase.Messaging;
 
 /** 파이어 베이스 관리자 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
+	/** 콜백 */
+	public enum ECallback {
+		NONE = -1,
+		INIT,
+		[HideInInspector] MAX_VAL
+	}
+
+	/** 파이어 베이스 콜백 */
+	private enum EFirebaseCallback {
+		NONE = -1,
+
+#if FIREBASE_AUTH_ENABLE
+		LOGIN,
+#endif			// #if FIREBASE_AUTH_ENABLE
+
+#if FIREBASE_DB_ENABLE
+		SAVE_DB,
+		LOAD_DB,
+#endif			// #if FIREBASE_DB_ENABLE
+
+#if FIREBASE_REMOTE_CONFIG_ENABLE
+		LOAD_CONFIG,
+#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
+
+		[HideInInspector] MAX_VAL
+	}
+
 	/** 매개 변수 */
 	public struct STParams {
 		public Dictionary<string, object> m_oConfigDict;
-	}
-
-	/** 콜백 매개 변수 */
-	public struct STCallbackParams {
-		public System.Action<CFirebaseManager, bool> m_oCallback;
+		public Dictionary<ECallback, System.Action<CFirebaseManager, bool>> m_oCallbackDict;
 	}
 
 	#region 변수
 	private STParams m_stParams;
-	private STCallbackParams m_stCallbackParams;
-
-#if FIREBASE_AUTH_ENABLE
-	private System.Action<CFirebaseManager, bool> m_oLoginCallback = null;
-#endif			// #if FIREBASE_AUTH_ENABLE
-
-#if FIREBASE_DB_ENABLE
-	private System.Action<CFirebaseManager, bool> m_oSaveDBCallback = null;
-	private System.Action<CFirebaseManager, string, bool> m_oLoadDBCallback = null;
-#endif			// #if FIREBASE_DB_ENABLE
+	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>> m_oCallbackDictA = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>>();
+	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>> m_oCallbackDictB = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>>();
 
 #if FIREBASE_REMOTE_CONFIG_ENABLE
 	private bool m_bIsSetupDefConfigs = false;
-	private System.Action<CFirebaseManager, bool> m_oLoadConfigCallback = null;
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 	#endregion			// 변수
 
@@ -91,22 +105,20 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 함수
 	/** 초기화 */
-	public virtual void Init(STParams a_stParams, STCallbackParams a_stCallbackParams) {
+	public virtual void Init(STParams a_stParams) {
 		CFunc.ShowLog($"CFirebaseManager.Init: {a_stParams.m_oConfigDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_stParams.m_oConfigDict != null);
 
 #if UNITY_IOS || UNITY_ANDROID
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			a_stCallbackParams.m_oCallback?.Invoke(this, true);
+			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, true);
 		} else {
 			m_stParams = a_stParams;
-			m_stCallbackParams = a_stCallbackParams;
-
 			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
 		}
 #else
-		a_stCallbackParams.m_oCallback?.Invoke(this, false);
+		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	}
 	#endregion			// 함수
@@ -146,7 +158,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 			}
 
-			CFunc.Invoke(ref m_stCallbackParams.m_oCallback, this, this.IsInit);
+			m_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
 		});
 	}
 

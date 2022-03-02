@@ -19,15 +19,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		// 로그인 되었을 경우
 		if(!this.IsInit || this.IsLogin) {
-			a_oCallback?.Invoke(this, this.IsLogin);
+			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
-			m_oLoginCallback = a_oCallback;
-			var oTask = FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync();
-
-			CTaskManager.Inst.WaitAsyncTask(oTask, this.OnLogin);
+			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
+			CTaskManager.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync(), this.OnLogin);
 		}
 #else
-		a_oCallback?.Invoke(this, false);
+		CFunc.Invoke(ref a_oCallback, this, false);
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 	}
 
@@ -38,11 +36,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if UNITY_IOS && (FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE)
 		var oAuth = FirebaseAuth.DefaultInstance;
-		var oCredential = OAuthProvider.GetCredential(KCDefine.U_PROVIDER_ID_FIREBASE_M_APPLE_LOGIN, a_oUserID, a_oIDToken, null);
-
-		this.LoginWithCredential(oCredential, a_oCallback);
+		this.LoginWithCredential(OAuthProvider.GetCredential(KCDefine.U_PROVIDER_ID_FIREBASE_M_APPLE_LOGIN, a_oUserID, a_oIDToken, null), a_oCallback);
 #else
-		a_oCallback?.Invoke(this, false);
+		CFunc.Invoke(ref a_oCallback, this, false);
 #endif			// #if UNITY_IOS && (FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE)
 	}
 
@@ -53,11 +49,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			
 #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && FACEBOOK_MODULE_ENABLE)
 		var oAuth = FirebaseAuth.DefaultInstance;
-		var oCredential = FacebookAuthProvider.GetCredential(a_oAccessToken);
-
-		this.LoginWithCredential(oCredential, a_oCallback);
+		this.LoginWithCredential(FacebookAuthProvider.GetCredential(a_oAccessToken), a_oCallback);
 #else
-		a_oCallback?.Invoke(this, false);
+		CFunc.Invoke(ref a_oCallback, this, false);
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && FACEBOOK_MODULE_ENABLE)
 	}
 
@@ -67,18 +61,16 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oAuthCode.ExIsValid());
 
 #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE)
-		m_oLoginCallback = a_oCallback;
+		m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
 		
 #if UNITY_IOS
 		CTaskManager.Inst.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), this.OnReceiveGameCenterCredential);
 #else
 		var oAuth = FirebaseAuth.DefaultInstance;
-		var oCredential = PlayGamesAuthProvider.GetCredential(a_oAuthCode);
-
-		this.LoginWithCredential(oCredential, a_oCallback);
+		this.LoginWithCredential(PlayGamesAuthProvider.GetCredential(a_oAuthCode), a_oCallback);
 #endif			// #if UNITY_IOS
 #else
-		a_oCallback?.Invoke(this, false);
+		CFunc.Invoke(ref a_oCallback, this, false);
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE)
 	}
 
@@ -93,7 +85,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 
-		a_oCallback?.Invoke(this);
+		CFunc.Invoke(ref a_oCallback, this);
 	}
 	#endregion			// 함수
 
@@ -105,7 +97,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 
 		CFunc.ShowLog($"CFirebaseManager.OnLogin: {a_oTask.ExIsComplete()}, {oUserID}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => CFunc.Invoke(ref m_oLoginCallback, this, this.IsLogin));
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.LOGIN)?.Invoke(this, this.IsLogin));
 	}
 
 	/** 인증 로그인을 처리한다 */
@@ -115,12 +107,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		// 로그인 되었을 경우
 		if(!this.IsInit || this.IsLogin) {
-			a_oCallback?.Invoke(this, this.IsLogin);
+			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
-			m_oLoginCallback = a_oCallback;
-			var oTask = FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential);
-
-			CTaskManager.Inst.WaitAsyncTask(oTask, this.OnLogin);
+			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
+			CTaskManager.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), this.OnLogin);
 		}
 	}
 
@@ -132,7 +122,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			if(a_oTask.ExIsComplete()) {
 				this.LoginWithCredential(a_oTask.Result, m_oLoginCallback);
 			} else {
-				CFunc.Invoke(ref m_oLoginCallback, this, false);
+				m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.LOGIN)?.Invoke(this, false);
 			}
 		});
 	}
