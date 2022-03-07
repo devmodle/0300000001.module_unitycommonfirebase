@@ -36,23 +36,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			var oDataDict = a_oDataDict ?? new Dictionary<string, string>();
-
-			oDataDict.TryAdd(KCDefine.L_LOG_KEY_DEVICE_ID, CCommonAppInfoStorage.Inst.AppInfo.DeviceID);
-			oDataDict.TryAdd(KCDefine.L_LOG_KEY_PLATFORM, CCommonAppInfoStorage.Inst.Platform);
-
-#if AUTO_LOG_PARAMS_ENABLE
-#if ANALYTICS_TEST_ENABLE || (DEBUG || DEVELOPMENT_BUILD)
-			oDataDict.TryAdd(KCDefine.L_LOG_KEY_USER_TYPE, KCDefine.B_TEXT_UNKNOWN);
-#else
-			oDataDict.TryAdd(KCDefine.L_LOG_KEY_USER_TYPE, CCommonUserInfoStorage.Inst.UserInfo.UserType.ToString());
-#endif			// #if ANALYTICS_TEST_ENABLE || (DEBUG || DEVELOPMENT_BUILD)
-
-			oDataDict.TryAdd(KCDefine.L_LOG_KEY_LOG_TIME, System.DateTime.UtcNow.ExToLongStr());
-			oDataDict.TryAdd(KCDefine.L_LOG_KEY_INSTALL_TIME, CCommonAppInfoStorage.Inst.AppInfo.UTCInstallTime.ExToLongStr());
-#endif			// #if AUTO_LOG_PARAMS_ENABLE
-
-			FirebaseAnalytics.LogEvent(a_oName, this.MakeParams(oDataDict).ToArray());
+			FirebaseAnalytics.LogEvent(a_oName, this.MakeParams(a_oDataDict ?? new Dictionary<string, string>()).ToArray());
 		}
 #endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 	}
