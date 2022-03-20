@@ -60,12 +60,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 변수
 	private STParams m_stParams;
+	private bool m_bIsSetupDefConfigs = false;
+
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>> m_oCallbackDictA = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>>();
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>> m_oCallbackDictB = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>>();
-
-#if FIREBASE_REMOTE_CONFIG_ENABLE
-	private bool m_bIsSetupDefConfigs = false;
-#endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 	#endregion			// 변수
 
 	#region 프로퍼티
