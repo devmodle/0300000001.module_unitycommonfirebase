@@ -61,6 +61,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 변수
 	private STParams m_stParams;
 	private bool m_bIsSetupDefConfigs = false;
+	private FirebaseApp m_oFirebaseApp = null;
 
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>> m_oCallbackDictA = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>>();
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>> m_oCallbackDictB = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>>();
@@ -125,7 +126,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
-		this.IsInit = a_oTask.Result == DependencyStatus.Available;
+		this.IsInit = a_oTask.Exception != null && a_oTask.Result == DependencyStatus.Available;
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		
 		CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
@@ -133,6 +134,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
 			// 초기화 되었을 경우
 			if(this.IsInit) {
+				m_oFirebaseApp = FirebaseApp.DefaultInstance;
+
 #if FIREBASE_ANALYTICS_ENABLE
 				FirebaseAnalytics.SetSessionTimeoutDuration(KCDefine.U_TIMEOUT_FIREBASE_SESSION);
 			
@@ -152,7 +155,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_CLOUD_MSG_ENABLE
 				FirebaseMessaging.TokenReceived += this.OnReceiveToken;
-				FirebaseMessaging.MessageReceived += this.OnReceiveMsg;
+				FirebaseMessaging.MessageReceived += this.OnReceiveNotiMsg;
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 			}
 
