@@ -126,7 +126,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
-		this.IsInit = a_oTask.Exception != null && a_oTask.Result == DependencyStatus.Available;
+		this.IsInit = a_oTask.ExIsComplete() && a_oTask.Result == DependencyStatus.Available;
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		
 		CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
