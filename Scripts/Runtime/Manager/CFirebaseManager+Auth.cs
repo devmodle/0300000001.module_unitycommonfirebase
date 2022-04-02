@@ -54,26 +54,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.Invoke(ref a_oCallback, this, false);
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && FACEBOOK_MODULE_ENABLE)
 	}
-
-	/** 게임 센터 로그인을 처리한다 */
-	public void LoginWithGameCenter(string a_oAuthCode, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CFunc.ShowLog($"CFirebaseManager.LoginWithGameCenter: {a_oAuthCode}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oAuthCode.ExIsValid());
-
-#if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE)
-		m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
-		
-#if UNITY_IOS
-		CTaskManager.Inst.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), this.OnReceiveGameCenterCredential);
-#else
-		var oAuth = FirebaseAuth.DefaultInstance;
-		this.LoginWithCredential(PlayGamesAuthProvider.GetCredential(a_oAuthCode), a_oCallback);
-#endif			// #if UNITY_IOS
-#else
-		CFunc.Invoke(ref a_oCallback, this, false);
-#endif			// #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE)
-	}
-
+	
 	/** 로그아웃을 처리한다 */
 	public void Logout(System.Action<CFirebaseManager> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.Logout", KCDefine.B_LOG_COLOR_PLUGIN);
@@ -113,20 +94,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CTaskManager.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), this.OnLogin);
 		}
 	}
-
-#if UNITY_IOS && GAME_CENTER_MODULE_ENABLE
-	/** 게임 센터 인증을 수신했을 경우 */
-	private void OnReceiveGameCenterCredential(Task<Credential> a_oTask) {
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_GAME_CENTER_CALLBACK, () => {
-			// 게임 센터에 인증 되었을 경우
-			if(a_oTask.ExIsComplete()) {
-				this.LoginWithCredential(a_oTask.Result, m_oLoginCallback);
-			} else {
-				m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.LOGIN)?.Invoke(this, false);
-			}
-		});
-	}
-#endif			// #if UNITY_IOS && GAME_CENTER_MODULE_ENABLE
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 	#endregion			// 조건부 함수
 }
