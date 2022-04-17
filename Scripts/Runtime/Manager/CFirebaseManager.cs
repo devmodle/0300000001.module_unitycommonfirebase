@@ -126,7 +126,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
-		this.IsInit = a_oTask.ExIsComplete() && a_oTask.Result == DependencyStatus.Available;
+		this.IsInit = a_oTask.ExIsCompleteSuccess() && a_oTask.Result == DependencyStatus.Available;
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		
 		CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
@@ -166,7 +166,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_REMOTE_CONFIG_ENABLE
 	/** 기본 속성을 설정했을 경우 */
 	private void OnSetupDefConfigs(Task a_oTask) {
-		m_bIsSetupDefConfigs = a_oTask.ExIsComplete();
+		m_bIsSetupDefConfigs = a_oTask.ExIsCompleteSuccess();
 	}
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 #endif			// #if UNITY_IOS || UNITY_ANDROID
