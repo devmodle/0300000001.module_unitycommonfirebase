@@ -20,7 +20,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(this.IsInit && this.IsLogin) {
-			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_DB, a_oCallback);
+			m_oCallbackDict02.ExReplaceVal(EFirebaseCallback.LOAD_DB, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(this.GetDB(a_oNodeList).GetValueAsync(), this.OnLoadDB);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
@@ -38,7 +38,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(this.IsInit && this.IsLogin) {
-			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SAVE_DB, a_oCallback);
+			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.SAVE_DB, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(this.GetDB(a_oNodeList).SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDB);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, false);
@@ -57,7 +57,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnLoadDB: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_DB_CALLBACK, () => {
-			m_oCallbackDictB.GetValueOrDefault(EFirebaseCallback.LOAD_DB)?.Invoke(this, a_oTask.ExIsComplete() ? a_oTask.Result.GetRawJsonValue() : string.Empty, a_oTask.ExIsComplete());
+			m_oCallbackDict02.GetValueOrDefault(EFirebaseCallback.LOAD_DB)?.Invoke(this, a_oTask.ExIsComplete() ? a_oTask.Result.GetRawJsonValue() : string.Empty, a_oTask.ExIsComplete());
 		});
 	}
 
@@ -66,7 +66,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnSaveDB: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DB_CALLBACK, () => m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.SAVE_DB)?.Invoke(this, a_oTask.ExIsComplete()));
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DB_CALLBACK, () => m_oCallbackDict01.GetValueOrDefault(EFirebaseCallback.SAVE_DB)?.Invoke(this, a_oTask.ExIsComplete()));
 	}
 
 	/** 데이터 베이스를 반환한다 */
