@@ -31,7 +31,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_REMOTE_CONFIG_ENABLE
 		// 기본 속성이 설정 되었을 경우
 		if(this.IsSetupDefConfigs) {
-			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.LOAD_CONFIG, a_oCallback);
+			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.LOAD_CONFIG, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.FetchAndActivateAsync(), this.OnLoadConfig);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, false);
@@ -49,7 +49,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadConfig: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIG_CALLBACK, () => m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.LOAD_CONFIG)?.Invoke(this, a_oTask.ExIsComplete() && a_oTask.Result));
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIG_CALLBACK, () => m_oCallbackDict01.GetValueOrDefault(EFirebaseCallback.LOAD_CONFIG)?.Invoke(this, a_oTask.ExIsCompleteSuccess() && a_oTask.Result));
 	}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_REMOTE_CONFIG_ENABLE
 	#endregion			// 조건부 함수
