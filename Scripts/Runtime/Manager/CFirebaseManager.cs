@@ -154,7 +154,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_REMOTE_CONFIG_ENABLE
 
 #if FIREBASE_CLOUD_MSG_ENABLE
-				FirebaseMessaging.TokenReceived += this.OnReceiveToken;
+				FirebaseMessaging.TokenReceived += this.OnReceiveMsgToken;
 				FirebaseMessaging.MessageReceived += this.OnReceiveNotiMsg;
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 			}
