@@ -60,9 +60,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithGameCenter: {a_oAccessToken}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oAccessToken.ExIsValid());
 
-		var oAuth = FirebaseAuth.DefaultInstance;
-
 #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && GAME_CENTER_MODULE_ENABLE)
+		var oAuth = FirebaseAuth.DefaultInstance;
+		
 #if UNITY_IOS
 		m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
 		CTaskManager.Inst.WaitAsyncTask(GameCenterAuthProvider.GetCredentialAsync(), this.OnReceiveGameCenterCredential);	
