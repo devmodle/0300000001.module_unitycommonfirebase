@@ -39,6 +39,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private STParams m_stParams;
 	private STCallbackParams m_stCallbackParams;
 
+	private FirebaseApp m_oFirebaseApp = null;
+
 #if FIREBASE_AUTH_ENABLE
 	private System.Action<CFirebaseManager, bool> m_oLoginCallback = null;
 #endif			// #if FIREBASE_AUTH_ENABLE
@@ -123,6 +125,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
 			// 초기화 되었을 경우
 			if(this.IsInit) {
+				m_oFirebaseApp = FirebaseApp.DefaultInstance;
+
 #if FIREBASE_ANALYTICS_ENABLE
 				FirebaseAnalytics.SetSessionTimeoutDuration(KCDefine.U_TIMEOUT_FIREBASE_SESSION);
 			
