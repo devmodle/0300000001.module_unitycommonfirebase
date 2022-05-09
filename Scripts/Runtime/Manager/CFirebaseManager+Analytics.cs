@@ -59,7 +59,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if PURCHASE_MODULE_ENABLE
 	/** 결제 로그를 전송한다 */
-	public void SendPurchaseLog(Product a_oProduct, int a_nNumProducts) {
+	public void SendPurchaseLog(Product a_oProduct, int a_nNumProducts, Dictionary<string, string> a_oDataDict) {
 		CFunc.ShowLog($"CFirebaseManager.SendPurchaseLog: {a_oProduct}, {a_nNumProducts}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oProduct != null);
 
