@@ -85,7 +85,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 
-		CFunc.Invoke(ref a_oCallback, this);
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGOUT_CALLBACK, () => CFunc.Invoke(ref a_oCallback, this));
 	}
 	#endregion			// 함수
 

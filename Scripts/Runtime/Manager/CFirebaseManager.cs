@@ -41,6 +41,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		LOAD_DB,
 #endif			// #if FIREBASE_DB_ENABLE
 
+#if FIREBASE_CLOUD_MSG_ENABLE
+		LOAD_MSG_TOKEN,
+#endif			// #if FIREBASE_CLOUD_MSG_ENABLE
+
 		[HideInInspector] MAX_VAL
 	}
 
@@ -128,6 +132,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_CLOUD_MSG_ENABLE
 				FirebaseMessaging.TokenReceived += this.OnReceiveMsgToken;
 				FirebaseMessaging.MessageReceived += this.OnReceiveNotiMsg;
+
+				FirebaseMessaging.TokenRegistrationOnInitEnabled = true;
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 			}
 
