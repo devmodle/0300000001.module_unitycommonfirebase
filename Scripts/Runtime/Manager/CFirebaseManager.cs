@@ -15,6 +15,10 @@ using Firebase.Auth;
 using Firebase.Analytics;
 #endif			// #if FIREBASE_ANALYTICS_ENABLE
 
+#if FIREBASE_CRASHLYTICS_ENABLE
+using Firebase.Crashlytics;
+#endif			// #if FIREBASE_CRASHLYTICS_ENABLE
+
 #if FIREBASE_CLOUD_MSG_ENABLE
 using Firebase.Messaging;
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
@@ -37,8 +41,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_AUTH_ENABLE
 
 #if FIREBASE_DB_ENABLE
-		SAVE_DB,
-		LOAD_DB,
+		LOAD_DATAS,
+		SAVE_DATAS,
 #endif			// #if FIREBASE_DB_ENABLE
 
 #if FIREBASE_CLOUD_MSG_ENABLE
@@ -103,6 +107,49 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
 #endif			// #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
+
+	/** 크래시 유저 식별자를 변경한다 */
+	public void SetCrashlyticsUserID(string a_oID) {
+		CFunc.ShowLog($"CFirebaseManager.SetCrashlyticsUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oID.ExIsValid());
+
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
+		// 초기화 되었을 경우
+		if(this.IsInit) {
+			Crashlytics.SetUserId(a_oID);
+		}
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
+	}
+
+	/** 크래시 데이터를 변경한다 */
+	public void SetCrashlyticsDatas(Dictionary<string, string> a_oDataDict) {
+		CFunc.ShowLog($"CFirebaseManager.SetCrashlyticsDatas: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CAccess.Assert(a_oDataDict.ExIsValid());
+
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
+		// 초기화 되었을 경우
+		if(this.IsInit) {
+			foreach(var stKeyVal in a_oDataDict) {
+				Crashlytics.SetCustomKey(stKeyVal.Key, stKeyVal.Value);
+			}
+		}
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
+	}
+
+	/** 메세지 토큰을 로드한다 */
+	public void LoadMsgToken(System.Action<CFirebaseManager, string, bool> a_oCallback) {
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CLOUD_MSG_ENABLE
+		// 초기화 되었을 경우
+		if(this.IsInit) {
+			m_oCallbackDict02.ExReplaceVal(EFirebaseCallback.LOAD_MSG_TOKEN, a_oCallback);
+			CTaskManager.Inst.WaitAsyncTask(FirebaseMessaging.GetTokenAsync(), this.OnLoadMsgToken);
+		} else {
+			CFunc.Invoke(ref a_oCallback, this, string.Empty, false);	
+		}
+#else
+		CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
+#endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CLOUD_MSG_ENABLE
+	}
 	#endregion			// 함수
 
 	#region 조건부 함수
@@ -140,6 +187,34 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
 		});
 	}
+
+#if FIREBASE_CLOUD_MSG_ENABLE
+	/** 메세지 토큰을 로드했을 경우 */
+	private void OnLoadMsgToken(Task<string> a_oTask) {
+		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
+		CFunc.ShowLog($"CFirebaseManager.OnLoadMsgToken: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
+
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_MSG_TOKEN_CALLBACK, () => {
+			this.MsgToken = a_oTask.ExIsCompleteSuccess() ? a_oTask.Result : string.Empty;
+			m_oCallbackDict02.GetValueOrDefault(EFirebaseCallback.LOAD_MSG_TOKEN)?.Invoke(this, this.MsgToken, a_oTask.ExIsCompleteSuccess());
+		});
+	}
+
+	/** 메세지 토큰을 수신했을 경우 */
+	private void OnReceiveMsgToken(object a_oSender, TokenReceivedEventArgs a_oArgs) {
+		CFunc.ShowLog($"CFirebaseManager.OnReceiveMsgToken: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_TOKEN_CALLBACK, () => this.MsgToken = a_oArgs.Token);
+	}
+
+	/** 알림 메세지를 수신했을 경우 */
+	private void OnReceiveNotiMsg(object a_oSender, MessageReceivedEventArgs a_oArgs) {
+		CFunc.ShowLog($"CFirebaseManager.OnReceiveNotiMsg: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
+		
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_NOTI_MSG_CALLBACK, () => {
+			// Do Something
+		});
+	}
+#endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 #endif			// #if UNITY_IOS || UNITY_ANDROID
 	#endregion			// 조건부 함수
 }

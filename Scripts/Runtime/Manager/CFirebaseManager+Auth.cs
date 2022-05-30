@@ -17,7 +17,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.Login: {a_oDeviceID}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-		// 로그인 되었을 경우
+		// 초기화 되었을 경우
 		if(!this.IsInit || this.IsLogin) {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
@@ -86,7 +86,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oCredential != null);
 
-		// 로그인 되었을 경우
+		// 초기화 되었을 경우
 		if(!this.IsInit || this.IsLogin) {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
