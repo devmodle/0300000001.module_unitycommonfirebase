@@ -60,14 +60,16 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void Logout(System.Action<CFirebaseManager> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.Logout", KCDefine.B_LOG_COLOR_PLUGIN);
 
+		try {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-		// 로그인 되었을 경우
-		if(this.IsInit && this.IsLogin) {
-			FirebaseAuth.DefaultInstance.SignOut();
-		}
+			// 로그인 되었을 경우
+			if(this.IsInit && this.IsLogin) {
+				FirebaseAuth.DefaultInstance.SignOut();
+			}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGOUT_CALLBACK, () => CFunc.Invoke(ref a_oCallback, this));
+		} finally {
+			CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGOUT_CALLBACK, () => CFunc.Invoke(ref a_oCallback, this));
+		}
 	}
 	#endregion			// 함수
 
