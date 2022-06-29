@@ -26,6 +26,14 @@ using Firebase.Messaging;
 
 /** 파이어 베이스 관리자 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
+	/** 식별자 */
+	private enum EKey {
+		NONE = -1,
+		IS_INIT,
+		MSG_TOKEN,
+		[HideInInspector] MAX_VAL
+	}
+
 	/** 콜백 */
 	public enum ECallback {
 		NONE = -1,
@@ -60,20 +68,25 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 변수
 	private STParams m_stParams;
-	private FirebaseApp m_oFirebaseApp = null;
 
+	private Dictionary<EKey, bool> m_oBoolDict = new Dictionary<EKey, bool>() {
+		[EKey.IS_INIT] = false
+	};
+
+	private Dictionary<EKey, string> m_oStrDict = new Dictionary<EKey, string>() {
+		[EKey.MSG_TOKEN] = string.Empty
+	};
+
+	private FirebaseApp m_oFirebaseApp = null;
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>> m_oCallbackDict01 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>>();
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>> m_oCallbackDict02 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>>();
 	#endregion			// 변수
 
 	#region 프로퍼티
-	public bool IsInit { get; private set; } = false;
-	public string MsgToken { get; private set; } = string.Empty;
-
 	public bool IsLogin {
 		get {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-			return this.IsInit && FirebaseAuth.DefaultInstance.CurrentUser != null;
+			return m_oBoolDict[EKey.IS_INIT] && FirebaseAuth.DefaultInstance.CurrentUser != null;
 #else
 			return false;
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
@@ -89,6 +102,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		}
 	}
+
+	public bool IsInit => m_oBoolDict[EKey.IS_INIT];
+	public string MsgToken => m_oStrDict[EKey.MSG_TOKEN];
 	#endregion			// 프로퍼티
 
 	#region 함수
@@ -98,8 +114,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
-		if(this.IsInit) {
-			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
+		if(m_oBoolDict[EKey.IS_INIT]) {
+			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
 		} else {
 			m_stParams = a_stParams;
 			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
@@ -116,7 +132,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
 		// 초기화 되었을 경우
-		if(this.IsInit) {
+		if(m_oBoolDict[EKey.IS_INIT]) {
 			Crashlytics.SetUserId(a_oID);
 		}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
@@ -129,7 +145,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
 		// 초기화 되었을 경우
-		if(this.IsInit) {
+		if(m_oBoolDict[EKey.IS_INIT]) {
 			foreach(var stKeyVal in a_oDataDict) {
 				Crashlytics.SetCustomKey(stKeyVal.Key, stKeyVal.Value);
 			}
@@ -141,7 +157,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public void LoadMsgToken(System.Action<CFirebaseManager, string, bool> a_oCallback) {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CLOUD_MSG_ENABLE
 		// 초기화 되었을 경우
-		if(this.IsInit) {
+		if(m_oBoolDict[EKey.IS_INIT]) {
 			m_oCallbackDict02.ExReplaceVal(EFirebaseCallback.LOAD_MSG_TOKEN, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseMessaging.GetTokenAsync(), this.OnLoadMsgToken);
 		} else {
@@ -157,14 +173,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
-		this.IsInit = a_oTask.ExIsCompleteSuccess() && a_oTask.Result == DependencyStatus.Available;
+		m_oBoolDict[EKey.IS_INIT] = a_oTask.ExIsCompleteSuccess() && a_oTask.Result == DependencyStatus.Available;
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		
-		CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CFunc.ShowLog($"CFirebaseManager.OnInit: {m_oBoolDict[EKey.IS_INIT]}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 		
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
 			// 초기화 되었을 경우
-			if(this.IsInit) {
+			if(m_oBoolDict[EKey.IS_INIT]) {
 				m_oFirebaseApp = FirebaseApp.DefaultInstance;
 
 #if FIREBASE_ANALYTICS_ENABLE
@@ -185,7 +201,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 			}
 
-			m_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
+			m_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
 		});
 	}
 
@@ -196,15 +212,15 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnLoadMsgToken: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_MSG_TOKEN_CALLBACK, () => {
-			this.MsgToken = a_oTask.ExIsCompleteSuccess() ? a_oTask.Result : string.Empty;
-			m_oCallbackDict02.GetValueOrDefault(EFirebaseCallback.LOAD_MSG_TOKEN)?.Invoke(this, this.MsgToken, a_oTask.ExIsCompleteSuccess());
+			m_oStrDict[EKey.MSG_TOKEN] = a_oTask.ExIsCompleteSuccess() ? a_oTask.Result : string.Empty;
+			m_oCallbackDict02.GetValueOrDefault(EFirebaseCallback.LOAD_MSG_TOKEN)?.Invoke(this, m_oStrDict[EKey.MSG_TOKEN], a_oTask.ExIsCompleteSuccess());
 		});
 	}
 
 	/** 메세지 토큰을 수신했을 경우 */
 	private void OnReceiveMsgToken(object a_oSender, TokenReceivedEventArgs a_oArgs) {
 		CFunc.ShowLog($"CFirebaseManager.OnReceiveMsgToken: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_TOKEN_CALLBACK, () => this.MsgToken = a_oArgs.Token);
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_TOKEN_CALLBACK, () => m_oStrDict[EKey.MSG_TOKEN] = a_oArgs.Token);
 	}
 
 	/** 알림 메세지를 수신했을 경우 */
