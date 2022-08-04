@@ -67,8 +67,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 	#region 변수
-	private STParams m_stParams;
-
 	private Dictionary<EKey, bool> m_oBoolDict = new Dictionary<EKey, bool>() {
 		[EKey.IS_INIT] = false
 	};
@@ -83,6 +81,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#endregion			// 변수
 
 	#region 프로퍼티
+	public STParams Params { get; private set; }
+
 	public bool IsLogin {
 		get {
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
@@ -117,7 +117,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(m_oBoolDict[EKey.IS_INIT]) {
 			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
 		} else {
-			m_stParams = a_stParams;
+			this.Params = a_stParams;
 			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
 		}
 #else
@@ -201,7 +201,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif			// #if FIREBASE_CLOUD_MSG_ENABLE
 			}
 
-			m_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
+			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
 		});
 	}
 
