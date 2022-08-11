@@ -20,7 +20,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
-		if(m_oBoolDict[EKey.IS_INIT] && this.IsLogin) {
+		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) && this.IsLogin) {
 			m_oCallbackDict02.ExReplaceVal(EFirebaseCallback.LOAD_DATAS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).GetValueAsync(), this.OnLoadDatas);
 		} else {
@@ -38,7 +38,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
-		if(m_oBoolDict[EKey.IS_INIT] && this.IsLogin) {
+		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) && this.IsLogin) {
 			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.SAVE_DATAS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDatas);
 		} else {
