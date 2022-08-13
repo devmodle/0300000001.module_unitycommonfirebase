@@ -62,7 +62,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 	/** 매개 변수 */
-	public partial struct STParams {
+	public struct STParams {
 		public Dictionary<ECallback, System.Action<CFirebaseManager, bool>> m_oCallbackDict;
 	}
 
