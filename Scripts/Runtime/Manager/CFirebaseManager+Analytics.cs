@@ -23,7 +23,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 		// 초기화 되었을 경우
-		if(this.BoolDict.GetValueOrDefault(EKey.IS_INIT)) {
+		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			FirebaseAnalytics.SetUserId(a_oID);
 		}
 #endif			// #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
@@ -36,7 +36,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 		// 초기화 되었을 경우
-		if(this.BoolDict.GetValueOrDefault(EKey.IS_INIT)) {
+		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			FirebaseAnalytics.LogEvent(a_oName, this.MakeParams(a_oDataDict ?? new Dictionary<string, string>()).ToArray());
 		}
 #endif			// #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
@@ -66,7 +66,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 		// 초기화 되었을 경우
-		if(this.BoolDict.GetValueOrDefault(EKey.IS_INIT)) {
+		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			var oParamsList = this.MakeParams(new Dictionary<string, string>() {
 				[FirebaseAnalytics.ParameterItemId] = a_oProduct.definition.id, [FirebaseAnalytics.ParameterItemName] = a_oProduct.metadata.localizedTitle, [FirebaseAnalytics.ParameterCurrency] = a_oProduct.metadata.isoCurrencyCode, [FirebaseAnalytics.ParameterQuantity] = $"{a_nNumProducts}", [FirebaseAnalytics.ParameterPrice] = $"{a_oProduct.metadata.localizedPrice}", [FirebaseAnalytics.ParameterTransactionId] = a_oProduct.transactionID
 			});
