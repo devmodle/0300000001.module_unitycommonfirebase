@@ -21,7 +21,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SetAnalyticsUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oID.ExIsValid());
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 		// 초기화 되었을 경우
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			FirebaseAnalytics.SetUserId(a_oID);
@@ -34,7 +34,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SendLog: {a_oName}, {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oName.ExIsValid());
 
-#if((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
+#if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 		// 초기화 되었을 경우
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			FirebaseAnalytics.LogEvent(a_oName, this.MakeParams(a_oDataDict ?? new Dictionary<string, string>()).ToArray());
@@ -44,7 +44,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#endregion         // 함수               
 
 	#region 조건부 함수
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 	/** 매개 변수를 생성한다 */
 	private List<Parameter> MakeParams(Dictionary<string, string> a_oDataDict) {
 		CAccess.Assert(a_oDataDict != null);
@@ -64,7 +64,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SendPurchaseLog: {a_oProduct}, {a_nNumProducts}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oProduct != null);
 
-#if((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
+#if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 		// 초기화 되었을 경우
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			var oParamsList = this.MakeParams(new Dictionary<string, string>() {

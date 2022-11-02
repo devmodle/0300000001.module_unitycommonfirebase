@@ -17,7 +17,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SetCrashlyticsUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oID.ExIsValid());
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
 		// 초기화 되었을 경우
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			Crashlytics.SetUserId(a_oID);
@@ -30,7 +30,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SetCrashlyticsDatas: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oDataDict.ExIsValid());
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
 		// 초기화 되었을 경우
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			foreach(var stKeyVal in a_oDataDict) {

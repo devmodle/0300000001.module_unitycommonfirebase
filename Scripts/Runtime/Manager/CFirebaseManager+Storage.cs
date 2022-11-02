@@ -20,7 +20,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.LoadDatas: {a_oFilePath}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oFilePath.ExIsValid());
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_STORAGE_ENABLE
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_STORAGE_ENABLE
 		// 초기화 되었을 경우
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			m_oCallbackDict02.ExReplaceVal(EFirebaseCallback.LOAD_FILES, a_oCallback);
@@ -30,7 +30,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
-#endif          // #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_STORAGE_ENABLE                                                                  
+#endif          // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_STORAGE_ENABLE                                                                  
 	}
 	#endregion            // 함수               
 

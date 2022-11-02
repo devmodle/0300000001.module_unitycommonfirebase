@@ -86,7 +86,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	public bool IsLogin {
 		get {
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 			return m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) && FirebaseAuth.DefaultInstance.CurrentUser != null;
 #else
 			return false;
@@ -96,7 +96,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	public string UserID {
 		get {
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
+#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 			return this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
 #else
 			return string.Empty;
