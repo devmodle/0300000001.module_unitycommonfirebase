@@ -13,13 +13,13 @@ using Firebase.Database;
 
 /** 파이어 베이스 관리자 - 데이터 베이스 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
-	#region 함수
+#region 함수
 	/** 데이터를 로드한다 */
 	public void LoadDatas(List<string> a_oNodeList, System.Action<CFirebaseManager, string, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoadDatas: {a_oNodeList}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oNodeList != null);
 
-#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
+#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) && this.IsLogin) {
 			m_oCallbackDict02.ExReplaceVal(EFirebaseCallback.LOAD_DATAS, a_oCallback);
@@ -37,7 +37,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SaveDatas: {a_oNodeList}, {a_oJSONStr}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
 
-#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
+#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) && this.IsLogin) {
 			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.SAVE_DATAS, a_oCallback);
@@ -49,10 +49,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.Invoke(ref a_oCallback, this, false);
 #endif         // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE                                                                   
 	}
-	#endregion         // 함수               
+#endregion         // 함수               
 
-	#region 조건부 함수
-#if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
+#region 조건부 함수
+#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 	/** 데이터가 로드 되었을 경우 */
 	private void OnLoadDatas(Task<DataSnapshot> a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -86,6 +86,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		return oDBRef.Child(this.UserID);
 	}
 #endif         // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE                                                                   
-	#endregion         // 조건부 함수                   
+#endregion         // 조건부 함수                   
 }
 #endif         // #if FIREBASE_MODULE_ENABLE                                       
