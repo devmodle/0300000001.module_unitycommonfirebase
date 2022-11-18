@@ -7,11 +7,11 @@ using UnityEngine.Events;
 #if FIREBASE_MODULE_ENABLE
 #if FIREBASE_ANALYTICS_ENABLE
 using Firebase.Analytics;
-#endif         // #if FIREBASE_ANALYTICS_ENABLE                                          
+#endif // #if FIREBASE_ANALYTICS_ENABLE                                          
 
 #if PURCHASE_MODULE_ENABLE
 using UnityEngine.Purchasing;
-#endif         // #if PURCHASE_MODULE_ENABLE                                       
+#endif // #if PURCHASE_MODULE_ENABLE                                       
 
 /** 파이어 베이스 관리자 - 분석 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -26,7 +26,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			FirebaseAnalytics.SetUserId(a_oID);
 		}
-#endif         // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE                                                                          
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE                                                                          
 	}
 
 	/** 로그를 전송한다 */
@@ -39,9 +39,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			FirebaseAnalytics.LogEvent(a_oName, this.MakeParams(a_oDataDict ?? new Dictionary<string, string>()).ToArray());
 		}
-#endif         // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)                                                                                                                           
+#endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)                                                                                                                           
 	}
-#endregion         // 함수               
+#endregion // 함수               
 
 #region 조건부 함수
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
@@ -56,7 +56,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		return oParamsList;
 	}
-#endif         // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE                                                                          
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE                                                                          
 
 #if PURCHASE_MODULE_ENABLE
 	/** 결제 로그를 전송한다 */
@@ -73,9 +73,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			
 			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParamsList.ToArray());
 		}
-#endif         // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)                                                                                                                           
+#endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)                                                                                                                           
 	}
-#endif         // #if PURCHASE_MODULE_ENABLE                                       
-#endregion         // 조건부 함수                   
+#endif // #if PURCHASE_MODULE_ENABLE                                       
+#endregion // 조건부 함수                   
 }
-#endif         // #if FIREBASE_MODULE_ENABLE                                       
+#endif // #if FIREBASE_MODULE_ENABLE                                       

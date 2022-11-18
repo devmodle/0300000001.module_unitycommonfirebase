@@ -7,7 +7,7 @@ using UnityEngine.Events;
 #if FIREBASE_MODULE_ENABLE
 #if FIREBASE_CRASHLYTICS_ENABLE
 using Firebase.Crashlytics;
-#endif         // #if FIREBASE_CRASHLYTICS_ENABLE                                            
+#endif // #if FIREBASE_CRASHLYTICS_ENABLE                                            
 
 /** 파이어 베이스 관리자 - 크래시 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -22,7 +22,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			Crashlytics.SetUserId(a_oID);
 		}
-#endif         // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE                                                                            
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE                                                                            
 	}
 
 	/** 크래시 데이터를 변경한다 */
@@ -37,8 +37,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 				Crashlytics.SetCustomKey(stKeyVal.Key, stKeyVal.Value);
 			}
 		}
-#endif         // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE                                                                            
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE                                                                            
 	}
-#endregion         // 함수               
+#endregion // 함수               
 }
-#endif         // #if FIREBASE_MODULE_ENABLE                                       
+#endif // #if FIREBASE_MODULE_ENABLE                                       
