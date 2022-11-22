@@ -10,15 +10,15 @@ using Firebase;
 
 #if FIREBASE_AUTH_ENABLE
 using Firebase.Auth;
-#endif // #if FIREBASE_AUTH_ENABLE                                     
+#endif // #if FIREBASE_AUTH_ENABLE
 
 #if FIREBASE_ANALYTICS_ENABLE
 using Firebase.Analytics;
-#endif // #if FIREBASE_ANALYTICS_ENABLE                                          
+#endif // #if FIREBASE_ANALYTICS_ENABLE
 
 #if FIREBASE_MSG_ENABLE
 using Firebase.Messaging;
-#endif // #if FIREBASE_MSG_ENABLE                                          
+#endif // #if FIREBASE_MSG_ENABLE
 
 /** 파이어 베이스 관리자 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -43,25 +43,25 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_AUTH_ENABLE
 		LOGIN,
-#endif // #if FIREBASE_AUTH_ENABLE                                     
+#endif // #if FIREBASE_AUTH_ENABLE
 
 #if FIREBASE_DB_ENABLE
 		LOAD_DATAS,
 		SAVE_DATAS,
-#endif // #if FIREBASE_DB_ENABLE                                   
+#endif // #if FIREBASE_DB_ENABLE
 
 #if FIREBASE_MSG_ENABLE
 		LOAD_MSG_TOKEN,
-#endif // #if FIREBASE_MSG_ENABLE                                          
+#endif // #if FIREBASE_MSG_ENABLE
 
 #if FIREBASE_CONFIG_ENABLE
 		SETUP_DEF_CONFIGS,
 		LOAD_CONFIGS,
-#endif // #if FIREBASE_CONFIG_ENABLE                                       
+#endif // #if FIREBASE_CONFIG_ENABLE
 
 #if FIREBASE_STORAGE_ENABLE
 		LOAD_FILES,
-#endif // #if FIREBASE_STORAGE_ENABLE                                        
+#endif // #if FIREBASE_STORAGE_ENABLE
 
 		[HideInInspector] MAX_VAL
 	}
@@ -79,7 +79,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>> m_oCallbackDict01 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>>();
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>> m_oCallbackDict02 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>>();
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, Dictionary<string, string>, bool>> m_oCallbackDict03 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, Dictionary<string, string>, bool>>();
-#endregion // 변수               
+#endregion // 변수
 
 #region 프로퍼티
 	public STParams Params { get; private set; }
@@ -90,7 +90,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			return m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) && FirebaseAuth.DefaultInstance.CurrentUser != null;
 #else
 			return false;
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE                                                                     
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		}
 	}
 
@@ -100,13 +100,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			return this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
 #else
 			return string.Empty;
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE                                                                     
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		}
 	}
 
 	public bool IsInit => m_oBoolDict.GetValueOrDefault(EKey.IS_INIT);
 	public string MsgToken => m_oStrDict.GetValueOrDefault(EKey.MSG_TOKEN, string.Empty);
-#endregion // 프로퍼티                 
+#endregion // 프로퍼티
 
 #region 함수
 	/** 초기화 */
@@ -125,7 +125,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
 #endif // #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)                                                              
 	}
-#endregion // 함수               
+#endregion // 함수
 
 #region 클래스 함수
 	/** 매개 변수를 생성한다 */
@@ -134,7 +134,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oCallbackDict = a_oCallbackDict ?? new Dictionary<ECallback, System.Action<CFirebaseManager, bool>>()
 		};
 	}
-#endregion // 클래스 함수                   
+#endregion // 클래스 함수
 
 #region 조건부 함수
 #if UNITY_IOS || UNITY_ANDROID
@@ -157,21 +157,21 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 				FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
 #else
 				FirebaseAnalytics.SetAnalyticsCollectionEnabled(false);
-#endif // #if ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD                                                          
-#endif // #if FIREBASE_ANALYTICS_ENABLE                                          
+#endif // #if ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD
+#endif // #if FIREBASE_ANALYTICS_ENABLE
 
 #if FIREBASE_MSG_ENABLE
 				FirebaseMessaging.TokenReceived += this.OnReceiveMsgToken;
 				FirebaseMessaging.MessageReceived += this.OnReceiveNotiMsg;
 
 				FirebaseMessaging.TokenRegistrationOnInitEnabled = true;
-#endif // #if FIREBASE_MSG_ENABLE                                          
+#endif // #if FIREBASE_MSG_ENABLE
 			}
 
 			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict.GetValueOrDefault(EKey.IS_INIT));
 		});
 	}
-#endif // #if UNITY_IOS || UNITY_ANDROID                                           
-#endregion // 조건부 함수                   
+#endif // #if UNITY_IOS || UNITY_ANDROID
+#endregion // 조건부 함수
 }
-#endif // #if FIREBASE_MODULE_ENABLE                                       
+#endif // #if FIREBASE_MODULE_ENABLE
