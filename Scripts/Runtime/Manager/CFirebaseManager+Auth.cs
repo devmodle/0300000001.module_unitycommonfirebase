@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 #if FIREBASE_AUTH_ENABLE
 using Firebase.Auth;
-#endif // #if FIREBASE_AUTH_ENABLE                                     
+#endif // #if FIREBASE_AUTH_ENABLE
 
 /** 파이어 베이스 관리자 - 인증 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
@@ -28,7 +28,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		CFunc.Invoke(ref a_oCallback, this, false);
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE                                                                     
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 	}
 
 	/** 애플 로그인을 처리한다 */
@@ -67,12 +67,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) && this.IsLogin) {
 				FirebaseAuth.DefaultInstance.SignOut();
 			}
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE                                                                     
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		} finally {
 			CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGOUT_CALLBACK, () => CFunc.Invoke(ref a_oCallback, this));
 		}
 	}
-#endregion // 함수               
+#endregion // 함수
 
 #region 조건부 함수
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
@@ -98,7 +98,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CTaskManager.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), this.OnLogin);
 		}
 	}
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE                                                                     
-#endregion // 조건부 함수                   
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
+#endregion // 조건부 함수
 }
-#endif // #if FIREBASE_MODULE_ENABLE                                       
+#endif // #if FIREBASE_MODULE_ENABLE
