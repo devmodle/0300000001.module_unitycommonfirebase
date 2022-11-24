@@ -39,7 +39,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
 			FirebaseAnalytics.LogEvent(a_oName, this.MakeParams(a_oDataDict ?? new Dictionary<string, string>()).ToArray());
 		}
-#endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)                                                                                                                           
+#endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 	}
 #endregion // 함수
 
@@ -73,7 +73,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			
 			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParamsList.ToArray());
 		}
-#endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)                                                                                                                           
+#endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 	}
 #endif // #if PURCHASE_MODULE_ENABLE
 #endregion // 조건부 함수
