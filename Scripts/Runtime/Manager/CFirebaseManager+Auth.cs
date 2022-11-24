@@ -41,7 +41,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		this.LoginWithCredential(OAuthProvider.GetCredential(KCDefine.U_PROVIDER_ID_FIREBASE_M_APPLE_LOGIN, a_oUserID, a_oIDToken, null), a_oCallback);
 #else
 		CFunc.Invoke(ref a_oCallback, this, false);
-#endif // #if UNITY_IOS && (FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE)                                                                          
+#endif // #if UNITY_IOS && (FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE)
 	}
 
 	/** 페이스 북 로그인을 처리한다 */
@@ -54,7 +54,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		this.LoginWithCredential(FacebookAuthProvider.GetCredential(a_oAccessToken), a_oCallback);
 #else
 		CFunc.Invoke(ref a_oCallback, this, false);
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && FACEBOOK_MODULE_ENABLE)                                                                                                 
+#endif // #if (UNITY_IOS || UNITY_ANDROID) && (FIREBASE_AUTH_ENABLE && FACEBOOK_MODULE_ENABLE)
 	}
 
 	/** 로그아웃을 처리한다 */

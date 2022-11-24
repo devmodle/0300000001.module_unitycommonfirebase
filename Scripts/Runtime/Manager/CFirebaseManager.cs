@@ -123,7 +123,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
-#endif // #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)                                                              
+#endif // #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 #endregion // 함수
 
