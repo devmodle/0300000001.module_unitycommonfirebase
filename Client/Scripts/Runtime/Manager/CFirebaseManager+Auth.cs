@@ -19,8 +19,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.Login: {a_oDeviceID}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-		// 초기화 되었을 경우
-		if(!m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) || this.IsLogin) {
+		// 로그인 되었을 경우
+		if(!m_oBoolDict[EKey.IS_INIT] || this.IsLogin) {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
 			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
@@ -64,7 +64,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		try {
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 			// 로그인 되었을 경우
-			if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) && this.IsLogin) {
+			if(m_oBoolDict[EKey.IS_INIT] && this.IsLogin) {
 				FirebaseAuth.DefaultInstance.SignOut();
 			}
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
@@ -90,8 +90,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oCredential != null);
 
-		// 초기화 되었을 경우
-		if(!m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) || this.IsLogin) {
+		// 로그인 되었을 경우
+		if(!m_oBoolDict[EKey.IS_INIT] || this.IsLogin) {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
 			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
