@@ -72,10 +72,16 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 #region 변수
+	private Dictionary<EKey, bool> m_oBoolDict = new Dictionary<EKey, bool>() {
+		[EKey.IS_INIT] = false
+	};
+
+	private Dictionary<EKey, string> m_oStrDict = new Dictionary<EKey, string>() {
+		[EKey.MSG_TOKEN] = string.Empty
+	};
+
 	private FirebaseApp m_oFirebaseApp = null;
 	private List<string> m_oConfigKeyList = new List<string>();
-	private Dictionary<EKey, bool> m_oBoolDict = new Dictionary<EKey, bool>();
-	private Dictionary<EKey, string> m_oStrDict = new Dictionary<EKey, string>();
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>> m_oCallbackDict01 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>>();
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>> m_oCallbackDict02 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>>();
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, Dictionary<string, string>, bool>> m_oCallbackDict03 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, Dictionary<string, string>, bool>>();
@@ -87,7 +93,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	public bool IsLogin {
 		get {
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-			return m_oBoolDict.GetValueOrDefault(EKey.IS_INIT) && FirebaseAuth.DefaultInstance.CurrentUser != null;
+			return m_oBoolDict[EKey.IS_INIT] && FirebaseAuth.DefaultInstance.CurrentUser != null;
 #else
 			return false;
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
@@ -104,8 +110,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 	}
 
-	public bool IsInit => m_oBoolDict.GetValueOrDefault(EKey.IS_INIT);
-	public string MsgToken => m_oStrDict.GetValueOrDefault(EKey.MSG_TOKEN, string.Empty);
+	public bool IsInit => m_oBoolDict[EKey.IS_INIT];
+	public string MsgToken => m_oStrDict[EKey.MSG_TOKEN];
 #endregion // 프로퍼티
 
 #region 함수
@@ -115,8 +121,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
-		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
-			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict.GetValueOrDefault(EKey.IS_INIT));
+		if(m_oBoolDict[EKey.IS_INIT]) {
+			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
 		} else {
 			this.Params = a_stParams;
 			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
@@ -141,13 +147,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	// 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-		m_oBoolDict.ExReplaceVal(EKey.IS_INIT, a_oTask.ExIsCompleteSuccess() && a_oTask.Result == DependencyStatus.Available);
+		m_oBoolDict[EKey.IS_INIT] = a_oTask.ExIsCompleteSuccess() && a_oTask.Result == DependencyStatus.Available;
 
-		CFunc.ShowLog($"CFirebaseManager.OnInit: {m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CFunc.ShowLog($"CFirebaseManager.OnInit: {m_oBoolDict[EKey.IS_INIT]}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
 			// 초기화 되었을 경우
-			if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
+			if(m_oBoolDict[EKey.IS_INIT]) {
 				m_oFirebaseApp = FirebaseApp.DefaultInstance;
 
 #if FIREBASE_ANALYTICS_ENABLE
@@ -168,7 +174,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif // #if FIREBASE_MSG_ENABLE
 			}
 
-			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict.GetValueOrDefault(EKey.IS_INIT));
+			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
 		});
 	}
 #endif // #if UNITY_IOS || UNITY_ANDROID
