@@ -21,7 +21,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
 		// 초기화 되었을 경우
-		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
+		if(m_oBoolDict[EKey.IS_INIT]) {
 			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.SETUP_DEF_CONFIGS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(a_oDataDict), this.OnSetupDefConfigs);
 		} else {
@@ -39,7 +39,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
 		// 초기화 되었을 경우
-		if(m_oBoolDict.GetValueOrDefault(EKey.IS_INIT)) {
+		if(m_oBoolDict[EKey.IS_INIT]) {
 			a_oKeyList.ExCopyTo(m_oConfigKeyList, (a_oKey) => a_oKey);
 			m_oCallbackDict03.ExReplaceVal(EFirebaseCallback.LOAD_CONFIGS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.FetchAndActivateAsync(), this.OnLoadConfigs);
