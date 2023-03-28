@@ -133,15 +133,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 #endregion // 함수
 
-#region 클래스 함수
-	/** 매개 변수를 생성한다 */
-	public static STParams MakeParams(Dictionary<ECallback, System.Action<CFirebaseManager, bool>> a_oCallbackDict = null) {
-		return new STParams() {
-			m_oCallbackDict = a_oCallbackDict ?? new Dictionary<ECallback, System.Action<CFirebaseManager, bool>>()
-		};
-	}
-#endregion // 클래스 함수
-
 #region 조건부 함수
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
@@ -179,5 +170,17 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 #endif // #if UNITY_IOS || UNITY_ANDROID
 #endregion // 조건부 함수
+}
+
+/** 파이어 베이스 관리자 - 팩토리 */
+public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
+#region 클래스 함수
+	/** 매개 변수를 생성한다 */
+	public static STParams MakeParams(Dictionary<ECallback, System.Action<CFirebaseManager, bool>> a_oCallbackDict = null) {
+		return new STParams() {
+			m_oCallbackDict = a_oCallbackDict ?? new Dictionary<ECallback, System.Action<CFirebaseManager, bool>>()
+		};
+	}
+#endregion // 클래스 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE
