@@ -22,7 +22,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_STORAGE_ENABLE
 		// 초기화 되었을 경우
-		if(m_oBoolDict[EKey.IS_INIT]) {
+		if(this.IsInit) {
 			m_oCallbackDict02.ExReplaceVal(EFirebaseCallback.LOAD_FILES, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseStorage.DefaultInstance.GetReference(a_oFilePath).GetStreamAsync(), this.OnLoadFiles);
 		} else {
