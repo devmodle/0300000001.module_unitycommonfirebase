@@ -13,7 +13,7 @@ using Firebase.RemoteConfig;
 
 /** 파이어 베이스 관리자 - 구성 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
-#region 함수
+	#region 함수
 	/** 기본 구성을 설정한다 */
 	public void SetupDefConfigs(Dictionary<string, object> a_oDataDict, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.SetupDefConfigs: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
@@ -50,9 +50,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.Invoke(ref a_oCallback, this, null, false);
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
 	}
-#endregion // 함수
+	#endregion // 함수
 
-#region 조건부 함수
+	#region 조건부 함수
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
 	/** 기본 구성을 설정했을 경우 */
 	public void OnSetupDefConfigs(Task a_oTask) {
@@ -74,6 +74,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
-#endregion // 조건부 함수
+	#endregion // 조건부 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE
