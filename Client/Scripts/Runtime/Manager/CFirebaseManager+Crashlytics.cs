@@ -19,7 +19,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
 		// 초기화 되었을 경우
-		if(m_oBoolDict[EKey.IS_INIT]) {
+		if(this.IsInit) {
 			Crashlytics.SetUserId(a_oID);
 		}
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
@@ -32,7 +32,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CRASHLYTICS_ENABLE
 		// 초기화 되었을 경우
-		if(m_oBoolDict[EKey.IS_INIT]) {
+		if(this.IsInit) {
 			foreach(var stKeyVal in a_oDataDict) {
 				Crashlytics.SetCustomKey(stKeyVal.Key, stKeyVal.Value);
 			}

@@ -22,14 +22,6 @@ using Firebase.Messaging;
 
 /** 파이어 베이스 관리자 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
-	/** 식별자 */
-	private enum EKey {
-		NONE = -1,
-		IS_INIT,
-		MSG_TOKEN,
-		[HideInInspector] MAX_VAL
-	}
-
 	/** 콜백 */
 	public enum ECallback {
 		NONE = -1,
@@ -72,14 +64,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 	#region 변수
-	private Dictionary<EKey, bool> m_oBoolDict = new Dictionary<EKey, bool>() {
-		[EKey.IS_INIT] = false
-	};
-
-	private Dictionary<EKey, string> m_oStrDict = new Dictionary<EKey, string>() {
-		[EKey.MSG_TOKEN] = string.Empty
-	};
-
 	private FirebaseApp m_oFirebaseApp = null;
 	private List<string> m_oConfigKeyList = new List<string>();
 	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>> m_oCallbackDict01 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>>();
@@ -89,11 +73,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 프로퍼티
 	public STParams Params { get; private set; }
+	
+	public bool IsInit { get; private set; } = false;
+	public string MsgToken { get; private set; } = string.Empty;
 
 	public bool IsLogin {
 		get {
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-			return m_oBoolDict[EKey.IS_INIT] && FirebaseAuth.DefaultInstance.CurrentUser != null;
+			return this.IsInit && FirebaseAuth.DefaultInstance.CurrentUser != null;
 #else
 			return false;
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
@@ -109,9 +96,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		}
 	}
-
-	public bool IsInit => m_oBoolDict[EKey.IS_INIT];
-	public string MsgToken => m_oStrDict[EKey.MSG_TOKEN];
 	#endregion // 프로퍼티
 
 	#region 함수
@@ -121,8 +105,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화 되었을 경우
-		if(m_oBoolDict[EKey.IS_INIT]) {
-			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
+		if(this.IsInit) {
+			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
 		} else {
 			this.Params = a_stParams;
 			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
@@ -137,14 +121,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
+		this.IsInit = a_oTask.ExIsCompleteSuccess() && a_oTask.Result == DependencyStatus.Available;
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
-		m_oBoolDict[EKey.IS_INIT] = a_oTask.ExIsCompleteSuccess() && a_oTask.Result == DependencyStatus.Available;
 
-		CFunc.ShowLog($"CFirebaseManager.OnInit: {m_oBoolDict[EKey.IS_INIT]}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
 			// 초기화 되었을 경우
-			if(m_oBoolDict[EKey.IS_INIT]) {
+			if(this.IsInit) {
 				m_oFirebaseApp = FirebaseApp.DefaultInstance;
 
 #if FIREBASE_ANALYTICS_ENABLE
@@ -165,7 +149,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif // #if FIREBASE_MSG_ENABLE
 			}
 
-			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, m_oBoolDict[EKey.IS_INIT]);
+			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
 		});
 	}
 #endif // #if UNITY_IOS || UNITY_ANDROID
