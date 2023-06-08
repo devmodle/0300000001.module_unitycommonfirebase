@@ -15,7 +15,7 @@ using UnityEngine.Purchasing;
 
 /** 파이어 베이스 관리자 - 분석 */
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
-#region 함수
+	#region 함수
 	/** 분석 유저 식별자를 변경한다 */
 	public void SetAnalyticsUserID(string a_oID) {
 		CFunc.ShowLog($"CFirebaseManager.SetAnalyticsUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
@@ -41,9 +41,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 	}
-#endregion // 함수
+	#endregion // 함수
 
-#region 조건부 함수
+	#region 조건부 함수
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 	/** 로그 매개 변수를 생성한다 */
 	private List<Parameter> MakeLogParams(Dictionary<string, string> a_oDataDict) {
@@ -76,6 +76,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 	}
 #endif // #if PURCHASE_MODULE_ENABLE
-#endregion // 조건부 함수
+	#endregion // 조건부 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE
