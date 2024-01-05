@@ -115,9 +115,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
 #endif // #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
-	#endregion // 함수
 
-	#region 조건부 함수
 #if UNITY_IOS || UNITY_ANDROID
 	// 초기화 되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
@@ -153,11 +151,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 #endif // #if UNITY_IOS || UNITY_ANDROID
-	#endregion // 조건부 함수
-}
+	#endregion // 함수
 
-/** 파이어 베이스 관리자 - 팩토리 */
-public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 클래스 함수
 	/** 매개 변수를 생성한다 */
 	public static STParams MakeParams(Dictionary<ECallback, System.Action<CFirebaseManager, bool>> a_oCallbackDict = null) {

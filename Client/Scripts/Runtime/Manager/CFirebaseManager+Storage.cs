@@ -32,9 +32,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_STORAGE_ENABLE
 	}
-	#endregion // 함수
 
-	#region 조건부 함수
 #if FIREBASE_STORAGE_ENABLE
 	/** 파일이 로드 되었을 경우 */
 	public void OnLoadFiles(Task<Stream> a_oTask) {
@@ -46,6 +44,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 #endif // #if FIREBASE_STORAGE_ENABLE
-	#endregion // 조건부 함수
+	#endregion // 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE
