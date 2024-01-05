@@ -41,9 +41,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 	}
-	#endregion // 함수
 
-	#region 조건부 함수
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
 	/** 로그 매개 변수를 생성한다 */
 	private List<Parameter> MakeLogParams(Dictionary<string, string> a_oDataDict) {
@@ -68,7 +66,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			var oParamsList = this.MakeLogParams(new Dictionary<string, string>() {
-				[FirebaseAnalytics.ParameterItemId] = a_oProduct.definition.id, [FirebaseAnalytics.ParameterItemName] = a_oProduct.metadata.localizedTitle, [FirebaseAnalytics.ParameterCurrency] = a_oProduct.metadata.isoCurrencyCode, [FirebaseAnalytics.ParameterQuantity] = $"{a_nNumProducts}", [FirebaseAnalytics.ParameterPrice] = $"{a_oProduct.metadata.localizedPrice}", [FirebaseAnalytics.ParameterTransactionId] = a_oProduct.transactionID
+				[FirebaseAnalytics.ParameterItemId] = a_oProduct.definition.id, 
+				[FirebaseAnalytics.ParameterItemName] = a_oProduct.metadata.localizedTitle, 
+				[FirebaseAnalytics.ParameterCurrency] = a_oProduct.metadata.isoCurrencyCode, 
+				[FirebaseAnalytics.ParameterQuantity] = $"{a_nNumProducts}", 
+				[FirebaseAnalytics.ParameterPrice] = $"{a_oProduct.metadata.localizedPrice}", 
+				[FirebaseAnalytics.ParameterTransactionId] = a_oProduct.transactionID
 			});
 			
 			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParamsList.ToArray());
@@ -76,6 +79,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
 	}
 #endif // #if PURCHASE_MODULE_ENABLE
-	#endregion // 조건부 함수
+	#endregion // 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE

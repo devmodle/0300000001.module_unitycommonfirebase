@@ -38,7 +38,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if UNITY_IOS && (FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE)
 		var oAuth = FirebaseAuth.DefaultInstance;
-		this.LoginWithCredential(OAuthProvider.GetCredential(KCDefine.U_PROVIDER_ID_FIREBASE_M_APPLE_LOGIN, a_oUserID, a_oIDToken, null), a_oCallback);
+		var oCredential = OAuthProvider.GetCredential(KCDefine.U_PROVIDER_ID_FIREBASE_M_APPLE_LOGIN, a_oUserID, a_oIDToken, null);
+
+		this.LoginWithCredential(oCredential, a_oCallback);
 #else
 		CFunc.Invoke(ref a_oCallback, this, false);
 #endif // #if UNITY_IOS && (FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE)
@@ -69,12 +71,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			}
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 		} finally {
-			CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGOUT_CALLBACK, () => CFunc.Invoke(ref a_oCallback, this));
+			CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGOUT_CALLBACK, () => {
+				CFunc.Invoke(ref a_oCallback, this);
+			});
 		}
 	}
-	#endregion // 함수
 
-	#region 조건부 함수
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
 	/** 로그인 되었을 경우 */
 	private void OnLogin(Task<FirebaseUser> a_oTask) {
@@ -82,7 +84,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 
 		CFunc.ShowLog($"CFirebaseManager.OnLogin: {a_oTask.ExIsCompleteSuccess()}, {oUserID}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => m_oCallbackDict01.GetValueOrDefault(EFirebaseCallback.LOGIN)?.Invoke(this, this.IsLogin));
+
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => {
+			m_oCallbackDict01.GetValueOrDefault(EFirebaseCallback.LOGIN)?.Invoke(this, this.IsLogin);
+		});
 	}
 
 	/** 인증 로그인을 처리한다 */
@@ -99,6 +104,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 	}
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-	#endregion // 조건부 함수
+	#endregion // 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE

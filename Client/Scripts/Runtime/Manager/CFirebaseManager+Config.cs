@@ -50,9 +50,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.Invoke(ref a_oCallback, this, null, false);
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
 	}
-	#endregion // 함수
 
-	#region 조건부 함수
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
 	/** 기본 구성을 설정했을 경우 */
 	public void OnSetupDefConfigs(Task a_oTask) {
@@ -74,6 +72,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
-	#endregion // 조건부 함수
+	#endregion // 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE

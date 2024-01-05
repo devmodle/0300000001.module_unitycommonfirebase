@@ -59,7 +59,8 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnLoadDatas: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_DATAS_CALLBACK, () => {
-			m_oCallbackDict02.GetValueOrDefault(EFirebaseCallback.LOAD_DATAS)?.Invoke(this, a_oTask.ExIsCompleteSuccess() ? a_oTask.Result.GetRawJsonValue() : string.Empty, a_oTask.ExIsCompleteSuccess());
+			m_oCallbackDict02.GetValueOrDefault(EFirebaseCallback.LOAD_DATAS)?.Invoke(this, 
+				a_oTask.ExIsCompleteSuccess() ? a_oTask.Result.GetRawJsonValue() : string.Empty, a_oTask.ExIsCompleteSuccess());
 		});
 	}
 
@@ -68,7 +69,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnSaveDatas: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DATAS_CALLBACK, () => m_oCallbackDict01.GetValueOrDefault(EFirebaseCallback.SAVE_DATAS)?.Invoke(this, a_oTask.ExIsCompleteSuccess()));
+		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DATAS_CALLBACK, () => {
+			m_oCallbackDict01.GetValueOrDefault(EFirebaseCallback.SAVE_DATAS)?.Invoke(this, a_oTask.ExIsCompleteSuccess());
+		});
 	}
 
 	/** 데이터 베이스 레퍼런스를 반환한다 */
@@ -77,10 +80,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		var oDBRef = FirebaseDatabase.DefaultInstance.RootReference;
 
 		for(int i = 0; i < a_oNodeList.Count; ++i) {
-			// 노드가 유효 할 경우
-			if(a_oNodeList[i].ExIsValid()) {
-				oDBRef = oDBRef.Child(a_oNodeList[i]);
+			// 노드가 유효하지 않을 경우
+			if(!a_oNodeList[i].ExIsValid()) {
+				continue;
 			}
+
+			oDBRef = oDBRef.Child(a_oNodeList[i]);
 		}
 
 		return oDBRef.Child(this.UserID);
