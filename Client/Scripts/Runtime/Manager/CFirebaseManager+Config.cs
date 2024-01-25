@@ -22,7 +22,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.SETUP_DEF_CONFIGS, a_oCallback);
+			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SETUP_DEF_CONFIGS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(a_oDataDict), this.OnSetupDefConfigs);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, false);
@@ -41,7 +41,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		// 초기화 되었을 경우
 		if(this.IsInit) {
 			a_oKeyList.ExCopyTo(m_oConfigKeyList, (a_oKey) => a_oKey);
-			m_oCallbackDict03.ExReplaceVal(EFirebaseCallback.LOAD_CONFIGS, a_oCallback);
+			m_oCallbackDictC.ExReplaceVal(EFirebaseCallback.LOAD_CONFIGS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.FetchAndActivateAsync(), this.OnLoadConfigs);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, null, false);
@@ -58,7 +58,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnSetupDefConfigs: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SETUP_DEF_CONFIGS_CALLBACK, () => {
-			m_oCallbackDict01.GetValueOrDefault(EFirebaseCallback.SETUP_DEF_CONFIGS)?.Invoke(this, a_oTask.ExIsCompleteSuccess());
+			m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.SETUP_DEF_CONFIGS)?.Invoke(this, a_oTask.ExIsCompleteSuccess());
 		});
 	}
 
@@ -68,7 +68,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnLoadConfigs: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIGS_CALLBACK, () => {
-			m_oCallbackDict03.GetValueOrDefault(EFirebaseCallback.LOAD_CONFIGS)?.Invoke(this, a_oTask.ExIsCompleteSuccess() ? m_oConfigKeyList.ExToDict((a_nIdx) => (m_oConfigKeyList[a_nIdx], FirebaseRemoteConfig.DefaultInstance.GetValue(m_oConfigKeyList[a_nIdx]).StringValue)) : null, a_oTask.ExIsCompleteSuccess());
+			m_oCallbackDictC.GetValueOrDefault(EFirebaseCallback.LOAD_CONFIGS)?.Invoke(this, a_oTask.ExIsCompleteSuccess() ? m_oConfigKeyList.ExToDict((a_nIdx) => (m_oConfigKeyList[a_nIdx], FirebaseRemoteConfig.DefaultInstance.GetValue(m_oConfigKeyList[a_nIdx]).StringValue)) : null, a_oTask.ExIsCompleteSuccess());
 		});
 	}
 #endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE

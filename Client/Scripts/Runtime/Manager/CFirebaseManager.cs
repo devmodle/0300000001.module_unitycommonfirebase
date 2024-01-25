@@ -66,9 +66,9 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 변수
 	private FirebaseApp m_oFirebaseApp = null;
 	private List<string> m_oConfigKeyList = new List<string>();
-	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>> m_oCallbackDict01 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>>();
-	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>> m_oCallbackDict02 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>>();
-	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, Dictionary<string, string>, bool>> m_oCallbackDict03 = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, Dictionary<string, string>, bool>>();
+	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>> m_oCallbackDictA = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, bool>>();
+	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>> m_oCallbackDictB = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, string, bool>>();
+	private Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, Dictionary<string, string>, bool>> m_oCallbackDictC = new Dictionary<EFirebaseCallback, System.Action<CFirebaseManager, Dictionary<string, string>, bool>>();
 	#endregion // 변수
 
 	#region 프로퍼티

@@ -22,7 +22,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(this.IsInit && this.IsLogin) {
-			m_oCallbackDict02.ExReplaceVal(EFirebaseCallback.LOAD_DATAS, a_oCallback);
+			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_DATAS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).GetValueAsync(), this.OnLoadDatas);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
@@ -40,7 +40,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
 		// 로그인 되었을 경우
 		if(this.IsInit && this.IsLogin) {
-			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.SAVE_DATAS, a_oCallback);
+			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SAVE_DATAS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDatas);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, false);
@@ -59,7 +59,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnLoadDatas: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_DATAS_CALLBACK, () => {
-			m_oCallbackDict02.GetValueOrDefault(EFirebaseCallback.LOAD_DATAS)?.Invoke(this, 
+			m_oCallbackDictB.GetValueOrDefault(EFirebaseCallback.LOAD_DATAS)?.Invoke(this, 
 				a_oTask.ExIsCompleteSuccess() ? a_oTask.Result.GetRawJsonValue() : string.Empty, a_oTask.ExIsCompleteSuccess());
 		});
 	}
@@ -70,7 +70,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnSaveDatas: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DATAS_CALLBACK, () => {
-			m_oCallbackDict01.GetValueOrDefault(EFirebaseCallback.SAVE_DATAS)?.Invoke(this, a_oTask.ExIsCompleteSuccess());
+			m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.SAVE_DATAS)?.Invoke(this, a_oTask.ExIsCompleteSuccess());
 		});
 	}
 

@@ -19,7 +19,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_MSG_ENABLE
 		// 초기화 되었을 경우
 		if(this.IsInit) {
-			m_oCallbackDict02.ExReplaceVal(EFirebaseCallback.LOAD_MSG_TOKEN, a_oCallback);
+			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_MSG_TOKEN, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseMessaging.GetTokenAsync(), this.OnLoadMsgToken);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
@@ -38,7 +38,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_MSG_TOKEN_CALLBACK, () => {
 			this.MsgToken = a_oTask.ExIsCompleteSuccess() ? a_oTask.Result : string.Empty;
 			
-			m_oCallbackDict02.GetValueOrDefault(EFirebaseCallback.LOAD_MSG_TOKEN)?.Invoke(this, 
+			m_oCallbackDictB.GetValueOrDefault(EFirebaseCallback.LOAD_MSG_TOKEN)?.Invoke(this, 
 				this.MsgToken, a_oTask.ExIsCompleteSuccess());
 		});
 	}
