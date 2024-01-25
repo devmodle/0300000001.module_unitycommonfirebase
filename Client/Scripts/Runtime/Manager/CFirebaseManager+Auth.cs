@@ -23,7 +23,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(!this.IsInit || this.IsLogin) {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
-			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
+			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync(), this.OnLogin);
 		}
 #else
@@ -86,7 +86,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnLogin: {a_oTask.ExIsCompleteSuccess()}, {oUserID}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => {
-			m_oCallbackDict01.GetValueOrDefault(EFirebaseCallback.LOGIN)?.Invoke(this, this.IsLogin);
+			m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.LOGIN)?.Invoke(this, this.IsLogin);
 		});
 	}
 
@@ -99,7 +99,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(!this.IsInit || this.IsLogin) {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
-			m_oCallbackDict01.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
+			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), this.OnLogin);
 		}
 	}
