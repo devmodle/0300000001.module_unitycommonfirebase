@@ -17,7 +17,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 메세지 토큰을 로드한다 */
 	public void LoadMsgToken(System.Action<CFirebaseManager, string, bool> a_oCallback) {
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_MSG_ENABLE
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_MSG_TOKEN, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseMessaging.GetTokenAsync(), this.OnLoadMsgToken);

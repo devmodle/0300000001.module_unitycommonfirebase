@@ -20,7 +20,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oDataDict != null);
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SETUP_DEF_CONFIGS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(a_oDataDict), this.OnSetupDefConfigs);
@@ -38,7 +38,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oKeyList != null);
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 			a_oKeyList.ExCopyTo(m_oConfigKeyList, (a_oKey) => a_oKey);
 			m_oCallbackDictC.ExReplaceVal(EFirebaseCallback.LOAD_CONFIGS, a_oCallback);

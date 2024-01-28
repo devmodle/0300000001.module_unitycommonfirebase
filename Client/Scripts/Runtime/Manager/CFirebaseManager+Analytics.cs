@@ -22,7 +22,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oID.ExIsValid());
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 			FirebaseAnalytics.SetUserId(a_oID);
 		}
@@ -35,7 +35,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oName.ExIsValid());
 
 #if((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 			FirebaseAnalytics.LogEvent(a_oName, this.MakeLogParams(a_oDataDict ?? new Dictionary<string, string>()).ToArray());
 		}
@@ -63,7 +63,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oProduct != null);
 
 #if((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 			var oParamsList = this.MakeLogParams(new Dictionary<string, string>() {
 				[FirebaseAnalytics.ParameterItemId] = a_oProduct.definition.id, 
