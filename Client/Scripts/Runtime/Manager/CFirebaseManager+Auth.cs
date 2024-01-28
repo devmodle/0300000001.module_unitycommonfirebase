@@ -19,7 +19,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.Login: {a_oDeviceID}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-		// 로그인 되었을 경우
+		// 로그인되었을 경우
 		if(!this.IsInit || this.IsLogin) {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
@@ -65,7 +65,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		try {
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-			// 로그인 되었을 경우
+			// 로그인되었을 경우
 			if(this.IsInit && this.IsLogin) {
 				FirebaseAuth.DefaultInstance.SignOut();
 			}
@@ -78,7 +78,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
-	/** 로그인 되었을 경우 */
+	/** 로그인되었을 경우 */
 	private void OnLogin(Task<FirebaseUser> a_oTask) {
 		string oUserID = a_oTask.ExIsCompleteSuccess() ? a_oTask.Result.UserId : string.Empty;
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -95,7 +95,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oCredential != null);
 
-		// 로그인 되었을 경우
+		// 로그인되었을 경우
 		if(!this.IsInit || this.IsLogin) {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {

@@ -104,7 +104,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.Init", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
 		} else {
@@ -117,7 +117,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 #if UNITY_IOS || UNITY_ANDROID
-	// 초기화 되었을 경우
+	// 초기화되었을 경우
 	private void OnInit(Task<DependencyStatus> a_oTask) {
 		this.IsInit = a_oTask.ExIsCompleteSuccess() && a_oTask.Result == DependencyStatus.Available;
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -125,7 +125,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
-			// 초기화 되었을 경우
+			// 초기화되었을 경우
 			if(this.IsInit) {
 				m_oFirebaseApp = FirebaseApp.DefaultInstance;
 

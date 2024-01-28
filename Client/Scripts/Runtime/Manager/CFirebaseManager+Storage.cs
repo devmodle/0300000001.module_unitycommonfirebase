@@ -21,7 +21,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oFilePath.ExIsValid());
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_STORAGE_ENABLE
-		// 초기화 되었을 경우
+		// 초기화되었을 경우
 		if(this.IsInit) {
 			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_FILES, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(FirebaseStorage.DefaultInstance.GetReference(a_oFilePath).GetStreamAsync(), this.OnLoadFiles);
@@ -34,7 +34,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 #if FIREBASE_STORAGE_ENABLE
-	/** 파일이 로드 되었을 경우 */
+	/** 파일이 로드되었을 경우 */
 	public void OnLoadFiles(Task<Stream> a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadFiles: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);

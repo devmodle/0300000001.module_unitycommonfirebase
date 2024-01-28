@@ -20,7 +20,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oNodeList != null);
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
-		// 로그인 되었을 경우
+		// 로그인되었을 경우
 		if(this.IsInit && this.IsLogin) {
 			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_DATAS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).GetValueAsync(), this.OnLoadDatas);
@@ -38,7 +38,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
 
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
-		// 로그인 되었을 경우
+		// 로그인되었을 경우
 		if(this.IsInit && this.IsLogin) {
 			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SAVE_DATAS, a_oCallback);
 			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDatas);
@@ -53,7 +53,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	#region 조건부 함수
 #if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_DB_ENABLE
-	/** 데이터가 로드 되었을 경우 */
+	/** 데이터가 로드되었을 경우 */
 	private void OnLoadDatas(Task<DataSnapshot> a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadDatas: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
@@ -64,7 +64,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 
-	/** 데이터가 저장 되었을 경우 */
+	/** 데이터가 저장되었을 경우 */
 	private void OnSaveDatas(Task a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnSaveDatas: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
