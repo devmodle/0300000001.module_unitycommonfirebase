@@ -16,7 +16,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	/** 메세지 토큰을 로드한다 */
 	public void LoadMsgToken(System.Action<CFirebaseManager, string, bool> a_oCallback) {
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_MSG_ENABLE
+#if FIREBASE_MSG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
 			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_MSG_TOKEN, a_oCallback);
@@ -26,10 +26,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_MSG_ENABLE
+#endif // #if FIREBASE_MSG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_MSG_ENABLE
+#if FIREBASE_MSG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	/** 메세지 토큰을 로드했을 경우 */
 	private void OnLoadMsgToken(Task<string> a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -60,7 +60,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			// Do Something
 		});
 	}
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_MSG_ENABLE
+#endif // #if FIREBASE_MSG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	#endregion // 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE

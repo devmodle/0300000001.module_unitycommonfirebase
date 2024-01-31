@@ -19,7 +19,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SetupDefConfigs: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oDataDict != null);
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
+#if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
 			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SETUP_DEF_CONFIGS, a_oCallback);
@@ -29,7 +29,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		CFunc.Invoke(ref a_oCallback, this, false);
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
+#endif // #if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	/** 구성을 로드한다 */
@@ -37,7 +37,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.LoadConfigs: {a_oKeyList}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oKeyList != null);
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
+#if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
 			a_oKeyList.ExCopyTo(m_oConfigKeyList, (a_oKey) => a_oKey);
@@ -48,10 +48,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 #else
 		CFunc.Invoke(ref a_oCallback, this, null, false);
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
+#endif // #if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
+#if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	/** 기본 구성을 설정했을 경우 */
 	public void OnSetupDefConfigs(Task a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
@@ -71,7 +71,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			m_oCallbackDictC.GetValueOrDefault(EFirebaseCallback.LOAD_CONFIGS)?.Invoke(this, a_oTask.ExIsCompleteSuccess() ? m_oConfigKeyList.ExToDict((a_nIdx) => (m_oConfigKeyList[a_nIdx], FirebaseRemoteConfig.DefaultInstance.GetValue(m_oConfigKeyList[a_nIdx]).StringValue)) : null, a_oTask.ExIsCompleteSuccess());
 		});
 	}
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_CONFIG_ENABLE
+#endif // #if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	#endregion // 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE
