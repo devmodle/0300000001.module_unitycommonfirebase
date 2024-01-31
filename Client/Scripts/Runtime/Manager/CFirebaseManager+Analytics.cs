@@ -21,12 +21,12 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SetAnalyticsUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oID.ExIsValid());
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
+#if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
 			FirebaseAnalytics.SetUserId(a_oID);
 		}
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
+#endif // #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	}
 
 	/** 로그를 전송한다 */
@@ -34,15 +34,15 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SendLog: {a_oName}, {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oName.ExIsValid());
 
-#if((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
+#if FIREBASE_ANALYTICS_ENABLE && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD) && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
 			FirebaseAnalytics.LogEvent(a_oName, this.MakeLogParams(a_oDataDict ?? new Dictionary<string, string>()).ToArray());
 		}
-#endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
+#endif // #if FIREBASE_ANALYTICS_ENABLE && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD) && (UNITY_IOS || UNITY_ANDROID)
 	}
 
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
+#if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	/** 로그 매개 변수를 생성한다 */
 	private List<Parameter> MakeLogParams(Dictionary<string, string> a_oDataDict) {
 		CAccess.Assert(a_oDataDict != null);
@@ -54,7 +54,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		return oParamsList;
 	}
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE
+#endif // #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 
 #if PURCHASE_MODULE_ENABLE
 	/** 결제 로그를 전송한다 */
@@ -62,7 +62,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.SendPurchaseLog: {a_oProduct}, {a_nNumProducts}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CAccess.Assert(a_oProduct != null);
 
-#if((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
+#if FIREBASE_ANALYTICS_ENABLE && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD) && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
 			var oParamsList = this.MakeLogParams(new Dictionary<string, string>() {
@@ -76,7 +76,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			
 			FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventPurchase, oParamsList.ToArray());
 		}
-#endif // #if ((UNITY_IOS || UNITY_ANDROID) && FIREBASE_ANALYTICS_ENABLE) && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD)
+#endif // #if FIREBASE_ANALYTICS_ENABLE && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD) && (UNITY_IOS || UNITY_ANDROID)
 	}
 #endif // #if PURCHASE_MODULE_ENABLE
 	#endregion // 함수

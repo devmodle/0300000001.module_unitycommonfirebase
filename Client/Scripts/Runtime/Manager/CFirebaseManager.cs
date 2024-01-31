@@ -79,21 +79,21 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	public bool IsLogin {
 		get {
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
+#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 			return this.IsInit && FirebaseAuth.DefaultInstance.CurrentUser != null;
 #else
 			return false;
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
+#endif // #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		}
 	}
 
 	public string UserID {
 		get {
-#if(UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
+#if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 			return this.IsLogin ? FirebaseAuth.DefaultInstance.CurrentUser.UserId : string.Empty;
 #else
 			return string.Empty;
-#endif // #if (UNITY_IOS || UNITY_ANDROID) && FIREBASE_AUTH_ENABLE
+#endif // #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		}
 	}
 	#endregion // 프로퍼티
