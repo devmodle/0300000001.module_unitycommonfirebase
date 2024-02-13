@@ -21,16 +21,22 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CAccess.Assert(a_oFilePath.ExIsValid());
 
 #if FIREBASE_STORAGE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
-		// 초기화되었을 경우
-		if(this.IsInit) {
-			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_FILES, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(FirebaseStorage.DefaultInstance.GetReference(a_oFilePath).GetStreamAsync(), this.OnLoadFiles);
-		} else {
-			CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
+		// 파일 로드가 불가능 할 경우
+		if(!this.IsInit) {
+			goto FIREBASE_MANAGER_LOAD_FILES_EXIT;
 		}
+
+		m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_FILES, a_oCallback);
+		var oFirebaseStorage = FirebaseStorage.DefaultInstance.GetReference(a_oFilePath);
+
+		CTaskManager.Inst.WaitAsyncTask(oFirebaseStorage.GetStreamAsync(), this.OnLoadFiles);
+		return;
 #else
 		CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
 #endif // #if FIREBASE_STORAGE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
+
+FIREBASE_MANAGER_LOAD_FILES_EXIT:
+		CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
 	}
 
 #if FIREBASE_STORAGE_ENABLE
@@ -40,7 +46,10 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.OnLoadFiles: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_FILES_CALLBACK, () => {
-			m_oCallbackDictB.GetValueOrDefault(EFirebaseCallback.LOAD_FILES)?.Invoke(this, a_oTask.ExIsCompleteSuccess() ? CFunc.ReadStr(a_oTask.Result, true) : string.Empty, a_oTask.ExIsCompleteSuccess());
+			bool bIsSuccess = a_oTask.ExIsCompleteSuccess();
+			string oResultStr = bIsSuccess ? CFunc.ReadStr(a_oTask.Result, true) : string.Empty;
+
+			m_oCallbackDictB.GetValueOrDefault(EFirebaseCallback.LOAD_FILES)?.Invoke(this, oResultStr, bIsSuccess);
 		});
 	}
 #endif // #if FIREBASE_STORAGE_ENABLE

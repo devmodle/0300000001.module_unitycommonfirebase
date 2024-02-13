@@ -53,7 +53,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	/** 기본 구성을 설정했을 경우 */
-	public void OnSetupDefConfigs(Task a_oTask) {
+	private void OnSetupDefConfigs(Task a_oTask) {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnSetupDefConfigs: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
