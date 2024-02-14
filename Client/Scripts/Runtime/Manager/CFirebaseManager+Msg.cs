@@ -35,7 +35,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadMsgToken: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_MSG_TOKEN_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_LOAD_MSG_TOKEN_CALLBACK, () => {
 			this.MsgToken = a_oTask.ExIsCompleteSuccess() ? a_oTask.Result : string.Empty;
 			
 			m_oCallbackDictB.GetValueOrDefault(EFirebaseCallback.LOAD_MSG_TOKEN)?.Invoke(this, 
@@ -47,7 +47,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private void OnReceiveMsgToken(object a_oSender, TokenReceivedEventArgs a_oArgs) {
 		CFunc.ShowLog($"CFirebaseManager.OnReceiveMsgToken: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_TOKEN_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_TOKEN_CALLBACK, () => {
 			this.MsgToken = a_oArgs.Token;
 		});
 	}
@@ -56,7 +56,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	private void OnReceiveNotiMsg(object a_oSender, MessageReceivedEventArgs a_oArgs) {
 		CFunc.ShowLog($"CFirebaseManager.OnReceiveNotiMsg: {a_oArgs}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_NOTI_MSG_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_NOTI_MSG_CALLBACK, () => {
 			// Do Something
 		});
 	}

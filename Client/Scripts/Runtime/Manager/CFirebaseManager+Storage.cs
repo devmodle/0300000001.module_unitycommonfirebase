@@ -45,7 +45,7 @@ FIREBASE_MANAGER_LOAD_FILES_EXIT:
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadFiles: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_FILES_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_LOAD_FILES_CALLBACK, () => {
 			bool bIsSuccess = a_oTask.ExIsCompleteSuccess();
 			string oResultStr = bIsSuccess ? CFunc.ReadStr(a_oTask.Result, true) : string.Empty;
 

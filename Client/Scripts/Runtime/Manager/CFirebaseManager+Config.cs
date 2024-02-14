@@ -57,7 +57,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnSetupDefConfigs: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SETUP_DEF_CONFIGS_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_SETUP_DEF_CONFIGS_CALLBACK, () => {
 			m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.SETUP_DEF_CONFIGS)?.Invoke(this, a_oTask.ExIsCompleteSuccess());
 		});
 	}
@@ -67,7 +67,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadConfigs: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_CONFIGS_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_LOAD_CONFIGS_CALLBACK, () => {
 			m_oCallbackDictC.GetValueOrDefault(EFirebaseCallback.LOAD_CONFIGS)?.Invoke(this, a_oTask.ExIsCompleteSuccess() ? m_oConfigKeyList.ExToDict((a_nIdx) => (m_oConfigKeyList[a_nIdx], FirebaseRemoteConfig.DefaultInstance.GetValue(m_oConfigKeyList[a_nIdx]).StringValue)) : null, a_oTask.ExIsCompleteSuccess());
 		});
 	}

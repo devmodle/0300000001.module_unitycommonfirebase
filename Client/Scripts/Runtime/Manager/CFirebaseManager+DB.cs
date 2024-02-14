@@ -58,7 +58,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnLoadDatas: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOAD_DATAS_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_LOAD_DATAS_CALLBACK, () => {
 			m_oCallbackDictB.GetValueOrDefault(EFirebaseCallback.LOAD_DATAS)?.Invoke(this, 
 				a_oTask.ExIsCompleteSuccess() ? a_oTask.Result.GetRawJsonValue() : string.Empty, a_oTask.ExIsCompleteSuccess());
 		});
@@ -69,7 +69,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		string oErrorMsg = (a_oTask.Exception != null) ? a_oTask.Exception.Message : string.Empty;
 		CFunc.ShowLog($"CFirebaseManager.OnSaveDatas: {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_SAVE_DATAS_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_SAVE_DATAS_CALLBACK, () => {
 			m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.SAVE_DATAS)?.Invoke(this, a_oTask.ExIsCompleteSuccess());
 		});
 	}
