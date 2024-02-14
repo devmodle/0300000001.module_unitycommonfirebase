@@ -124,13 +124,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		CFunc.ShowLog($"CFirebaseManager.OnInit: {this.IsInit}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_INIT_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_INIT_CALLBACK, () => {
 			// 초기화되었을 경우
 			if(this.IsInit) {
 				m_oFirebaseApp = FirebaseApp.DefaultInstance;
 
 #if FIREBASE_ANALYTICS_ENABLE
-				FirebaseAnalytics.SetSessionTimeoutDuration(KCDefine.U_TIMEOUT_FIREBASE_SESSION);
+				FirebaseAnalytics.SetSessionTimeoutDuration(KCDefine.B_TIMEOUT_FIREBASE_SESSION);
 
 #if ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD
 				FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);

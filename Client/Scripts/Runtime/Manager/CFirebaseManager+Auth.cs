@@ -38,7 +38,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 #if FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE && UNITY_IOS
 		var oAuth = FirebaseAuth.DefaultInstance;
-		var oCredential = OAuthProvider.GetCredential(KCDefine.U_PROVIDER_ID_FIREBASE_M_APPLE_LOGIN, a_oUserID, a_oIDToken, null);
+		var oCredential = OAuthProvider.GetCredential(KCDefine.B_PROVIDER_ID_FIREBASE_M_APPLE_LOGIN, a_oUserID, a_oIDToken, null);
 
 		this.LoginWithCredential(oCredential, a_oCallback);
 #else
@@ -71,7 +71,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			}
 #endif // #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		} finally {
-			CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGOUT_CALLBACK, () => {
+			CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_LOGOUT_CALLBACK, () => {
 				CFunc.Invoke(ref a_oCallback, this);
 			});
 		}
@@ -85,7 +85,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 		CFunc.ShowLog($"CFirebaseManager.OnLogin: {a_oTask.ExIsCompleteSuccess()}, {oUserID}, {oErrorMsg}", KCDefine.B_LOG_COLOR_PLUGIN);
 
-		CScheduleManager.Inst.AddCallback(KCDefine.U_KEY_FIREBASE_M_LOGIN_CALLBACK, () => {
+		CScheduleManager.Inst.AddCallback(KCDefine.B_KEY_FIREBASE_M_LOGIN_CALLBACK, () => {
 			m_oCallbackDictA.GetValueOrDefault(EFirebaseCallback.LOGIN)?.Invoke(this, this.IsLogin);
 		});
 	}
