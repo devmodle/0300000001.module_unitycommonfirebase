@@ -106,13 +106,13 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
-			a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
+			a_stParams.m_oCallbackDict?.ExGetVal(ECallback.INIT)?.Invoke(this, this.IsInit);
 		} else {
 			this.Params = a_stParams;
 			CTaskManager.Inst.WaitAsyncTask(FirebaseApp.CheckAndFixDependenciesAsync(), this.OnInit);
 		}
 #else
-		a_stParams.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, false);
+		a_stParams.m_oCallbackDict?.ExGetVal(ECallback.INIT)?.Invoke(this, false);
 #endif // #if !UNITY_EDITOR && (UNITY_IOS || UNITY_ANDROID)
 	}
 
@@ -147,7 +147,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif // #if FIREBASE_MSG_ENABLE
 			}
 
-			this.Params.m_oCallbackDict?.GetValueOrDefault(ECallback.INIT)?.Invoke(this, this.IsInit);
+			this.Params.m_oCallbackDict?.ExGetVal(ECallback.INIT)?.Invoke(this, this.IsInit);
 		});
 	}
 #endif // #if UNITY_IOS || UNITY_ANDROID
