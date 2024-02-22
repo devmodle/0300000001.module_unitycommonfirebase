@@ -18,7 +18,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 파일을 로드한다 */
 	public void LoadFiles(string a_oFilePath, System.Action<CFirebaseManager, string, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoadDatas: {a_oFilePath}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oFilePath.ExIsValid());
+		CFunc.Assert(a_oFilePath.ExIsValid());
 
 #if FIREBASE_STORAGE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 파일 로드가 불가능 할 경우

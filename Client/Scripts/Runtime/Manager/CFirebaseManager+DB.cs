@@ -17,7 +17,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 데이터를 로드한다 */
 	public void LoadDatas(List<string> a_oNodeList, System.Action<CFirebaseManager, string, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoadDatas: {a_oNodeList}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oNodeList != null);
+		CFunc.Assert(a_oNodeList != null);
 
 #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 로그인되었을 경우
@@ -35,7 +35,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 데이터를 저장한다 */
 	public void SaveDatas(List<string> a_oNodeList, string a_oJSONStr, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.SaveDatas: {a_oNodeList}, {a_oJSONStr}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
+		CFunc.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
 
 #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 로그인되었을 경우
@@ -76,7 +76,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 
 	/** 데이터 베이스 레퍼런스를 반환한다 */
 	private DatabaseReference GetDBRef(List<string> a_oNodeList) {
-		CAccess.Assert(a_oNodeList != null);
+		CFunc.Assert(a_oNodeList != null);
 		var oDBRef = FirebaseDatabase.DefaultInstance.RootReference;
 
 		for(int i = 0; i < a_oNodeList.Count; ++i) {

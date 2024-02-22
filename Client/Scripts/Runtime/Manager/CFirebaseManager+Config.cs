@@ -17,7 +17,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 기본 구성을 설정한다 */
 	public void SetupDefConfigs(Dictionary<string, object> a_oDataDict, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.SetupDefConfigs: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oDataDict != null);
+		CFunc.Assert(a_oDataDict != null);
 
 #if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
@@ -35,7 +35,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 구성을 로드한다 */
 	public void LoadConfigs(List<string> a_oKeyList, System.Action<CFirebaseManager, Dictionary<string, string>, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoadConfigs: {a_oKeyList}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oKeyList != null);
+		CFunc.Assert(a_oKeyList != null);
 
 #if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
