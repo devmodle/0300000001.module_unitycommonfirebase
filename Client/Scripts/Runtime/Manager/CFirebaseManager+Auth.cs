@@ -34,7 +34,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 애플 로그인을 처리한다 */
 	public void LoginWithApple(string a_oUserID, string a_oIDToken, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithApple: {a_oUserID}, {a_oIDToken}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oUserID.ExIsValid() && a_oIDToken.ExIsValid());
+		CFunc.Assert(a_oUserID.ExIsValid() && a_oIDToken.ExIsValid());
 
 #if FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE && UNITY_IOS
 		var oAuth = FirebaseAuth.DefaultInstance;
@@ -49,7 +49,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 페이스 북 로그인을 처리한다 */
 	public void LoginWithFacebook(string a_oAccessToken, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithFacebook: {a_oAccessToken}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oAccessToken.ExIsValid());
+		CFunc.Assert(a_oAccessToken.ExIsValid());
 
 #if FIREBASE_AUTH_ENABLE && FACEBOOK_MODULE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		var oAuth = FirebaseAuth.DefaultInstance;
@@ -93,7 +93,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 인증 로그인을 처리한다 */
 	private void LoginWithCredential(Credential a_oCredential, System.Action<CFirebaseManager, bool> a_oCallback) {
 		CFunc.ShowLog("CFirebaseManager.LoginWithCredential", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oCredential != null);
+		CFunc.Assert(a_oCredential != null);
 
 		// 로그인되었을 경우
 		if(!this.IsInit || this.IsLogin) {

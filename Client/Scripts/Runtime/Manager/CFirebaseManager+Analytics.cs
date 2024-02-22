@@ -19,7 +19,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 분석 유저 식별자를 변경한다 */
 	public void SetAnalyticsUserID(string a_oID) {
 		CFunc.ShowLog($"CFirebaseManager.SetAnalyticsUserID: {a_oID}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oID.ExIsValid());
+		CFunc.Assert(a_oID.ExIsValid());
 
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
@@ -32,7 +32,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 로그를 전송한다 */
 	public void SendLog(string a_oName, Dictionary<string, string> a_oDataDict) {
 		CFunc.ShowLog($"CFirebaseManager.SendLog: {a_oName}, {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oName.ExIsValid());
+		CFunc.Assert(a_oName.ExIsValid());
 
 #if FIREBASE_ANALYTICS_ENABLE && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD) && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
@@ -45,7 +45,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #if FIREBASE_ANALYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 	/** 로그 매개 변수를 생성한다 */
 	private List<Parameter> MakeLogParams(Dictionary<string, string> a_oDataDict) {
-		CAccess.Assert(a_oDataDict != null);
+		CFunc.Assert(a_oDataDict != null);
 		var oParamsList = new List<Parameter>();
 
 		foreach(var stKeyVal in a_oDataDict) {
@@ -60,7 +60,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	/** 결제 로그를 전송한다 */
 	public void SendPurchaseLog(Product a_oProduct, int a_nNumProducts, Dictionary<string, string> a_oDataDict) {
 		CFunc.ShowLog($"CFirebaseManager.SendPurchaseLog: {a_oProduct}, {a_nNumProducts}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CAccess.Assert(a_oProduct != null);
+		CFunc.Assert(a_oProduct != null);
 
 #if FIREBASE_ANALYTICS_ENABLE && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD) && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
