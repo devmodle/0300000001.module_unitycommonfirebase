@@ -151,7 +151,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 #endif // #if UNITY_IOS || UNITY_ANDROID
-	#endregion // 함수
+#endregion // 함수
 
 	#region 클래스 함수
 	/** 매개 변수를 생성한다 */
