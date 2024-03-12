@@ -79,6 +79,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 #endif // #if FIREBASE_ANALYTICS_ENABLE && (ANALYTICS_TEST_ENABLE || STORE_DIST_BUILD) && (UNITY_IOS || UNITY_ANDROID)
 	}
 #endif // #if PURCHASE_MODULE_ENABLE
-	#endregion // 함수
+#endregion // 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE

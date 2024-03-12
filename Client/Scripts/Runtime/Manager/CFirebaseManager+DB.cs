@@ -91,6 +91,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		return oDBRef.Child(this.UserID);
 	}
 #endif // #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
-	#endregion // 조건부 함수
+#endregion // 조건부 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE

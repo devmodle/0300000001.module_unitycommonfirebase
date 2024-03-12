@@ -53,6 +53,6 @@ FIREBASE_MANAGER_LOAD_FILES_EXIT:
 		});
 	}
 #endif // #if FIREBASE_STORAGE_ENABLE
-	#endregion // 함수
+#endregion // 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE

@@ -72,6 +72,6 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		});
 	}
 #endif // #if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
-	#endregion // 함수
+#endregion // 함수
 }
 #endif // #if FIREBASE_MODULE_ENABLE
