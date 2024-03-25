@@ -36,14 +36,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		CFunc.ShowLog($"CFirebaseManager.LoginWithApple: {a_oUserID}, {a_oIDToken}", KCDefine.B_LOG_COLOR_PLUGIN);
 		CFunc.Assert(a_oUserID.ExIsValid() && a_oIDToken.ExIsValid());
 
-#if FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE && UNITY_IOS
+#if FIREBASE_AUTH_ENABLE && ENABLE_LOGIN_APPLE && UNITY_IOS
 		var oAuth = FirebaseAuth.DefaultInstance;
 		var oCredential = OAuthProvider.GetCredential(KCDefine.B_PROVIDER_ID_FIREBASE_M_APPLE_LOGIN, a_oUserID, a_oIDToken, null);
 
 		this.LoginWithCredential(oCredential, a_oCallback);
 #else
 		CFunc.Invoke(ref a_oCallback, this, false);
-#endif // #if FIREBASE_AUTH_ENABLE && APPLE_LOGIN_ENABLE && UNITY_IOS
+#endif // #if FIREBASE_AUTH_ENABLE && ENABLE_LOGIN_APPLE && UNITY_IOS
 	}
 
 	/** 페이스 북 로그인을 처리한다 */
