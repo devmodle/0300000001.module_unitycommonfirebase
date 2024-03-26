@@ -23,7 +23,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		// 로그인되었을 경우
 		if(this.IsInit && this.IsLogin) {
 			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_DATAS, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).GetValueAsync(), this.OnLoadDatas);
+			CManagerTask.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).GetValueAsync(), this.OnLoadDatas);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
 		}
@@ -41,7 +41,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		// 로그인되었을 경우
 		if(this.IsInit && this.IsLogin) {
 			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SAVE_DATAS, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).SetRawJsonValueAsync(a_oStrJSON), this.OnSaveDatas);
+			CManagerTask.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).SetRawJsonValueAsync(a_oStrJSON), this.OnSaveDatas);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, false);
 		}

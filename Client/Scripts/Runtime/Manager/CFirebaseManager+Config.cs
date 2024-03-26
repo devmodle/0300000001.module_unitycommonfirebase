@@ -23,7 +23,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		// 초기화되었을 경우
 		if(this.IsInit) {
 			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SETUP_DEF_CONFIGS, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(a_oDictData), this.OnSetupDefConfigs);
+			CManagerTask.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(a_oDictData), this.OnSetupDefConfigs);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, false);
 		}
@@ -42,7 +42,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		if(this.IsInit) {
 			a_oKeyList.ExCopyTo(m_oConfigKeyList, (a_oKey) => a_oKey);
 			m_oCallbackDictC.ExReplaceVal(EFirebaseCallback.LOAD_CONFIGS, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.FetchAndActivateAsync(), this.OnLoadConfigs);
+			CManagerTask.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.FetchAndActivateAsync(), this.OnLoadConfigs);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, null, false);
 		}

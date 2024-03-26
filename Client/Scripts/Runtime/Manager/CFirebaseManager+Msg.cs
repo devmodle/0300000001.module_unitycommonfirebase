@@ -20,7 +20,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		// 초기화되었을 경우
 		if(this.IsInit) {
 			m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_MSG_TOKEN, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(FirebaseMessaging.GetTokenAsync(), this.OnLoadMsgToken);
+			CManagerTask.Inst.WaitAsyncTask(FirebaseMessaging.GetTokenAsync(), this.OnLoadMsgToken);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
 		}
