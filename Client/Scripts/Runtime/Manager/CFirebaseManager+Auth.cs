@@ -24,7 +24,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
 			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync(), this.OnLogin);
+			CManagerTask.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync(), this.OnLogin);
 		}
 #else
 		CFunc.Invoke(ref a_oCallback, this, false);
@@ -100,7 +100,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 			CFunc.Invoke(ref a_oCallback, this, this.IsLogin);
 		} else {
 			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.LOGIN, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), this.OnLogin);
+			CManagerTask.Inst.WaitAsyncTask(FirebaseAuth.DefaultInstance.SignInWithCredentialAsync(a_oCredential), this.OnLogin);
 		}
 	}
 #endif // #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)

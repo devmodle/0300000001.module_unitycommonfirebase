@@ -29,7 +29,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_FILES, a_oCallback);
 		var oFirebaseStorage = FirebaseStorage.DefaultInstance.GetReference(a_oPathFile);
 
-		CTaskManager.Inst.WaitAsyncTask(oFirebaseStorage.GetStreamAsync(), this.OnLoadFiles);
+		CManagerTask.Inst.WaitAsyncTask(oFirebaseStorage.GetStreamAsync(), this.OnLoadFiles);
 		return;
 #else
 		CFunc.Invoke(ref a_oCallback, this, string.Empty, false);
