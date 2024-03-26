@@ -16,9 +16,9 @@ using Firebase.Storage;
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	/** 파일을 로드한다 */
-	public void LoadFiles(string a_oFilePath, System.Action<CFirebaseManager, string, bool> a_oCallback) {
-		CFunc.ShowLog($"CFirebaseManager.LoadDatas: {a_oFilePath}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CFunc.Assert(a_oFilePath.ExIsValid());
+	public void LoadFiles(string a_oPathFile, System.Action<CFirebaseManager, string, bool> a_oCallback) {
+		CFunc.ShowLog($"CFirebaseManager.LoadDatas: {a_oPathFile}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CFunc.Assert(a_oPathFile.ExIsValid());
 
 #if FIREBASE_STORAGE_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 파일 로드가 불가능 할 경우
@@ -27,7 +27,7 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 		}
 
 		m_oCallbackDictB.ExReplaceVal(EFirebaseCallback.LOAD_FILES, a_oCallback);
-		var oFirebaseStorage = FirebaseStorage.DefaultInstance.GetReference(a_oFilePath);
+		var oFirebaseStorage = FirebaseStorage.DefaultInstance.GetReference(a_oPathFile);
 
 		CTaskManager.Inst.WaitAsyncTask(oFirebaseStorage.GetStreamAsync(), this.OnLoadFiles);
 		return;

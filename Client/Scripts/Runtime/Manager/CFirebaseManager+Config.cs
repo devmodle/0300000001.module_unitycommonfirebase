@@ -15,15 +15,15 @@ using Firebase.RemoteConfig;
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	/** 기본 구성을 설정한다 */
-	public void SetupDefConfigs(Dictionary<string, object> a_oDataDict, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CFunc.ShowLog($"CFirebaseManager.SetupDefConfigs: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CFunc.Assert(a_oDataDict != null);
+	public void SetupDefConfigs(Dictionary<string, object> a_oDictData, System.Action<CFirebaseManager, bool> a_oCallback) {
+		CFunc.ShowLog($"CFirebaseManager.SetupDefConfigs: {a_oDictData}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CFunc.Assert(a_oDictData != null);
 
 #if FIREBASE_CONFIG_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
 			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SETUP_DEF_CONFIGS, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(a_oDataDict), this.OnSetupDefConfigs);
+			CTaskManager.Inst.WaitAsyncTask(FirebaseRemoteConfig.DefaultInstance.SetDefaultsAsync(a_oDictData), this.OnSetupDefConfigs);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, false);
 		}

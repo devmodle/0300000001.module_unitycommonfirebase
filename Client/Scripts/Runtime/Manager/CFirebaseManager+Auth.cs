@@ -15,8 +15,8 @@ using Firebase.Auth;
 public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	#region 함수
 	/** 익명 로그인을 처리한다 */
-	public void Login(string a_oDeviceID, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CFunc.ShowLog($"CFirebaseManager.Login: {a_oDeviceID}", KCDefine.B_LOG_COLOR_PLUGIN);
+	public void Login(string a_oIDDevice, System.Action<CFirebaseManager, bool> a_oCallback) {
+		CFunc.ShowLog($"CFirebaseManager.Login: {a_oIDDevice}", KCDefine.B_LOG_COLOR_PLUGIN);
 
 #if FIREBASE_AUTH_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 로그인되었을 경우

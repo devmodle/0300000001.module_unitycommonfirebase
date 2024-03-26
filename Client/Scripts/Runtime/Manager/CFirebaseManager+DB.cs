@@ -33,15 +33,15 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 	/** 데이터를 저장한다 */
-	public void SaveDatas(List<string> a_oNodeList, string a_oJSONStr, System.Action<CFirebaseManager, bool> a_oCallback) {
-		CFunc.ShowLog($"CFirebaseManager.SaveDatas: {a_oNodeList}, {a_oJSONStr}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CFunc.Assert(a_oNodeList != null && a_oJSONStr.ExIsValid());
+	public void SaveDatas(List<string> a_oNodeList, string a_oStrJSON, System.Action<CFirebaseManager, bool> a_oCallback) {
+		CFunc.ShowLog($"CFirebaseManager.SaveDatas: {a_oNodeList}, {a_oStrJSON}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CFunc.Assert(a_oNodeList != null && a_oStrJSON.ExIsValid());
 
 #if FIREBASE_DB_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 로그인되었을 경우
 		if(this.IsInit && this.IsLogin) {
 			m_oCallbackDictA.ExReplaceVal(EFirebaseCallback.SAVE_DATAS, a_oCallback);
-			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).SetRawJsonValueAsync(a_oJSONStr), this.OnSaveDatas);
+			CTaskManager.Inst.WaitAsyncTask(this.GetDBRef(a_oNodeList).SetRawJsonValueAsync(a_oStrJSON), this.OnSaveDatas);
 		} else {
 			CFunc.Invoke(ref a_oCallback, this, false);
 		}

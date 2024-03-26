@@ -26,14 +26,14 @@ public partial class CFirebaseManager : CSingleton<CFirebaseManager> {
 	}
 
 	/** 크래시 데이터를 변경한다 */
-	public void SetCrashlyticsDatas(Dictionary<string, string> a_oDataDict) {
-		CFunc.ShowLog($"CFirebaseManager.SetCrashlyticsDatas: {a_oDataDict}", KCDefine.B_LOG_COLOR_PLUGIN);
-		CFunc.Assert(a_oDataDict.ExIsValid());
+	public void SetCrashlyticsDatas(Dictionary<string, string> a_oDictData) {
+		CFunc.ShowLog($"CFirebaseManager.SetCrashlyticsDatas: {a_oDictData}", KCDefine.B_LOG_COLOR_PLUGIN);
+		CFunc.Assert(a_oDictData.ExIsValid());
 
 #if FIREBASE_CRASHLYTICS_ENABLE && (UNITY_IOS || UNITY_ANDROID)
 		// 초기화되었을 경우
 		if(this.IsInit) {
-			foreach(var stKeyVal in a_oDataDict) {
+			foreach(var stKeyVal in a_oDictData) {
 				Crashlytics.SetCustomKey(stKeyVal.Key, stKeyVal.Value);
 			}
 		}
